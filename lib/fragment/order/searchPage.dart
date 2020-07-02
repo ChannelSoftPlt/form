@@ -1,0 +1,70 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:my/fragment/order/child/orderFragment.dart';
+import 'package:my/object/order.dart';
+import 'package:my/shareWidget/not_found.dart';
+
+class SearchPage extends StatefulWidget {
+  @override
+  _SearchPageState createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  StreamController queryStream;
+  List<Order> list = [];
+
+  var queryController = TextEditingController();
+
+  int itemPerPage = 5, currentPage = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    queryStream = StreamController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        brightness: Brightness.dark,
+        title: TextField(
+          controller: queryController,
+          decoration: InputDecoration(
+            hintText: 'Search By Orders',
+            border: InputBorder.none,
+            suffixIcon: IconButton(
+                icon: Icon(Icons.clear),
+                color: Colors.orangeAccent,
+                onPressed: () {
+                  queryController.clear();
+                  queryStream.add('');
+                }),
+          ),
+          style: TextStyle(color: Colors.white),
+          onChanged: (text) async {
+            await Future.delayed(Duration(milliseconds: 300));
+            queryStream.add(text);
+          },
+        ),
+        iconTheme: IconThemeData(color: Colors.orangeAccent),
+      ),
+      body: StreamBuilder(
+          stream: queryStream.stream,
+          builder: (context, object) {
+            if (object.hasData && object.data.toString().length >= 2)
+              return OrderFragment(
+                query: object.data,
+                orderStatus: '',
+              );
+            return NotFound(
+                title: 'Search order',
+                description: 'Type some keyword to find your order..',
+                showButton: false,
+                button: '',
+                drawable: 'drawable/search_icon.png');
+          }),
+    );
+  }
+}
