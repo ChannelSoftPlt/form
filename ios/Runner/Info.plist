@@ -41,7 +41,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 		  <string>whatsapp</string>
-          <string>tel</string>
+
           <key>LSApplicationQueriesSchemes</key>
           <array>
               <string>comgooglemaps</string>
