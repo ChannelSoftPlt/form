@@ -53,5 +53,7 @@
           <string>mapsme</string>
           <string>osmandmaps</string>
      </array>
+     	<key>UIFileSharing</key>
+     	<true/>
 </dict>
 </plist>
