@@ -1,8 +1,14 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 import 'child/orderFragment.dart';
 
 class OrderPage extends StatefulWidget {
+  final String startDate, endDate, driverId;
+
+  OrderPage({this.startDate, this.endDate, this.driverId});
+
   @override
   _OrderPageState createState() => _OrderPageState();
 }
@@ -34,11 +40,9 @@ class _OrderPageState extends State<OrderPage>
               Expanded(
                 child: Container(
                   child: TabBarView(children: [
-                    OrderFragment(orderStatus: '1'),
-                    //Processing Order
-                    OrderFragment(orderStatus: '3'),
-                    //All Orders
-                    OrderFragment(orderStatus: '')
+                    orderFragment('1'),
+                    orderFragment('2'),
+                    orderFragment('')
                   ]),
                 ),
               )
@@ -46,6 +50,16 @@ class _OrderPageState extends State<OrderPage>
           ),
         ),
       ),
+    );
+  }
+
+  Widget orderFragment(String status) {
+    return OrderFragment(
+      orderStatus: status,
+      query: '',
+      startDate: widget.startDate ?? '',
+      endDate: widget.endDate ?? '',
+      driverId: widget.driverId ?? '',
     );
   }
 }

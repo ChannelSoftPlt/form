@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "774394266586",
+    "firebase_url": "https://form-6cf0c.firebaseio.com",
+    "project_id": "form-6cf0c",
+    "storage_bucket": "form-6cf0c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774394266586:android:d101739dcfb61ab31d36e3",
+        "android_client_info": {
+          "package_name": "channelsoft.com.my"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "774394266586-hnth2emslrlhsjhnqo3hm6jrn1eln6p6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDz4MiTKUckZf9s1X_kVbeOi28Bb5YcFaQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "774394266586-hnth2emslrlhsjhnqo3hm6jrn1eln6p6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

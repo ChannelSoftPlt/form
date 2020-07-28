@@ -31,7 +31,8 @@ dependencies:
   #pull to refresh
   pull_to_refresh: ^1.5.8
   #open WhatsApp
-  flutter_launch: ^0.2.0
+  #  flutter_launch: ^0.2.0
+  flutter_open_whatsapp: ^0.1.2
   #url
   url_launcher: ^5.4.10
   #radio button
@@ -43,6 +44,24 @@ dependencies:
   google_fonts: ^1.1.0
   #toast
   toast: ^0.1.5
+  #selection with search
+  dropdown_search: ^0.4.3
+  #date picker
+  flutter_datetime_picker: ^1.3.8
+  #firebase_messaging
+  firebase_messaging: ^6.0.16
+  #rich text editor
+  zefyr: ^0.11.0
+  quill_delta: ^1.0.2
+  #html text
+  flutter_html: ^1.0.0
+  #convert rich text's output to html
+  notustohtml: ^0.0.7
+  #share
+  share: ^0.6.4+3
+  #connection
+  connectivity: ^0.4.9
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -51,7 +70,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  #app icon
+  flutter_launcher_icons: ^0.7.5
 
+flutter_icons:
+  image_path: "drawable/logo.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

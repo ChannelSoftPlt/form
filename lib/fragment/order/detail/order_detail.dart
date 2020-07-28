@@ -3,9 +3,11 @@ import 'package:geocoder/geocoder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:my/fragment/order/child/dialog/add_product_dialog.dart';
+import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_address_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
+import 'package:my/fragment/order/child/dialog/grouping_dialog.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
@@ -51,6 +53,15 @@ class _OrderDetailState extends State<OrderDetail> {
           ),
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),
+        actions: <Widget>[
+          IconButton(
+            icon: Image.asset('drawable/location.png'),
+            onPressed: () {
+              openMapsSheet(context);
+            },
+          ),
+          whatsAppMenu(context),
+        ],
       ),
       body: FutureBuilder(
           future: Domain().fetchOrderDetail(widget.publicUrl, widget.id),
@@ -58,16 +69,20 @@ class _OrderDetailState extends State<OrderDetail> {
             if (object.hasData) {
               if (object.connectionState == ConnectionState.done) {
                 Map data = object.data;
-                if (data['status'] == '1') {
+                print(data);
+                if (data['order_detail_status'] == '1') {
                   List orderDetail = data['order_detail'];
-                  List orderItem = data['order_item'];
+                  order = Order.fromJson(orderDetail[0]);
+                }
 
+                if (data['order_item_status'] == '1') {
+                  List orderItem = data['order_item'];
                   orderItems.addAll(orderItem
                       .map((jsonObject) => OrderItem.fromJson(jsonObject))
                       .toList());
-                  order = Order.fromJson(orderDetail[0]);
-                  return mainContent(context);
                 }
+
+                return mainContent(context);
               }
             }
             return CustomProgressBar();
@@ -110,21 +125,46 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
-                        decoration: BoxDecoration(
-                            color:
-                                StatusControl().setStatusColor(order.status)),
-                        child: Text(
-                          StatusControl().setStatus(order.status),
-                          style: TextStyle(fontSize: 12, color: Colors.white),
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+                            decoration: BoxDecoration(
+                                color: StatusControl()
+                                    .setStatusColor(order.status)),
+                            child: Text(
+                              StatusControl().setStatus(order.status),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
+                            ),
+                          ),
+                          Visibility(
+                              visible: order.orderGroupId != null,
+                              child: SizedBox(
+                                height: 5,
+                              )),
+                          Visibility(
+                              visible: order.orderGroupId != null,
+                              child: Text('Group: ${order.groupName}',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold))),
+                          Visibility(
+                              visible: order.driverId != null,
+                              child: SizedBox(
+                                height: 3,
+                              )),
+                          Visibility(
+                            visible: order.driverId != null,
+                            child: Text(
+                              'Delivery By: ${order.driverName}',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                          )
+                        ],
                       ),
-                      IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            showStatusDialog(context);
-                          })
+                      popUpMenu(context),
                     ],
                   ),
                 ],
@@ -150,19 +190,33 @@ class _OrderDetailState extends State<OrderDetail> {
                   SizedBox(
                     height: 10,
                   ),
-                  Column(
-                    children: <Widget>[
-                      for (var i = 0; i < orderItems.length; i++)
-                        orderProductList(orderItems[i], i, context)
-                    ],
+                  Visibility(
+                    visible: orderItems.length > 0,
+                    child: Column(
+                      children: <Widget>[
+                        for (var i = 0; i < orderItems.length; i++)
+                          orderProductList(orderItems[i], i, context)
+                      ],
+                    ),
                   ),
+                  Visibility(
+                      visible: orderItems.length <= 0,
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'No Item Found',
+                          style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: RaisedButton.icon(
-                          onPressed: () => showAddProductDialog(context),
+                            onPressed: () => showAddProductDialog(context),
                             elevation: 5,
                             color: Colors.orangeAccent,
                             icon: Icon(
@@ -374,14 +428,11 @@ class _OrderDetailState extends State<OrderDetail> {
                         style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                       Spacer(),
-                      IconButton(
-                          icon: Icon(Icons.message),
-                          color: Colors.greenAccent,
-                          onPressed: () => openWhatsApp()),
+                      whatsAppMenu(context),
                       IconButton(
                           icon: Icon(Icons.call),
                           color: Colors.greenAccent,
-                          onPressed: () => launch(('tel://+6${order.phone}')))
+                          onPressed: () => launch(('tel://+${order.phone}')))
                     ],
                   ),
                   Divider(
@@ -425,6 +476,7 @@ class _OrderDetailState extends State<OrderDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       orderItem.name,
@@ -439,6 +491,20 @@ class _OrderDetailState extends State<OrderDetail> {
                     Text(
                       'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
                       style: TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Visibility(
+                      visible: orderItem.remark != null &&
+                          orderItem.remark.length > 0,
+                      child: Text(
+                        'Remark: ${orderItem.remark}',
+                        style: TextStyle(
+                            color: Colors.red[400],
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -457,6 +523,12 @@ class _OrderDetailState extends State<OrderDetail> {
                               onPressed: () {
                                 showEditProductDialog(
                                     mainContent, orderItem, position);
+                              }),
+                          IconButton(
+                              icon: Icon(Icons.delete),
+                              color: Colors.red,
+                              onPressed: () {
+                                deleteOrderItem(mainContent, orderItem);
                               })
                         ])
                   ],
@@ -473,6 +545,137 @@ class _OrderDetailState extends State<OrderDetail> {
           ],
         ),
       ),
+    );
+  }
+
+  /*
+*
+*
+*  action bar part
+*
+* */
+  Widget whatsAppMenu(context) {
+    return new PopupMenuButton(
+      icon: Image.asset('drawable/whatsapp.png'),
+      offset: Offset(0, 10),
+      itemBuilder: (context) => [
+        _buildMenuItem('message', 'Send Message', true),
+        _buildMenuItem('confirm', 'Confirm Order', true),
+      ],
+      onCanceled: () {},
+      onSelected: (value) {
+        print(value);
+        switch (value) {
+          case 'message':
+            openWhatsApp(1);
+            break;
+          case 'confirm':
+            openWhatsApp(0);
+            break;
+        }
+      },
+    );
+  }
+
+/*
+*
+*
+*  header part
+*
+* */
+  Widget popUpMenu(context) {
+    return new PopupMenuButton(
+      icon: Icon(
+        Icons.settings,
+        color: Colors.grey,
+      ),
+      offset: Offset(0, 10),
+      itemBuilder: (context) => [
+        _buildMenuItem('group', 'Assign Group / 统计', true),
+        _buildMenuItem('status', 'Change Status / 状态', order.status != '1'),
+        _buildMenuItem('driver', 'Assign Driver / 司机', order.status != '1')
+      ],
+      onCanceled: () {},
+      onSelected: (value) {
+        print(value);
+        switch (value) {
+          case 'group':
+            showGroupingDialog(context);
+            break;
+          case 'status':
+            showStatusDialog(context);
+            break;
+          case 'driver':
+            showDriverDialog(context);
+            break;
+        }
+      },
+    );
+  }
+
+  PopupMenuItem _buildMenuItem(String value, String text, bool enabled) {
+    return PopupMenuItem(
+      value: value,
+      child: Text(text),
+      enabled: enabled,
+    );
+  }
+
+  showGroupingDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return GroupingDialog(
+          onClick: (groupName, orderGroupId) async {
+            await Future.delayed(Duration(milliseconds: 500));
+            Navigator.pop(mainContext);
+
+            Map data = await Domain().setOrderGroup(
+                order.status, groupName, order.id.toString(), orderGroupId);
+
+            print(data);
+
+            if (data['status'] == '1') {
+              CustomSnackBar.show(mainContext, 'Update Successfully!');
+              setState(() {
+                orderItems.clear();
+              });
+            } else {
+              CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+            }
+          },
+        );
+      },
+    );
+  }
+
+  showDriverDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return DriverDialog(
+          onClick: (driverName, driverId) async {
+            await Future.delayed(Duration(milliseconds: 500));
+            Navigator.pop(mainContext);
+
+            Map data = await Domain()
+                .setDriver(driverName, order.id.toString(), driverId);
+
+            if (data['status'] == '1') {
+              CustomSnackBar.show(mainContext, 'Update Successfully!');
+              setState(() {
+                orderItems.clear();
+              });
+            } else {
+              CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+            }
+          },
+        );
+      },
     );
   }
 
@@ -496,6 +699,7 @@ class _OrderDetailState extends State<OrderDetail> {
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext, 'Update Successfully!');
                 setState(() {
+                  orderItems.clear();
                   order.status = value;
                 });
               } else
@@ -529,6 +733,49 @@ class _OrderDetailState extends State<OrderDetail> {
               } else
                 CustomSnackBar.show(mainContext, 'Something Went Wrong!');
             });
+      },
+    );
+  }
+
+  /*
+  * edit product dialog
+  * */
+  deleteOrderItem(mainContext, OrderItem orderItem) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text("Delete Request"),
+          content: Text("Confirm to this this item? \n${orderItem.name}"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                Map data = await Domain()
+                    .deleteOrderItem(orderItem.orderProductId.toString());
+                if (data['status'] == '1') {
+                  Navigator.of(context).pop();
+                  CustomSnackBar.show(mainContext, 'Delete Successfully!');
+                  setState(() {
+                    orderItems.clear();
+                  });
+                } else
+                  CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+              },
+            ),
+          ],
+        );
       },
     );
   }
@@ -574,11 +821,13 @@ class _OrderDetailState extends State<OrderDetail> {
         // return alert dialog object
         return AddProductDialog(
             formId: order.formId.toString(),
-            addProduct: (Product product, quantity) async {
+            addProduct: (Product product, quantity, remark) async {
               await Future.delayed(Duration(milliseconds: 300));
               Navigator.pop(mainContext);
 
-              Map data = await Domain().addOrderItem(product, order.id.toString(), quantity);
+              Map data = await Domain()
+                  .addOrderItem(product, order.id.toString(), quantity, remark);
+
               print(data);
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext, 'Add Successfully!');
@@ -621,12 +870,24 @@ class _OrderDetailState extends State<OrderDetail> {
     );
   }
 
-  openWhatsApp() {
-    Order().openWhatsApp(
-        '+6' + order.phone,
-        'Hi, ${order.name}\nThis is your Order Id ${order.orderID}\n\nDetails Please go through this link\n'
-        '${Domain.whatsAppLink}.?id=5915ad448f9d75bd91c247c874ff1914',
-        context);
+  openWhatsApp(int messageType) async {
+    print(Order().orderPrefix(widget.orderId));
+    String message = '';
+    if (messageType == 0)
+      message =
+          '👋你好, *${order.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${orderPrefix(widget.orderId)}'
+          '\n\n\n*检查订单/Check Order*\n点击这里/Click here👇\n'
+          '${Domain.whatsAppLink}?id=${order.publicUrl}';
+
+    Order().openWhatsApp('+6' + order.phone, message, context);
+  }
+
+  String orderPrefix(orderID) {
+    String prefix = '';
+    for (int i = orderID.length; i < 5; i++) {
+      prefix = prefix + "0";
+    }
+    return prefix + orderID;
   }
 
   openMapsSheet(context) async {

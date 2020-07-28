@@ -1,11 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:my/fragment/group/group.dart';
 import 'package:my/fragment/order/child/orderFragment.dart';
+import 'package:my/fragment/user/user.dart';
 import 'package:my/object/order.dart';
 import 'package:my/shareWidget/not_found.dart';
 
 class SearchPage extends StatefulWidget {
+  final String type;
+
+  SearchPage({this.type});
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -32,7 +38,7 @@ class _SearchPageState extends State<SearchPage> {
         title: TextField(
           controller: queryController,
           decoration: InputDecoration(
-            hintText: 'Search By Orders',
+            hintText: 'Search By ${widget.type}s',
             border: InputBorder.none,
             suffixIcon: IconButton(
                 icon: Icon(Icons.clear),
@@ -42,7 +48,7 @@ class _SearchPageState extends State<SearchPage> {
                   queryStream.add('');
                 }),
           ),
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black87),
           onChanged: (text) async {
             await Future.delayed(Duration(milliseconds: 300));
             queryStream.add(text);
@@ -53,14 +59,28 @@ class _SearchPageState extends State<SearchPage> {
       body: StreamBuilder(
           stream: queryStream.stream,
           builder: (context, object) {
-            if (object.hasData && object.data.toString().length >= 2)
-              return OrderFragment(
-                query: object.data,
-                orderStatus: '',
-              );
+            if (object.hasData && object.data.toString().length >= 1) {
+              if (widget.type == 'Order') {
+                return OrderFragment(
+                  query: object.data,
+                  orderStatus: '',
+                );
+              } else if (widget.type == 'Group') {
+                return GroupPage(
+                  query: object.data,
+                  startDate: '',
+                  endDate: '',
+                );
+              } else {
+                return UserPage(
+                  query: object.data,
+                );
+              }
+            }
+
             return NotFound(
-                title: 'Search order',
-                description: 'Type some keyword to find your order..',
+                title: 'Search ${widget.type}',
+                description: 'Type some keyword to find your ${widget.type}',
                 showButton: false,
                 button: '',
                 drawable: 'drawable/search_icon.png');

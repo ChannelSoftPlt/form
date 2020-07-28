@@ -1,4 +1,4 @@
-import 'package:flutter_launch/flutter_launch.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:intl/intl.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 
@@ -19,9 +19,11 @@ class Order {
       paymentMethod,
       userDeviceType,
       publicUrl,
+      groupName,
+      driverName,
       deliveryFee;
 
-  int id, formId;
+  int id, formId, orderGroupId, driverId;
   double total;
   final dateFormat = DateFormat("dd MMM");
 
@@ -45,6 +47,10 @@ class Order {
       this.extraNote,
       this.paymentMethod,
       this.userDeviceType,
+      this.orderGroupId,
+      this.driverId,
+      this.driverName,
+      this.groupName,
       this.publicUrl});
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -63,6 +69,10 @@ class Order {
         publicUrl: json['public_url'] as String,
         deliveryFee: json['delivery_fee'] as String,
         tax: json['tax'] == '' ? '0.00' : json['tax'] as String,
+        orderGroupId: json['order_group_id'] as int,
+        groupName: json['group_name'] as String,
+        driverId: json['driver_id'] as int,
+        driverName: json['driver_name'] as String,
         total: checkDouble(json['total_amount']),
         status: json['status'] as String);
   }
@@ -100,7 +110,8 @@ class Order {
 
   openWhatsApp(phone, message, context) async {
     try {
-      await FlutterLaunch.launchWathsApp(phone: phone, message: message);
+//      await FlutterLaunch.launchWathsApp(phone: phone, message: message);
+      await FlutterOpenWhatsapp.sendSingleMessage(phone, message);
     } on Exception catch (e) {
       CustomSnackBar.show(context, 'WhatsApp Not Found!');
     }

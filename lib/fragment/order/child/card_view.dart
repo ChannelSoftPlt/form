@@ -89,6 +89,20 @@ class _CardViewState extends State<CardView> {
                 ],
               ),
               Text(widget.orders.phone, style: TextStyle(fontSize: 12)),
+              Visibility(
+                  visible: widget.orders.orderGroupId != null,
+                  child: Text(
+                      widget.orders.groupName != null
+                          ? 'Group: ${widget.orders.groupName}'
+                          : '',
+                      style: TextStyle(fontSize: 10, color: Colors.grey))),
+              Visibility(
+                  visible: widget.orders.driverId != null,
+                  child: Text(
+                      widget.orders.driverName != null
+                          ? 'Deliver By: ${widget.orders.driverName}'
+                          : '',
+                      style: TextStyle(fontSize: 10, color: Colors.grey))),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[

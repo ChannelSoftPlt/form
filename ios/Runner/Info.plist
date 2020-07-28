@@ -43,6 +43,7 @@
 	<false/>
 	 <key>LSApplicationQueriesSchemes</key>
       <array>
+          <string>whatsapp</string>
           <string>comgooglemaps</string>
           <string>baidumap</string>
           <string>iosamap</string>
@@ -53,7 +54,5 @@
           <string>mapsme</string>
           <string>osmandmaps</string>
      </array>
-     	<key>UIFileSharing</key>
-     	<true/>
 </dict>
 </plist>

@@ -12,7 +12,7 @@ import 'package:toast/toast.dart';
 
 class AddProductDialog extends StatefulWidget {
   final String formId, quantity;
-  final Function(Product, String) addProduct;
+  final Function(Product, String, String) addProduct;
 
   AddProductDialog({this.formId, this.addProduct, this.quantity});
 
@@ -30,6 +30,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   Product product;
   var price = TextEditingController();
   var quantity = TextEditingController();
+  var remark = TextEditingController();
 
   @override
   void initState() {
@@ -65,7 +66,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 double.parse(price.text);
                 product.price = price.text;
                 if (inputQuantity > 0) {
-                  widget.addProduct(product, quantity.text.toString());
+                  widget.addProduct(product, quantity.text.toString(), remark.text);
                 } else {
                   CustomToast('Invalid input! 输入不正确!', context,
                           gravity: Toast.BOTTOM)
@@ -195,6 +196,31 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 ),
               )
             ],
+          ),
+          SizedBox(
+            height: 7,
+          ),
+          Container(
+            child: Theme(
+              data: new ThemeData(
+                primaryColor: Colors.orange,
+              ),
+              child: TextField(
+                  minLines: 1,
+                  maxLines: 4,
+                  keyboardType: TextInputType.text,
+                  controller: remark,
+                  decoration: InputDecoration(
+                    labelText: 'Remark',
+                    labelStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.blueGrey,
+                        fontWeight: FontWeight.bold),
+                    hintText: 'Remark...',
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.teal)),
+                  )),
+            ),
           )
         ],
       ),

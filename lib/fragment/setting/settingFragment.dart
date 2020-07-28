@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:my/fragment/setting/edit_profile.dart';
+import 'package:my/fragment/setting/payment/edit_payment_method.dart';
 import 'package:my/fragment/setting/reset_password.dart';
+import 'package:my/object/merchant.dart';
 import 'package:my/page/loading.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingFragment extends StatefulWidget {
@@ -15,17 +18,21 @@ class SettingFragment extends StatefulWidget {
 class _SettingFragmentState extends State<SettingFragment> {
   String _platformVersion = 'Default';
   bool isButtonPressed = false;
+  String url = '';
+  final key = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getVersionNumber();
+    getUrl();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: key,
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Padding(
@@ -42,6 +49,39 @@ class _SettingFragmentState extends State<SettingFragment> {
                   height: 10,
                 ),
                 ListTile(
+                    leading: Icon(
+                      Icons.link,
+                      size: 35,
+                      color: Colors.lightBlueAccent,
+                    ),
+                    title: Text(
+                      url,
+                      style: TextStyle(
+                          color: Color.fromRGBO(89, 100, 109, 1), fontSize: 14),
+                    ),
+                    trailing: IconButton(
+                        icon: Icon(
+                          Icons.content_copy,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Clipboard.setData(new ClipboardData(text: url));
+                          key.currentState.showSnackBar(new SnackBar(
+                            content: new Text("Copied to Clipboard"),
+                          ));
+                        })),
+                SizedBox(
+                  height: 10,
+                ),
+                ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfile(),
+                        ),
+                      );
+                    },
                     leading: Icon(
                       Icons.person,
                       size: 35,
@@ -91,24 +131,22 @@ class _SettingFragmentState extends State<SettingFragment> {
                     thickness: 1.0,
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Settings',
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
                 ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditPaymentMethod(),
+                        ),
+                      );
+                    },
                     leading: Icon(
-                      Icons.notifications,
+                      Icons.payment,
                       size: 35,
-                      color: Colors.red,
+                      color: Colors.lightBlue,
                     ),
                     title: Text(
-                      'Notification',
+                      'Payment Method',
                       style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                     ),
                     trailing: Icon(
@@ -120,6 +158,45 @@ class _SettingFragmentState extends State<SettingFragment> {
                   child: Divider(
                     color: Colors.teal.shade100,
                     thickness: 1.0,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Visibility(
+                  visible: false,
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Settings',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ListTile(
+                          leading: Icon(
+                            Icons.notifications,
+                            size: 35,
+                            color: Colors.red,
+                          ),
+                          title: Text(
+                            'Notification',
+                            style: TextStyle(
+                                color: Color.fromRGBO(89, 100, 109, 1)),
+                          ),
+                          trailing: Icon(
+                            Icons.keyboard_arrow_right,
+                            size: 30,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                        child: Divider(
+                          color: Colors.teal.shade100,
+                          thickness: 1.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
@@ -240,6 +317,11 @@ class _SettingFragmentState extends State<SettingFragment> {
             ),
           ),
         ));
+  }
+
+  getUrl() async {
+    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    setState(() {});
   }
 
   getVersionNumber() async {

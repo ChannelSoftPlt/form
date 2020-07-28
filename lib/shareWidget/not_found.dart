@@ -48,10 +48,17 @@ class NotFound extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 height: 50.0,
-                child: RaisedButton(
+                child: OutlineButton(
+                  borderSide: BorderSide(
+                    color: Colors.orange, //Color of the border
+                    style: BorderStyle.solid, //Style of the border
+                    width: 0.8, //width of the border
+                  ),
+                  color: Colors.orangeAccent,
+                  onPressed:() => refresh(),
                   child: Text(
                     button,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.orange),
                   ),
                 ),
               ),
