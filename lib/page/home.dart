@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +14,7 @@ import 'package:my/fragment/setting/settingFragment.dart';
 import 'package:my/fragment/user/user.dart';
 import 'package:my/object/driver.dart';
 import 'package:my/object/merchant.dart';
+import 'package:my/object/notification_object.dart';
 import 'package:my/shareWidget/filter_dialog.dart';
 import 'package:my/shareWidget/not_found.dart';
 import 'package:my/utils/sharePreference.dart';
@@ -41,6 +43,12 @@ class _ListState extends State<HomePage> {
   StreamSubscription<ConnectivityResult> connectivity;
   bool networkConnection = true;
 
+  /*
+  * firebase messaging
+  * */
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final List<NotificationMessage> message = [];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -54,6 +62,24 @@ class _ListState extends State<HomePage> {
         networkConnection = (result == ConnectivityResult.mobile ||
             result == ConnectivityResult.wifi);
       });
+    });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.getToken().then((token) {
+      print('token: $token');
     });
   }
 
@@ -167,7 +193,7 @@ class _ListState extends State<HomePage> {
     return NotFound(
         title: 'No Network Found!',
         description:
-            'We can\'t detect any network connection from your device...',
+        'We can\'t detect any network connection from your device...',
         showButton: true,
         refresh: () {
           setState(() {});
@@ -224,7 +250,9 @@ class _ListState extends State<HomePage> {
   }
 
   getUrl() async {
-    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    this.url = Merchant
+        .fromJson(await SharePreferences().read("merchant"))
+        .url;
 
     shareContent.text = 'Welcome to visit My Store!\n$url';
     setState(() {});
@@ -264,7 +292,7 @@ class _ListState extends State<HomePage> {
                       prefixIcon: Icon(Icons.textsms),
                       labelText: 'Content',
                       labelStyle:
-                          TextStyle(fontSize: 16, color: Colors.blueGrey),
+                      TextStyle(fontSize: 16, color: Colors.blueGrey),
                       hintText: 'Write some content to share..',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
@@ -301,9 +329,10 @@ class _ListState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SearchPage(
-          type: getSearchType(),
-        ),
+        builder: (context) =>
+            SearchPage(
+              type: getSearchType(),
+            ),
       ),
     );
   }
