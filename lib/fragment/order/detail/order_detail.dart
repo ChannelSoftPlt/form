@@ -20,8 +20,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetail extends StatefulWidget {
   final String orderId, id, publicUrl;
+  final Function() refresh;
 
-  OrderDetail({this.id, this.orderId, this.publicUrl});
+  OrderDetail({this.id, this.orderId, this.publicUrl, this.refresh});
 
   @override
   _OrderDetailState createState() => _OrderDetailState();
@@ -377,41 +378,49 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            order.name,
-                            style: TextStyle(
-                                color: Colors.grey[600], fontSize: 13),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            order.address,
-                            style: TextStyle(
-                                color: Colors.grey[600], fontSize: 13),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            '${order.postcode} ${order.city}',
-                            style: TextStyle(
-                                color: Colors.grey[600], fontSize: 13),
-                          ),
-                        ],
+                      Expanded(
+                        flex: 6,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              order.name,
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              order.address,
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '${order.postcode} ${order.city}',
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 13),
+                            ),
+                          ],
+                        ),
                       ),
-                      Spacer(),
-                      IconButton(
-                          icon: Icon(Icons.edit),
-                          color: Colors.grey,
-                          onPressed: () => showEditAddressDialog(context)),
-                      IconButton(
-                          icon: Icon(Icons.navigation),
-                          color: Colors.blueAccent,
-                          onPressed: () => openMapsSheet(context)),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                            icon: Icon(Icons.edit),
+                            color: Colors.grey,
+                            onPressed: () => showEditAddressDialog(context)),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                            icon: Icon(Icons.navigation),
+                            color: Colors.blueAccent,
+                            onPressed: () => openMapsSheet(context)),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -593,7 +602,8 @@ class _OrderDetailState extends State<OrderDetail> {
       itemBuilder: (context) => [
         _buildMenuItem('group', 'Assign Group / 统计', true),
         _buildMenuItem('status', 'Change Status / 状态', order.status != '1'),
-        _buildMenuItem('driver', 'Assign Driver / 司机', order.status != '1')
+        _buildMenuItem('driver', 'Assign Driver / 司机', order.status != '1'),
+        _buildMenuItem('delete', 'Delete Order / 删除', true)
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -608,6 +618,9 @@ class _OrderDetailState extends State<OrderDetail> {
           case 'driver':
             showDriverDialog(context);
             break;
+          case 'delete':
+            showDeleteOrderDialog(context);
+            break;
         }
       },
     );
@@ -618,6 +631,46 @@ class _OrderDetailState extends State<OrderDetail> {
       value: value,
       child: Text(text),
       enabled: enabled,
+    );
+  }
+
+  /*
+  * delete order
+  * */
+  showDeleteOrderDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text("Delete Request"),
+          content: Text("Confirm to this this item?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                Map data = await Domain().deleteOrder(widget.id.toString());
+                if (data['status'] == '1') {
+                  widget.refresh();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                } else
+                  CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

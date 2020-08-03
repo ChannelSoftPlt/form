@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,10 @@ import 'package:my/fragment/setting/settingFragment.dart';
 import 'package:my/fragment/user/user.dart';
 import 'package:my/object/driver.dart';
 import 'package:my/object/merchant.dart';
-import 'package:my/object/notification_object.dart';
+import 'package:my/shareWidget/notification_plugin.dart';
 import 'package:my/shareWidget/filter_dialog.dart';
 import 'package:my/shareWidget/not_found.dart';
+import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:share/share.dart';
 
@@ -26,6 +28,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _ListState extends State<HomePage> {
+  final key = new GlobalKey<ScaffoldState>();
+
   /*
   * filter purpose
   * */
@@ -47,7 +51,16 @@ class _ListState extends State<HomePage> {
   * firebase messaging
   * */
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final List<NotificationMessage> message = [];
+
+  static Future<dynamic> backgroundMessageHandler(
+      Map<String, dynamic> message) async {
+    if (message.containsKey('data')) {
+      await notificationPlugin.showNotification(message['data']);
+// Handle data message
+    }
+// Or do other work.
+    return null;
+  }
 
   @override
   void initState() {
@@ -64,24 +77,52 @@ class _ListState extends State<HomePage> {
       });
     });
 
+    //initialize
+//    notificationPlugin
+//        .setListenerForLowerVersions(onNotificationInLowerVersions);
+//    notificationPlugin.setOnNotificationClick(setOnNotificationClick);
+
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
+        showSnackBar('New Order Received', 'See Now');
+        _setupNotificationSound();
         print("onMessage: $message");
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
+        _setupNotificationSound();
       },
+      onBackgroundMessage: backgroundMessageHandler,
       onResume: (Map<String, dynamic> message) async {
+        _setupNotificationSound();
         print("onResume: $message");
+        setState(() {
+          currentIndex = 0;
+        });
       },
     );
 
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
-    _firebaseMessaging.getToken().then((token) {
-      print('token: $token');
+    /*
+    * register token
+    * */
+    _firebaseMessaging.getToken().then((token) async {
+      Map data = await Domain().registerDeviceToken(token);
+      print(data);
     });
   }
+
+  _setupNotificationSound() async {
+    final assetsAudioPlayer = AssetsAudioPlayer();
+    assetsAudioPlayer.open(
+      Audio("audio/notification.mp3"),
+    );
+  }
+
+  onNotificationInLowerVersions(ReceivedNotification receivedNotification) {}
+
+  setOnNotificationClick(String payload) {}
 
   // Be sure to cancel subscription after you are done
   @override
@@ -93,6 +134,7 @@ class _ListState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: key,
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
@@ -193,7 +235,7 @@ class _ListState extends State<HomePage> {
     return NotFound(
         title: 'No Network Found!',
         description:
-        'We can\'t detect any network connection from your device...',
+            'We can\'t detect any network connection from your device...',
         showButton: true,
         refresh: () {
           setState(() {});
@@ -250,9 +292,7 @@ class _ListState extends State<HomePage> {
   }
 
   getUrl() async {
-    this.url = Merchant
-        .fromJson(await SharePreferences().read("merchant"))
-        .url;
+    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
 
     shareContent.text = 'Welcome to visit My Store!\n$url';
     setState(() {});
@@ -292,7 +332,7 @@ class _ListState extends State<HomePage> {
                       prefixIcon: Icon(Icons.textsms),
                       labelText: 'Content',
                       labelStyle:
-                      TextStyle(fontSize: 16, color: Colors.blueGrey),
+                          TextStyle(fontSize: 16, color: Colors.blueGrey),
                       hintText: 'Write some content to share..',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
@@ -329,10 +369,9 @@ class _ListState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            SearchPage(
-              type: getSearchType(),
-            ),
+        builder: (context) => SearchPage(
+          type: getSearchType(),
+        ),
       ),
     );
   }
@@ -371,5 +410,19 @@ class _ListState extends State<HomePage> {
         );
       },
     );
+  }
+
+  showSnackBar(message, button) {
+    key.currentState.showSnackBar(new SnackBar(
+        content: new Text(message),
+        action: SnackBarAction(
+          label: button,
+          onPressed: () {
+            setState(() {
+              currentIndex = 0;
+            });
+            // Some code to undo the change.
+          },
+        )));
   }
 }

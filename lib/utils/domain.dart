@@ -19,6 +19,7 @@ class Domain {
   static var driver = domain + 'mobile_api/driver/index.php';
   static var profile = domain + 'profile/index.php';
   static var user = domain + 'mobile_api/user/index.php';
+  static var notification = domain + 'mobile_api/notification/index.php';
 
   static var whatsAppLink = domain + 'order/view-order.php';
 
@@ -368,6 +369,20 @@ class Domain {
     return jsonDecode(response.body);
   }
 
+  /*
+  * register device token
+  * */
+  registerDeviceToken(token) async {
+    var response = await http.post(Domain.notification, body: {
+      'register_token': '1',
+      'token': token,
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId
+    });
+    return jsonDecode(response.body);
+  }
+
   /*--------------------------------------------------------------------delete part-------------------------------------------------------------------------------*/
   /*
   * delete order item
@@ -376,6 +391,18 @@ class Domain {
     var response = await http.post(Domain.orderItem, body: {
       'delete': '1',
       'order_product_id': orderProductId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * delete order
+  * */
+  deleteOrder(orderIds) async {
+    print('delete id here: $orderIds');
+    var response = await http.post(Domain.order, body: {
+      'delete': '1',
+      'order_ids': orderIds,
     });
     return jsonDecode(response.body);
   }

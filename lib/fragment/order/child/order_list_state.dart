@@ -17,7 +17,14 @@ class OrderList extends StatefulWidget {
   final List<Order> orders;
   final String orderStatus, query, groupId, driverId, startDate, endDate;
 
-  OrderList({this.orders, this.orderStatus, this.query, this.groupId, this.driverId, this.startDate, this.endDate});
+  OrderList(
+      {this.orders,
+      this.orderStatus,
+      this.query,
+      this.groupId,
+      this.driverId,
+      this.startDate,
+      this.endDate});
 
   @override
   _OrderListState createState() => _OrderListState();
@@ -89,10 +96,17 @@ class _OrderListState extends State<OrderList> {
     return ListView.builder(
         itemCount: list.length,
         itemBuilder: (BuildContext context, int index) {
-          return CardView(orders: list[index], selectedList: selectedList);
+          return CardView(
+            orders: list[index],
+            selectedList: selectedList,
+            refresh: () => _onRefresh(),
+          );
         });
   }
 
+  /*
+  * when long click then use this list view
+  * */
   Widget groupingListView() {
     return CustomScrollView(
       slivers: <Widget>[
@@ -149,16 +163,18 @@ class _OrderListState extends State<OrderList> {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) => CardView(
-                orders: list[index],
-                selectedList: selectedList,
-                longPress: (orderId) {
-                  print(orderId);
-                  if (selectedList.contains(orderId)) {
-                    selectedList.remove(orderId);
-                  } else
-                    selectedList.add(orderId);
-                  setState(() {});
-                }),
+              orders: list[index],
+              selectedList: selectedList,
+              longPress: (orderId) {
+                print(orderId);
+                if (selectedList.contains(orderId)) {
+                  selectedList.remove(orderId);
+                } else
+                  selectedList.add(orderId);
+                setState(() {});
+              },
+              refresh: () => _onRefresh(),
+            ),
             childCount: list.length,
           ),
         ),
@@ -176,7 +192,8 @@ class _OrderListState extends State<OrderList> {
       itemBuilder: (context) => [
         _buildMenuItem('group', 'Assign Group / 统计', true),
         _buildMenuItem('status', 'Change Status / 状态', status != '1'),
-        _buildMenuItem('driver', 'Assign Driver / 司机', status != '1')
+        _buildMenuItem('driver', 'Assign Driver / 司机', status != '1'),
+        _buildMenuItem('delete', 'Delete Order / 删除', true)
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -190,6 +207,9 @@ class _OrderListState extends State<OrderList> {
             break;
           case 'driver':
             showDriverDialog(context);
+            break;
+          case 'delete':
+            showDeleteOrderDialog(context);
             break;
         }
       },
@@ -218,6 +238,7 @@ class _OrderListState extends State<OrderList> {
     // monitor network fetch
     if (mounted)
       setState(() {
+        selectedList.clear();
         list.clear();
         currentPage = 1;
         itemFinish = false;
@@ -241,8 +262,8 @@ class _OrderListState extends State<OrderList> {
   }
 
   Future fetchOrder() async {
-    Map data =
-        await Domain().fetchOrder(currentPage, itemPerPage, status, widget.query, '', widget.driverId, widget.startDate, widget.endDate);
+    Map data = await Domain().fetchOrder(currentPage, itemPerPage, status,
+        widget.query, '', widget.driverId, widget.startDate, widget.endDate);
 
     setState(() {
       if (data['status'] == '1') {
@@ -273,9 +294,7 @@ class _OrderListState extends State<OrderList> {
 
             if (data['status'] == '1') {
               CustomSnackBar.show(mainContext, 'Update Successfully!');
-              setState(() {
-                selectedList.clear();
-              });
+              _onRefresh();
             } else {
               CustomSnackBar.show(mainContext, 'Something Went Wrong!');
             }
@@ -301,9 +320,7 @@ class _OrderListState extends State<OrderList> {
 
             if (data['status'] == '1') {
               CustomSnackBar.show(mainContext, 'Update Successfully!');
-              setState(() {
-                selectedList.clear();
-              });
+              _onRefresh();
             } else {
               CustomSnackBar.show(mainContext, 'Something Went Wrong!');
             }
@@ -313,7 +330,7 @@ class _OrderListState extends State<OrderList> {
     );
   }
 
-  void showStatusDialog(mainContext) {
+  showStatusDialog(mainContext) {
     // flutter defined function
     showDialog(
       context: mainContext,
@@ -329,12 +346,50 @@ class _OrderListState extends State<OrderList> {
 
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext, 'Update Successfully!');
-                setState(() {
-                  selectedList.clear();
-                });
+                _onRefresh();
               } else
                 CustomSnackBar.show(mainContext, 'Something Went Wrong!');
             });
+      },
+    );
+  }
+
+  /*
+  * edit product dialog
+  * */
+  showDeleteOrderDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text("Delete Request"),
+          content: Text("Confirm to this these item?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                Map data = await Domain().deleteOrder(selectedList.join(','));
+                if (data['status'] == '1') {
+                  Navigator.of(context).pop();
+                  CustomSnackBar.show(mainContext, 'Delete Successfully!');
+                  _onRefresh();
+                } else
+                  CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+              },
+            ),
+          ],
+        );
       },
     );
   }

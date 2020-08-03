@@ -25,10 +25,11 @@ class _GroupDetailState extends State<GroupDetail> {
   /*
   * pagination
   * */
-  int itemPerPage = 5, currentPage = 1;
+  int itemPerPage = 5,
+      currentPage = 1;
   bool itemFinish = false;
   RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -62,7 +63,7 @@ class _GroupDetailState extends State<GroupDetail> {
                 } else if (mode == LoadStatus.canLoading) {
                   body = Text("release to load more");
                 } else {
-                  body = Text("No more Data");
+                  body = Text(totalList.length > 0 ? "No more Data" : '');
                 }
                 return Container(
                   height: 55.0,
@@ -88,24 +89,29 @@ class _GroupDetailState extends State<GroupDetail> {
                 floating: true,
                 pinned: true,
                 elevation: 5,
-                expandedHeight: 170 + (50 * totalList.length.toDouble()),
+                expandedHeight: totalList.length > 0 ? 170 + (50 * totalList.length.toDouble()) : 400,
                 flexibleSpace: FlexibleSpaceBar(
                   background: totalList.length > 0
                       ? headerLayout()
-                      : Center(child: CustomProgressBar()),
+                      : notFound(),
                 ),
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => CardView(
-                    orders: list[index],
-                    selectedList: [],
-                  ),
+                      (context, index) =>
+                      CardView(
+                        orders: list[index],
+                        selectedList: [],
+                        refresh: () {
+                          _onRefresh();
+                        },
+                      ),
                   childCount: list.length,
                 ),
               ),
             ])));
   }
+
 
   Widget headerLayout() {
     print('total ${widget.orderGroup.totalOrder}');
@@ -117,7 +123,8 @@ class _GroupDetailState extends State<GroupDetail> {
             Text(
               '${Order().formatDate(widget.orderGroup.date ?? '')}' +
                   ' \. ' +
-                  '${Order().orderPrefix(widget.orderGroup.groupName.toString())}',
+                  '${Order().orderPrefix(
+                      widget.orderGroup.groupName.toString())}',
               style: TextStyle(color: Colors.grey[600]),
             ),
             SizedBox(
@@ -189,8 +196,15 @@ class _GroupDetailState extends State<GroupDetail> {
   }
 
   Future fetchOrder() async {
-    Map data = await Domain().fetchOrder(currentPage, itemPerPage, '', '',
-        widget.orderGroup.orderGroupId, '', '', '');
+    Map data = await Domain().fetchOrder(
+        currentPage,
+        itemPerPage,
+        '',
+        '',
+        widget.orderGroup.orderGroupId,
+        '',
+        '',
+        '');
 
     setState(() {
       if (data['status'] == '1') {
@@ -253,11 +267,11 @@ class _GroupDetailState extends State<GroupDetail> {
 
   Widget notFound() {
     return NotFound(
-        title: 'No Order Right Now!',
-        description: 'No order add into this group yet!',
+        title: 'No Order Found in this Group!',
+        description: 'No order is added into this group so far..!',
         showButton: false,
         button: '',
-        drawable: 'drawable/no_order.png');
+        drawable: 'drawable/folder.png');
   }
 
   _onRefresh() async {

@@ -64,6 +64,9 @@ class _SearchPageState extends State<SearchPage> {
                 return OrderFragment(
                   query: object.data,
                   orderStatus: '',
+                  driverId: '',
+                  startDate: '',
+                  endDate: '',
                 );
               } else if (widget.type == 'Group') {
                 return GroupPage(

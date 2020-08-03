@@ -12,9 +12,10 @@ import 'package:url_launcher/url_launcher.dart';
 class CardView extends StatefulWidget {
   final Order orders;
   final Function(String) longPress;
+  final Function() refresh;
   final List selectedList;
 
-  CardView({Key key, this.orders, this.longPress, this.selectedList})
+  CardView({Key key, this.orders, this.longPress, this.selectedList, this.refresh})
       : super(key: key);
 
   @override
@@ -146,6 +147,10 @@ class _CardViewState extends State<CardView> {
           value: 'status',
           child: Text("Update Status"),
         ),
+        PopupMenuItem(
+          value: 'delete',
+          child: Text("Delete"),
+        ),
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -167,6 +172,9 @@ class _CardViewState extends State<CardView> {
           case 'status':
             _showDialog(context);
             break;
+          case 'delete':
+            showDeleteOrderDialog(context);
+            break;
         }
       },
     );
@@ -185,12 +193,55 @@ class _CardViewState extends State<CardView> {
           orderId: widget.orders.orderID,
           id: widget.orders.id.toString(),
           publicUrl: widget.orders.publicUrl,
+          refresh: (){
+            widget.refresh();
+          },
         ),
       ),
     );
   }
 
-  void _showDialog(mainContext) {
+  /*
+  * delete order
+  * */
+  showDeleteOrderDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text("Delete Request"),
+          content: Text("Confirm to this these item?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                Map data = await Domain().deleteOrder(widget.orders.id.toString());
+                if (data['status'] == '1') {
+                  Navigator.of(context).pop();
+                  CustomSnackBar.show(mainContext, 'Delete Successfully!');
+                  widget.refresh();
+                } else
+                  CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _showDialog(mainContext) {
     // flutter defined function
     showDialog(
       context: mainContext,
