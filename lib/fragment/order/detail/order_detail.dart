@@ -82,7 +82,6 @@ class _OrderDetailState extends State<OrderDetail> {
                       .map((jsonObject) => OrderItem.fromJson(jsonObject))
                       .toList());
                 }
-
                 return mainContent(context);
               }
             }

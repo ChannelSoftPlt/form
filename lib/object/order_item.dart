@@ -2,7 +2,6 @@ class OrderItem {
   String name, description, quantity, price, productId, status, image, remark;
 
   int orderProductId;
-  double totalPrice;
 
   OrderItem(
       {this.orderProductId,
@@ -13,14 +12,12 @@ class OrderItem {
       this.price,
       this.productId,
       this.status,
-      this.image,
-      this.totalPrice});
+      this.image});
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
         orderProductId: json['order_product_id'] as int,
         name: json['name'] as String,
-        totalPrice: convertIntToDouble(json['total']),
         description: json['description'] as String,
         remark: json['remark'] as String,
         quantity: convertIntToString(json['quantity']),

@@ -55,7 +55,11 @@ class _ListState extends State<HomePage> {
   static Future<dynamic> backgroundMessageHandler(
       Map<String, dynamic> message) async {
     if (message.containsKey('data')) {
-      await notificationPlugin.showNotification(message['data']);
+      Merchant merchant = Merchant.fromJson(await SharePreferences().read('merchant'));
+      if (merchant != null && message['data']['merchant_id'] == Merchant.fromJson(await SharePreferences().read("merchant")).merchantId) {
+        await notificationPlugin.showNotification(message['data']);
+      }
+
 // Handle data message
     }
 // Or do other work.

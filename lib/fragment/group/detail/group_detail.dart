@@ -151,7 +151,7 @@ class _GroupDetailState extends State<GroupDetail> {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    'Quantity',
+                    'Price',
                     textAlign: TextAlign.end,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
@@ -159,7 +159,7 @@ class _GroupDetailState extends State<GroupDetail> {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    'Total',
+                    'Quantity',
                     textAlign: TextAlign.end,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
@@ -243,15 +243,16 @@ class _GroupDetailState extends State<GroupDetail> {
               new Expanded(
                 flex: 1,
                 child: Text(
-                  '${orderItem.quantity}',
-                  textAlign: TextAlign.center,
+                  orderItem.price,
+                  textAlign: TextAlign.end,
                 ),
               ),
               new Expanded(
                 flex: 1,
                 child: Text(
-                  orderItem.totalPrice.toString(),
-                  textAlign: TextAlign.end,
+                  'x${orderItem.quantity}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ],
