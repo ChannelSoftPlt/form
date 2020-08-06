@@ -73,7 +73,7 @@ class _EditShippingTaxDialogState extends State<EditShippingTaxDialog> {
             child: TextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [
-                  WhitelistingTextInputFormatter(RegExp(r"^\d*\.?\d*")),
+                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                 ],
                 controller: widget.type == 'delivery_fee' ? deliveryFree : tax,
                 textAlign: TextAlign.center,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my/fragment/order/child/card_view.dart';
+import 'package:my/fragment/group/detail/group_order_list.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_group.dart';
 import 'package:my/object/order_item.dart';
@@ -20,28 +20,55 @@ class GroupDetail extends StatefulWidget {
 
 class _GroupDetailState extends State<GroupDetail> {
   List<OrderItem> totalList = [];
-  List<Order> list = [];
 
   /*
   * pagination
   * */
-  int itemPerPage = 5,
-      currentPage = 1;
-  bool itemFinish = false;
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchOrder();
     fetchTotalOrder();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(child: mainContent()));
+    return Scaffold(
+        appBar: AppBar(
+          brightness: Brightness.dark,
+          title: Text(
+            'Group ${Order().orderPrefix(widget.orderGroup.groupName)}',
+            style: GoogleFonts.cantoraOne(
+              textStyle: TextStyle(
+                  color: Colors.orangeAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+          ),
+          iconTheme: IconThemeData(color: Colors.orangeAccent),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.assignment,
+                color: Colors.orangeAccent,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GroupOrderList(
+                      orderGroup: widget.orderGroup,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        body: SafeArea(child: mainContent()));
   }
 
   Widget mainContent() {
@@ -55,7 +82,7 @@ class _GroupDetailState extends State<GroupDetail> {
               builder: (BuildContext context, LoadStatus mode) {
                 Widget body;
                 if (mode == LoadStatus.idle) {
-                  body = Text("pull up load");
+                  body = Text("Item finished");
                 } else if (mode == LoadStatus.loading) {
                   body = CustomProgressBar();
                 } else if (mode == LoadStatus.failed) {
@@ -74,201 +101,174 @@ class _GroupDetailState extends State<GroupDetail> {
             controller: _refreshController,
             onRefresh: _onRefresh,
             onLoading: _onLoading,
-            child: CustomScrollView(slivers: <Widget>[
-              SliverAppBar(
-                backgroundColor: Colors.white,
-                title: Text(
-                  'Group ${Order().orderPrefix(widget.orderGroup.groupName)}',
-                  style: GoogleFonts.cantoraOne(
-                    textStyle: TextStyle(
-                        color: Colors.orangeAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
-                ),
-                floating: true,
-                pinned: true,
-                elevation: 5,
-                expandedHeight: totalList.length > 0 ? 170 + (50 * totalList.length.toDouble()) : 400,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: totalList.length > 0
-                      ? headerLayout()
-                      : notFound(),
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (context, index) =>
-                      CardView(
-                        orders: list[index],
-                        selectedList: [],
-                        refresh: () {
-                          _onRefresh();
-                        },
-                      ),
-                  childCount: list.length,
-                ),
-              ),
-            ])));
+            child: totalList.length > 0 ? _listView() : notFound()));
   }
 
+  Widget _listView() {
+    return ListView.builder(
+        itemCount: totalList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return totalOrderItemView(totalList[index], index);
+        });
+  }
 
   Widget headerLayout() {
-    print('total ${widget.orderGroup.totalOrder}');
     return Padding(
-        padding: const EdgeInsets.fromLTRB(30, 70, 30, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              '${Order().formatDate(widget.orderGroup.date ?? '')}' +
-                  ' \. ' +
-                  '${Order().orderPrefix(
-                      widget.orderGroup.groupName.toString())}',
-              style: TextStyle(color: Colors.grey[600]),
+              'Date: ${Order().formatDate(widget.orderGroup.date ?? '')}',
+              style: TextStyle(color: Colors.grey[600], fontSize: 16),
             ),
-            SizedBox(
-              height: 5,
-            ),
+            Spacer(),
             Text(
               'Total Order: ${widget.orderGroup.totalOrder.toString()}',
+              textAlign: TextAlign.end,
               style: TextStyle(
-                  color: Colors.grey[600], fontWeight: FontWeight.bold),
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
             ),
             SizedBox(
-              height: 15,
+              height: 50,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Product',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    'Price',
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    'Quantity',
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Column(children: <Widget>[
-              for (int i = 0; i < totalList.length; i++)
-                totalOrderItemView(totalList[i])
-            ])
           ],
         ));
   }
 
-  refresh() {
-    fetchOrder();
-    fetchTotalOrder();
-  }
-
   Future fetchTotalOrder() async {
     Map data = await Domain().fetchGroupDetail(widget.orderGroup.orderGroupId);
+
     setState(() {
       if (data['status'] == '1') {
         List responseJson = data['group_order_item'];
-        totalList.addAll(responseJson
-            .map((jsonObject) => OrderItem.fromJson(jsonObject))
-            .toList());
+        //add two blank object
+        totalList.add(new OrderItem());
+        totalList.add(new OrderItem());
+
+        for (int i = 0; i < responseJson.length; i++) {
+          bool isAdded = false;
+          for (int j = 0; j < totalList.length; j++) {
+            if (responseJson[i]['name'] == totalList[j].name &&
+                responseJson[i]['remark'] == totalList[j].remark &&
+                responseJson[i]['price'] == totalList[j].price) {
+              /*
+              * existing record goes here
+              * */
+              totalList[j].quantity = (int.parse(responseJson[i]['quantity']) +
+                      int.parse(totalList[j].quantity))
+                  .toString();
+              isAdded = true;
+              break;
+            }
+          }
+          /*
+          * new record goes here
+          * */
+          if (!isAdded) {
+            totalList.add(new OrderItem(
+                name: responseJson[i]['name'],
+                price: responseJson[i]['price'],
+                quantity: responseJson[i]['quantity'],
+                remark: responseJson[i]['remark']));
+          }
+        }
         setState(() {});
       }
     });
   }
 
-  Future fetchOrder() async {
-    Map data = await Domain().fetchOrder(
-        currentPage,
-        itemPerPage,
-        '',
-        '',
-        widget.orderGroup.orderGroupId,
-        '',
-        '',
-        '');
-
-    setState(() {
-      if (data['status'] == '1') {
-        List responseJson = data['order'];
-        list.addAll(responseJson
-            .map((jsonObject) => Order.fromJson(jsonObject))
-            .toList());
-      } else {
-        _refreshController.loadNoData();
-        itemFinish = true;
-      }
-    });
+  headerLabel() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            flex: 3,
+            child: Text(
+              'Product',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              'Price',
+              textAlign: TextAlign.end,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              'Quantity',
+              textAlign: TextAlign.end,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget totalOrderItemView(OrderItem orderItem) {
-    print(orderItem.quantity);
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              new Expanded(
-                flex: 2,
-                child: Text(
-                  orderItem.name,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Colors.black87),
+  Widget totalOrderItemView(OrderItem orderItem, int position) {
+    if (position == 0) {
+      return headerLayout();
+    } else if (position == 1) {
+      return headerLabel();
+    } else {
+      return Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                new Expanded(
+                  flex: 3,
+                  child: Text(
+                    orderItem.name,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Colors.black87),
+                  ),
                 ),
-              ),
-              Spacer(),
-              new Expanded(
-                flex: 1,
-                child: Text(
-                  orderItem.price,
-                  textAlign: TextAlign.end,
+                Spacer(),
+                new Expanded(
+                  flex: 1,
+                  child: Text(
+                    orderItem.price,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              new Expanded(
-                flex: 1,
-                child: Text(
-                  'x${orderItem.quantity}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+                new Expanded(
+                  flex: 1,
+                  child: Text(
+                    'x${orderItem.quantity}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Divider(
-          color: Colors.teal.shade100,
-          thickness: 1.0,
-        ),
-      ],
-    );
+          Divider(
+            color: Colors.teal.shade100,
+            thickness: 1.0,
+          ),
+        ],
+      );
+    }
   }
 
   Widget notFound() {
     return NotFound(
-        title: 'No Order Found in this Group!',
+        title: 'No Item Found!',
         description: 'No order is added into this group so far..!',
         showButton: false,
         button: '',
@@ -280,10 +280,7 @@ class _GroupDetailState extends State<GroupDetail> {
     if (mounted)
       setState(() {
         totalList.clear();
-        list.clear();
-        currentPage = 1;
-        itemFinish = false;
-        refresh();
+        fetchTotalOrder();
         _refreshController.resetNoData();
       });
     // if failed,use refreshFailed()
@@ -291,12 +288,7 @@ class _GroupDetailState extends State<GroupDetail> {
   }
 
   _onLoading() async {
-    if (mounted && !itemFinish) {
-      setState(() {
-        currentPage++;
-        fetchOrder();
-      });
-    }
+    if (mounted) {}
     _refreshController.loadComplete();
   }
 }

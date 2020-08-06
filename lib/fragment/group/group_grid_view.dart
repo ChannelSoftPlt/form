@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my/object/order_group.dart';
 
-import 'detail/final_group_detail.dart';
+import 'detail/group_detail.dart';
 
 
 class GroupGridView extends StatefulWidget {

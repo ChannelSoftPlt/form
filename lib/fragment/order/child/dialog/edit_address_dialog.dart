@@ -99,7 +99,7 @@ class _EditAddressDialogState extends State<EditAddressDialog> {
                 ),
                 child: TextField(
                   keyboardType: TextInputType.number,
-                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   controller: postcode,
                   maxLength: 5,
                   textAlign: TextAlign.center,

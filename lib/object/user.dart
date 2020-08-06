@@ -19,7 +19,7 @@ class User {
   openWhatsApp(phone, message, context) async {
     try {
       await FlutterOpenWhatsapp.sendSingleMessage(phone, message);
-    } on Exception catch (e) {
+    } on Exception {
       CustomSnackBar.show(context, 'WhatsApp Not Found!');
     }
   }

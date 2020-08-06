@@ -25,7 +25,7 @@ class Order {
 
   int id, formId, orderGroupId, driverId;
   double total;
-  final dateFormat = DateFormat("dd MMM");
+  final dateFormat = DateFormat("dd MMM hh:mm");
 
   Order(
       {this.id,
@@ -93,7 +93,7 @@ class Order {
     try {
       DateTime todayDate = DateTime.parse(date);
       return dateFormat.format(todayDate).toString();
-    } on Exception catch (e) {
+    } on Exception {
       return '';
     }
   }
@@ -112,7 +112,7 @@ class Order {
     try {
 //      await FlutterLaunch.launchWathsApp(phone: phone, message: message);
       await FlutterOpenWhatsapp.sendSingleMessage(phone, message);
-    } on Exception catch (e) {
+    } on Exception {
       CustomSnackBar.show(context, 'WhatsApp Not Found!');
     }
   }

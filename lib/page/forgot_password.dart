@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my/main.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 import 'package:my/shareWidget/toast.dart';
 import 'package:my/utils/domain.dart';
@@ -180,7 +179,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   child: TextField(
                     keyboardType: TextInputType.number,
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(RegExp(r"^\d*\.?\d*")),
+                      FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                     ],
                     controller: pac,
                     textAlign: TextAlign.start,

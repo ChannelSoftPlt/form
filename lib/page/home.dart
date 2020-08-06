@@ -55,12 +55,8 @@ class _ListState extends State<HomePage> {
   static Future<dynamic> backgroundMessageHandler(
       Map<String, dynamic> message) async {
     if (message.containsKey('data')) {
-      Merchant merchant = Merchant.fromJson(await SharePreferences().read('merchant'));
-      if (merchant != null && message['data']['merchant_id'] == Merchant.fromJson(await SharePreferences().read("merchant")).merchantId) {
-        await notificationPlugin.showNotification(message['data']);
-      }
 
-// Handle data message
+      await notificationPlugin.showNotification(message['data']);
     }
 // Or do other work.
     return null;
@@ -88,17 +84,14 @@ class _ListState extends State<HomePage> {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        showSnackBar('New Order Received', 'See Now');
-        _setupNotificationSound();
+        _setupNotificationSound(message);
         print("onMessage: $message");
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        _setupNotificationSound();
       },
       onBackgroundMessage: backgroundMessageHandler,
       onResume: (Map<String, dynamic> message) async {
-        _setupNotificationSound();
         print("onResume: $message");
         setState(() {
           currentIndex = 0;
@@ -117,11 +110,17 @@ class _ListState extends State<HomePage> {
     });
   }
 
-  _setupNotificationSound() async {
-    final assetsAudioPlayer = AssetsAudioPlayer();
-    assetsAudioPlayer.open(
-      Audio("audio/notification.mp3"),
-    );
+  _setupNotificationSound(message) async {
+    print(message['data']);
+    Merchant merchant = Merchant.fromJson(await SharePreferences().read('merchant'));
+
+    if(merchant != null && message['data']['merchant_id'] == Merchant.fromJson(await SharePreferences().read("merchant")).merchantId){
+      showSnackBar('New Order Received', 'See Now');
+      final assetsAudioPlayer = AssetsAudioPlayer();
+      assetsAudioPlayer.open(
+        Audio("audio/notification.mp3"),
+      );
+    }
   }
 
   onNotificationInLowerVersions(ReceivedNotification receivedNotification) {}

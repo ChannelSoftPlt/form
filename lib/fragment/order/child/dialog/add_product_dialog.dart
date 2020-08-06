@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/toast.dart';
@@ -154,7 +153,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   child: TextField(
                       keyboardType: TextInputType.number,
                       inputFormatters: [
-                        WhitelistingTextInputFormatter(RegExp(r"^\d*\.?\d*")),
+                        FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                       ],
                       controller: price,
                       textAlign: TextAlign.center,
@@ -180,7 +179,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   child: TextField(
                       keyboardType: TextInputType.number,
                       inputFormatters: [
-                        WhitelistingTextInputFormatter.digitsOnly
+                        FilteringTextInputFormatter.digitsOnly
                       ],
                       controller: quantity,
                       decoration: InputDecoration(

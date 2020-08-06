@@ -89,7 +89,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
                     child: TextField(
                         keyboardType: TextInputType.number,
                         inputFormatters: [
-                          WhitelistingTextInputFormatter(RegExp(r"^\d*\.?\d*")),
+                          FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                         ],
                         controller: price,
                         textAlign: TextAlign.center,
@@ -115,7 +115,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
                     child: TextField(
                         keyboardType: TextInputType.number,
                         inputFormatters: [
-                          WhitelistingTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.digitsOnly
                         ],
                         controller: quantity,
                         decoration: InputDecoration(
