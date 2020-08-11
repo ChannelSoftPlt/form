@@ -55,7 +55,6 @@ class _ListState extends State<HomePage> {
   static Future<dynamic> backgroundMessageHandler(
       Map<String, dynamic> message) async {
     if (message.containsKey('data')) {
-
       await notificationPlugin.showNotification(message['data']);
     }
 // Or do other work.
@@ -81,6 +80,8 @@ class _ListState extends State<HomePage> {
 //    notificationPlugin
 //        .setListenerForLowerVersions(onNotificationInLowerVersions);
 //    notificationPlugin.setOnNotificationClick(setOnNotificationClick);
+
+    _firebaseMessaging.requestNotificationPermissions();
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -112,9 +113,13 @@ class _ListState extends State<HomePage> {
 
   _setupNotificationSound(message) async {
     print(message['data']);
-    Merchant merchant = Merchant.fromJson(await SharePreferences().read('merchant'));
+    Merchant merchant =
+        Merchant.fromJson(await SharePreferences().read('merchant'));
 
-    if(merchant != null && message['data']['merchant_id'] == Merchant.fromJson(await SharePreferences().read("merchant")).merchantId){
+    if (merchant != null &&
+        message['data']['merchant_id'] ==
+            Merchant.fromJson(await SharePreferences().read("merchant"))
+                .merchantId) {
       showSnackBar('New Order Received', 'See Now');
       final assetsAudioPlayer = AssetsAudioPlayer();
       assetsAudioPlayer.open(
@@ -158,7 +163,7 @@ class _ListState extends State<HomePage> {
         ),
         actions: <Widget>[
           Visibility(
-            visible: currentIndex != 2,
+            visible: currentIndex == 1 || currentIndex == 0,
             child: IconButton(
               icon: Icon(
                 Icons.sort,
@@ -265,12 +270,14 @@ class _ListState extends State<HomePage> {
         endDate: endDate != null
             ? selectedDateFormat.format(endDate).toString()
             : '',
-        query: '',
+        query: ''
       ),
       UserPage(
         query: '',
       ),
-      ProductPage(),
+      ProductPage(
+        query: '',
+      ),
       SettingFragment()
     ];
   }

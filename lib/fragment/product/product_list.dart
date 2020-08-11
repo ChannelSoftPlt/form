@@ -1,26 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my/fragment/product/product_list_view.dart';
 
-import 'package:my/object/order_group.dart';
+import 'package:my/object/product.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/utils/domain.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'group_grid_view.dart';
+class ProductList extends StatefulWidget {
+  final List<Product> products;
+  final String query, categoryName;
 
-class GroupList extends StatefulWidget {
-  final List<OrderGroup> groups;
-  final String query, startDate, endDate;
-
-  GroupList({this.groups, this.query, this.startDate, this.endDate});
+  ProductList({this.products, this.query, this.categoryName});
 
   @override
-  _GroupListState createState() => _GroupListState();
+  _ProductListState createState() => _ProductListState();
 }
 
-class _GroupListState extends State<GroupList> {
-  List<OrderGroup> list = [];
-  String query;
+class _ProductListState extends State<ProductList> {
+  List<Product> list = [];
   int itemPerPage = 8, currentPage = 1;
   bool itemFinish = false;
 
@@ -31,8 +29,7 @@ class _GroupListState extends State<GroupList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    list = widget.groups;
-    query = widget.query ?? '';
+    list = widget.products;
   }
 
   @override
@@ -68,12 +65,11 @@ class _GroupListState extends State<GroupList> {
   }
 
   Widget customListView() {
-    return GridView.count(
-        crossAxisCount: 2,
-        childAspectRatio: (100 / 110),
-        children: List.generate(list.length, (index) {
-          return GroupGridView(orderGroup: list[index]);
-        }));
+    return ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ProductListView(product: list[index]);
+        });
   }
 
   _onRefresh() async {
@@ -84,7 +80,7 @@ class _GroupListState extends State<GroupList> {
         list.clear();
         currentPage = 1;
         itemFinish = false;
-        fetchGroup();
+        fetchProduct();
         _refreshController.resetNoData();
       });
     // if failed,use refreshFailed()
@@ -95,21 +91,21 @@ class _GroupListState extends State<GroupList> {
     if (mounted && !itemFinish) {
       setState(() {
         currentPage++;
-        fetchGroup();
+        fetchProduct();
       });
     }
     _refreshController.loadComplete();
   }
 
-  Future fetchGroup() async {
+  Future fetchProduct() async {
     Map data = await Domain()
-        .fetchGroupWithPagination(currentPage, itemPerPage, query, widget.startDate, widget.endDate);
-    print(data);
+        .fetchProductWithPagination(currentPage, itemPerPage, widget.query, widget.categoryName);
+    print('data goes here: $data');
     setState(() {
       if (data['status'] == '1') {
-        List responseJson = data['order_group'];
+        List responseJson = data['product'];
         list.addAll(responseJson
-            .map((jsonObject) => OrderGroup.fromJson(jsonObject))
+            .map((jsonObject) => Product.fromJson(jsonObject))
             .toList());
       } else {
         _refreshController.loadNoData();

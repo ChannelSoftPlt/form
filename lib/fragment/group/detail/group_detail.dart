@@ -190,7 +190,7 @@ class _GroupDetailState extends State<GroupDetail> {
             flex: 3,
             child: Text(
               'Product',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
           ),
           Expanded(
@@ -198,7 +198,7 @@ class _GroupDetailState extends State<GroupDetail> {
             child: Text(
               'Price',
               textAlign: TextAlign.end,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
           ),
           Expanded(
@@ -206,7 +206,7 @@ class _GroupDetailState extends State<GroupDetail> {
             child: Text(
               'Quantity',
               textAlign: TextAlign.end,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
           ),
         ],
