@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my/fragment/product/product_detail_dialog.dart';
+import 'package:my/fragment/product/product_detail.dart';
 import 'package:my/object/product.dart';
 import 'package:my/utils/domain.dart';
 
@@ -25,8 +25,14 @@ class _ProductListViewState extends State<ProductListView> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Image.network('${Domain.imagePath}${widget.product.image}',
-                  height: 100, width: 120, fit: BoxFit.fill),
+              FadeInImage(
+                  height: 100,
+                  width: 120,
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                      '${Domain.imagePath}${widget.product.image}'),
+                  placeholder:
+                      NetworkImage('${Domain.imagePath}no-image-found.png')),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -103,15 +109,13 @@ class _ProductListViewState extends State<ProductListView> {
 
   showProductDetail(mainContext, bool action) {
     // flutter defined function
-    showDialog(
-      context: mainContext,
-      builder: (BuildContext context) {
-        // return alert dialog object
-        return ProductDetailDialog(
-          product: widget.product,
-          isUpdate: action,
-        );
-      },
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ProductDetailDialog(
+                product: widget.product,
+                isUpdate: action,
+              )),
     );
   }
 }

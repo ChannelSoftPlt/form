@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my/fragment/product/product_detail.dart';
 import 'package:my/fragment/product/product_list.dart';
 import 'package:my/object/product.dart';
 import 'package:my/shareWidget/not_found.dart';
@@ -20,34 +21,53 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-          future: Domain().fetchProductWithPagination(currentPage, itemPerPage,
-              widget.query ?? '', widget.categoryName ?? ''),
-          builder: (context, object) {
-            if (object.hasData) {
-              if (object.connectionState == ConnectionState.done) {
-                Map data = object.data;
-                if (data['status'] == '1') {
-                  List responseJson = data['product'];
-                  return ProductList(
-                    products: responseJson
-                        .map((jsonObject) => Product.fromJson(jsonObject))
-                        .toList(),
-                    query: widget.query ?? '',
-                    categoryName: widget.categoryName ?? '',
-                  );
-                } else {
-                  return notFound();
+        body: FutureBuilder(
+            future: Domain().fetchProductWithPagination(currentPage,
+                itemPerPage, widget.query ?? '', widget.categoryName ?? ''),
+            builder: (context, object) {
+              if (object.hasData) {
+                if (object.connectionState == ConnectionState.done) {
+                  Map data = object.data;
+                  if (data['status'] == '1') {
+                    List responseJson = data['product'];
+                    return ProductList(
+                      products: responseJson
+                          .map((jsonObject) => Product.fromJson(jsonObject))
+                          .toList(),
+                      query: widget.query ?? '',
+                      categoryName: widget.categoryName ?? '',
+                    );
+                  } else {
+                    return notFound();
+                  }
                 }
               }
-            }
-            return Center(child: CustomProgressBar());
-          }),
-      floatingActionButton: FloatingActionButton(
-        elevation: 5,
-        onPressed: () {},
-        child: Icon(Icons.add, color: Colors.white,),
-      )
+              return Center(child: CustomProgressBar());
+            }),
+        floatingActionButton: FloatingActionButton(
+          elevation: 5,
+          backgroundColor: Colors.orange[300],
+          onPressed: () {
+            showProductDetail(context);
+          },
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ));
+  }
+
+  showProductDetail(mainContext) {
+    // flutter defined function
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ProductDetailDialog(
+                isUpdate: false,
+                refresh: () {
+                  setState(() {});
+                },
+              )),
     );
   }
 

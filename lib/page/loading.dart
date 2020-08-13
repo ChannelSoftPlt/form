@@ -49,6 +49,7 @@ class _LoadingPageState extends State<LoadingPage> {
     await Future.delayed(Duration(milliseconds: 500));
     try {
       var data = await SharePreferences().read('merchant');
+      print('merchant data: $data');
       if (data != null) {
         launchChecking();
       } else
@@ -60,6 +61,7 @@ class _LoadingPageState extends State<LoadingPage> {
 
   void launchChecking() async {
     Map data = await Domain().launchCheck();
+    //print(data);
     if (data['status'] == '1') {
       String merchantStatus = data['merchant_status'][0]['status'].toString();
       if (merchantStatus == '1') {

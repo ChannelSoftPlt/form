@@ -1,5 +1,6 @@
 class Merchant {
   String merchantId;
+  String formId;
   String name;
   String email;
   String companyName;
@@ -13,6 +14,7 @@ class Merchant {
 
   Merchant(
       {this.merchantId,
+      this.formId,
       this.name,
       this.email,
       this.grouping,
@@ -26,6 +28,7 @@ class Merchant {
 
   Merchant.fromJson(Map<String, dynamic> json)
       : merchantId = json['merchantId'],
+        formId = json['formId'],
         name = json['name'],
         email = json['email'],
         companyName = json['company_name'],
@@ -38,6 +41,7 @@ class Merchant {
 
   Map<String, dynamic> toJson() => {
         'merchantId': merchantId,
+        'formId': formId,
         'name': name,
         'url': url,
         'email': email,

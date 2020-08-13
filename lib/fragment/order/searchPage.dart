@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:my/fragment/group/group.dart';
 import 'package:my/fragment/order/child/orderFragment.dart';
+import 'package:my/fragment/product/product.dart';
 import 'package:my/fragment/user/user.dart';
 import 'package:my/object/order.dart';
 import 'package:my/shareWidget/not_found.dart';
@@ -74,8 +75,13 @@ class _SearchPageState extends State<SearchPage> {
                   startDate: '',
                   endDate: '',
                 );
-              } else {
+              } else if (widget.type == 'User'){
                 return UserPage(
+                  query: object.data,
+                );
+              }
+              else{
+                return ProductPage(
                   query: object.data,
                 );
               }

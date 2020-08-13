@@ -11,8 +11,10 @@ import 'package:my/fragment/group/group.dart';
 import 'package:my/fragment/order/order.dart';
 import 'package:my/fragment/order/searchPage.dart';
 import 'package:my/fragment/product/product.dart';
+import 'package:my/fragment/product/product_filter.dart';
 import 'package:my/fragment/setting/settingFragment.dart';
 import 'package:my/fragment/user/user.dart';
+import 'package:my/object/category.dart';
 import 'package:my/object/driver.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/notification_plugin.dart';
@@ -35,6 +37,7 @@ class _ListState extends State<HomePage> {
   * */
   var startDate, endDate;
   Driver driver;
+  Category category;
   final selectedDateFormat = DateFormat("yyy-MM-dd");
 
   int currentIndex = 0;
@@ -163,14 +166,15 @@ class _ListState extends State<HomePage> {
         ),
         actions: <Widget>[
           Visibility(
-            visible: currentIndex == 1 || currentIndex == 0,
+            visible:
+                currentIndex == 1 || currentIndex == 0 || currentIndex == 3,
             child: IconButton(
               icon: Icon(
                 Icons.sort,
                 color: Colors.orange,
               ),
               onPressed: () {
-                showDriverDialog(context);
+                showFilterDialog(context);
                 // do something
               },
             ),
@@ -222,7 +226,7 @@ class _ListState extends State<HomePage> {
             title: Text('Customer'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_grocery_store),
+            icon: Icon(Icons.apps),
             title: Text('Product'),
           ),
           BottomNavigationBarItem(
@@ -264,19 +268,19 @@ class _ListState extends State<HomePage> {
         driverId: driver != null ? driver.driverId.toString() : '',
       ),
       GroupPage(
-        startDate: startDate != null
-            ? selectedDateFormat.format(startDate).toString()
-            : '',
-        endDate: endDate != null
-            ? selectedDateFormat.format(endDate).toString()
-            : '',
-        query: ''
-      ),
+          startDate: startDate != null
+              ? selectedDateFormat.format(startDate).toString()
+              : '',
+          endDate: endDate != null
+              ? selectedDateFormat.format(endDate).toString()
+              : '',
+          query: ''),
       UserPage(
         query: '',
       ),
       ProductPage(
         query: '',
+        categoryName: category != null ? category.name : '',
       ),
       SettingFragment()
     ];
@@ -392,34 +396,54 @@ class _ListState extends State<HomePage> {
         return 'Order';
       case 1:
         return 'Group';
-      default:
+      case 2:
         return 'User';
+      default:
+        return 'Product';
     }
   }
 
-  showDriverDialog(mainContext) {
+  showFilterDialog(mainContext) {
     // flutter defined function
-    showDialog(
-      context: mainContext,
-      builder: (BuildContext context) {
-        // return alert dialog object
-        return FilterDialog(
-          showDriver: currentIndex != 1,
-          fromDate: this.startDate,
-          toDate: this.endDate,
-          driver: this.driver,
-          onClick: (fromDate, toDate, driver) async {
-            await Future.delayed(Duration(milliseconds: 500));
-            Navigator.pop(mainContext);
-            setState(() {
-              this.startDate = fromDate;
-              this.endDate = toDate;
-              this.driver = driver;
-            });
-          },
-        );
-      },
-    );
+    if (currentIndex != 3) {
+      showDialog(
+        context: mainContext,
+        builder: (BuildContext context) {
+          // return alert dialog object
+          return FilterDialog(
+            showDriver: currentIndex != 1,
+            fromDate: this.startDate,
+            toDate: this.endDate,
+            driver: this.driver,
+            onClick: (fromDate, toDate, driver) async {
+              await Future.delayed(Duration(milliseconds: 500));
+              Navigator.pop(mainContext);
+              setState(() {
+                this.startDate = fromDate;
+                this.endDate = toDate;
+                this.driver = driver;
+              });
+            },
+          );
+        },
+      );
+    } else
+      showDialog(
+        context: mainContext,
+        builder: (BuildContext context) {
+          // return alert dialog object
+          return ProductFilter(
+            category: category,
+            onClick: (status, category) async {
+              await Future.delayed(Duration(milliseconds: 300));
+              Navigator.pop(mainContext);
+              setState(() {
+                this.category = category;
+              });
+            },
+          );
+        },
+      );
   }
 
   showSnackBar(message, button) {

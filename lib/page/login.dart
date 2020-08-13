@@ -163,11 +163,13 @@ class _LoginFormState extends State<LoginPage> {
   }
 
   storeUser(data) async {
+    print('form id: ${data['form_id'].toString()}');
     try {
       await SharePreferences().save(
           'merchant',
           Merchant(
               merchantId: data['merchant_id'].toString(),
+              formId: data['form_id'].toString(),
               name: data['name'],
               url: 'https://www.emenu.com.my/${data['url']}',
               email: data['email']));

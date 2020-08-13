@@ -164,8 +164,8 @@ class Domain {
     var response = await http.post(Domain.product, body: {
       'read': '1',
       'merchant_id':
-      Merchant.fromJson(await SharePreferences().read("merchant"))
-          .merchantId,
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
       'query': query,
       'category_name': categoryName,
       'page': currentPage.toString(),
@@ -181,8 +181,8 @@ class Domain {
     var response = await http.post(Domain.category, body: {
       'read': '1',
       'merchant_id':
-      Merchant.fromJson(await SharePreferences().read("merchant"))
-          .merchantId,
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -317,6 +317,41 @@ class Domain {
   }
 
   /*
+  * update category
+  * */
+  updateCategory(name, categoryId) async {
+    var response = await http.post(Domain.category, body: {
+      'update': '1',
+      'name': name,
+      'category_id': categoryId,
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * create product
+  * */
+  updateProduct(Product product, extension, imageCode) async {
+    print('product id: ${product.productId.toString()}');
+    var response = await http.post(Domain.product, body: {
+      'update': '1',
+      'product_id': product.productId.toString(),
+      'status': product.status.toString(),
+      'description': product.description,
+      'name': product.name,
+      'price': product.price,
+      'category_id': product.categoryId.toString(),
+      'image_name': product.image,
+      'image_extension': extension,
+      'image_code': imageCode,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * add order item
   * */
   addOrderItem(Product object, orderId, quantity, remark) async {
@@ -414,6 +449,40 @@ class Domain {
     return jsonDecode(response.body);
   }
 
+  /*
+  * create category
+  * */
+  createCategory(name) async {
+    var response = await http.post(Domain.category, body: {
+      'create': '1',
+      'name': name,
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * create product
+  * */
+  createProduct(Product product, extension, imageCode) async {
+    var response = await http.post(Domain.product, body: {
+      'create': '1',
+      'status': product.status.toString(),
+      'description': product.description,
+      'name': product.name,
+      'price': product.price,
+      'category_id': product.categoryId.toString(),
+      'image_name': product.image,
+      'image_extension': extension,
+      'image_code': imageCode,
+      'form_id':
+          Merchant.fromJson(await SharePreferences().read("merchant")).formId,
+    });
+    return jsonDecode(response.body);
+  }
+
   /*--------------------------------------------------------------------delete part-------------------------------------------------------------------------------*/
   /*
   * delete order item
@@ -434,6 +503,28 @@ class Domain {
     var response = await http.post(Domain.order, body: {
       'delete': '1',
       'order_ids': orderIds,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * delete category
+  * */
+  deleteCategory(categoryId) async {
+    var response = await http.post(Domain.category, body: {
+      'delete': '1',
+      'category_id': categoryId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * delete product
+  * */
+  deleteProduct(productId) async {
+    var response = await http.post(Domain.product, body: {
+      'delete': '1',
+      'product_id': productId,
     });
     return jsonDecode(response.body);
   }
