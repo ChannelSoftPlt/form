@@ -43,14 +43,14 @@ class _ProductListViewState extends State<ProductListView> {
                       Text(
                         widget.product.categoryName ?? 'No Category',
                         maxLines: 2,
-                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         widget.product.name,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 13,
+                            fontSize: 14,
                             color: Colors.black87),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -63,7 +63,7 @@ class _ProductListViewState extends State<ProductListView> {
                         maxLines: 2,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 10,
+                            fontSize: 11,
                             color: widget.product.status == 0
                                 ? Colors.green
                                 : Colors.red),
@@ -75,7 +75,7 @@ class _ProductListViewState extends State<ProductListView> {
                       Text(
                         widget.product.description,
                         maxLines: 2,
-                        style: TextStyle(fontSize: 10),
+                        style: TextStyle(fontSize: 12),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
@@ -86,7 +86,7 @@ class _ProductListViewState extends State<ProductListView> {
                 children: [
                   Text(
                     'RM ${widget.product.price}',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   ),
                   SizedBox(
                     height: 60,
@@ -95,7 +95,7 @@ class _ProductListViewState extends State<ProductListView> {
                     'Details',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: 13,
                         color: Colors.orangeAccent),
                   )
                 ],

@@ -126,7 +126,8 @@ class _GroupingDialogState extends State<CategoryDialog> {
         // return alert dialog object
         return AlertDialog(
           title: Text("Delete Request"),
-          content: Text("Confirm to this this item? \n${categoryName.text}\n\n*This category will remove from other products as well"),
+          content: Text(
+              "Confirm to this this item? \n${categoryName.text}\n\n*This category will remove from other products as well"),
           actions: <Widget>[
             FlatButton(
               child: Text('Cancel'),
@@ -233,6 +234,8 @@ class _GroupingDialogState extends State<CategoryDialog> {
                 print(category.length);
 
                 return customListView();
+              } else {
+                return Text('No Category Found!');
               }
             }
           }

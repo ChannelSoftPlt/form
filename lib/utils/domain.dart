@@ -8,8 +8,8 @@ import 'package:my/utils/sharePreference.dart';
 import 'package:http/http.dart' as http;
 
 class Domain {
-  //static var domain = 'https://www.emenu.com.my/';
-  static var domain = 'https://www.petkeeper.com.my/form/';
+  static var domain = 'https://www.emenu.com.my/';
+//  static var domain = 'https://www.petkeeper.com.my/form/';
 
   static var registration = domain + 'registration/index.php';
   static var order = domain + 'mobile_api/order/index.php';
@@ -24,7 +24,7 @@ class Domain {
   static var category = domain + 'mobile_api/category/index.php';
 
   static var whatsAppLink = domain + 'order/view-order.php';
-  static var imagePath = domain + '/product/image/';
+  static var imagePath = domain + 'product/image/';
 
   fetchOrder(currentPage, itemPerPage, orderStatus, query, orderGroupId,
       driverId, startDate, endDate) async {

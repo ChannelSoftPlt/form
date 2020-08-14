@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -8,9 +9,13 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my/fragment/product/category/category_dialog.dart';
+import 'package:my/object/merchant.dart';
 import 'package:my/object/product.dart';
+import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/utils/domain.dart';
+import 'package:my/utils/sharePreference.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetailDialog extends StatefulWidget {
   final Product product;
@@ -36,6 +41,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
 
   File _image;
   ImageProvider provider;
+  StreamController imageStateStream;
 
   String imageCode = '-1';
   String imageName = 'no-image-found.png';
@@ -44,10 +50,15 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
 
   final picker = ImagePicker();
 
+  String url = '';
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    imageStateStream = StreamController();
+    imageStateStream.add('display');
+
     if (widget.isUpdate == true) {
       name.text = widget.product.name;
       description.text = widget.product.description;
@@ -55,7 +66,54 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       imageName = widget.product.image;
       category.text = widget.product.categoryName;
       available = widget.product.status == 0;
+      getUrl();
     }
+  }
+
+  leaveConfirmation() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text("Confirm to exit?"),
+          content: Text("Changes you made not be saved"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                name.clear();
+                description.clear();
+                price.clear();
+                Navigator.of(context).pop();
+                _onBackPressed();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> _onBackPressed() async {
+    if (!widget.isUpdate &&
+        (name.text.length > 0 ||
+            description.text.length > 0 ||
+            price.text.length > 0)) {
+      leaveConfirmation();
+      return null;
+    }
+    Navigator.of(context).pop();
+    return null;
   }
 
   @override
@@ -67,14 +125,214 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     super.dispose();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: key,
+      appBar: AppBar(
+        brightness: Brightness.dark,
+        title: Text(
+          widget.isUpdate == true ? 'Update Product' : 'Add Product',
+          style: GoogleFonts.cantoraOne(
+            textStyle: TextStyle(
+                color: Colors.orangeAccent,
+                fontWeight: FontWeight.bold,
+                fontSize: 25),
+          ),
+        ),
+        actions: <Widget>[
+          Visibility(
+            visible: widget.isUpdate,
+            child: IconButton(
+              icon: Icon(
+                Icons.remove_red_eye,
+                color: Colors.blueGrey,
+              ),
+              onPressed: () {
+                launch(url);
+              },
+            ),
+          ),
+          Visibility(
+            visible: widget.isUpdate,
+            child: IconButton(
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red[200],
+              ),
+              onPressed: () {
+                deleteProduct();
+              },
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.save,
+              color: Colors.orangeAccent,
+            ),
+            onPressed: () {
+              //checking
+              if (name.text.length <= 0)
+                return _showSnackBar("Name Can't be blank!");
+              if (price.text.length <= 0)
+                return _showSnackBar("Price Can't be blank!");
+              //action
+              if (widget.isUpdate != true)
+                createProduct();
+              else
+                updateProduct();
+            },
+          )
+        ],
+      ),
+      body: WillPopScope(
+        onWillPop: _onBackPressed,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                InkWell(
+                  child: _imageViewWidget(),
+                  onTap: () => _showSelectionDialog(context),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Theme(
+                  data: new ThemeData(
+                    primaryColor: Colors.orange,
+                  ),
+                  child: TextField(
+                    controller: name,
+                    textAlign: TextAlign.start,
+                    minLines: 1,
+                    maxLengthEnforced: true,
+                    maxLength: 25,
+                    style: TextStyle(fontSize: 14),
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      labelStyle:
+                          TextStyle(fontSize: 14, color: Colors.blueGrey),
+                      hintText: 'Product Name',
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Theme(
+                  data: new ThemeData(
+                    primaryColor: Colors.orange,
+                  ),
+                  child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    controller: description,
+                    textAlign: TextAlign.start,
+                    minLines: 3,
+                    maxLines: 5,
+                    maxLength: 100,
+                    maxLengthEnforced: true,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(fontSize: 14),
+                      labelText: 'Description',
+                      labelStyle:
+                          TextStyle(fontSize: 14, color: Colors.blueGrey),
+                      hintText: 'Product Description',
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Theme(
+                  data: new ThemeData(
+                    primaryColor: Colors.orange,
+                  ),
+                  child: TextField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                    ],
+                    keyboardType: TextInputType.number,
+                    controller: price,
+                    textAlign: TextAlign.start,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(fontSize: 14),
+                      labelText: 'Price',
+                      labelStyle:
+                          TextStyle(fontSize: 14, color: Colors.blueGrey),
+                      hintText: 'Price',
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                    ),
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Text('Status'),
+                    Switch(
+                      value: available,
+                      onChanged: (value) {
+                        setState(() {
+                          available = value;
+                        });
+                      },
+                      activeTrackColor: Colors.orangeAccent,
+                      activeColor: Colors.deepOrangeAccent,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                InkWell(
+                  onTap: () => showCategoryDialog(context),
+                  child: Theme(
+                    data: new ThemeData(
+                      primaryColor: Colors.orange,
+                    ),
+                    child: TextField(
+                      enabled: false,
+                      controller: category,
+                      textAlign: TextAlign.start,
+                      decoration: InputDecoration(
+                          hintStyle: TextStyle(fontSize: 14),
+                          labelText: 'Category',
+                          labelStyle:
+                              TextStyle(fontSize: 14, color: Colors.blueGrey),
+                          hintText: 'Product Category',
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
+                          suffixIcon:
+                              IconButton(icon: Icon(Icons.arrow_drop_down))),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future getImage(isCamera) async {
     final pickedFile = await picker.getImage(
         source: isCamera ? ImageSource.camera : ImageSource.gallery);
     _image = File(pickedFile.path);
+
     compressFileMethod();
   }
 
   void compressFileMethod() async {
+    imageStateStream.add('processing-image');
+    await Future.delayed(Duration(milliseconds: 300));
+
     Uint8List bytes = _image.readAsBytesSync();
     final ByteData data = ByteData.view(bytes.buffer);
 
@@ -92,7 +350,9 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     this.imageCode = base64.encode(compressedFileSource);
     this.imageName = file.path.split('/').last;
     this.extension = imageName.split('.').last;
-    setState(() {});
+    setState(() {
+      imageStateStream.add('display');
+    });
   }
 
   File createFile(String path) {
@@ -105,11 +365,23 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
 
   Future<Uint8List> compressFile(File file) async {
     print("compressFile");
+
     final result = await FlutterImageCompress.compressWithFile(
       file.absolute.path,
-      quality: 70,
+      quality: countQuality(file.lengthSync()),
     );
+    print('before: ${file.lengthSync()}');
+    print('after: ${result.length}');
     return result;
+  }
+
+  countQuality(int quality) {
+    if (quality <= 100)
+      return 60;
+    else if (quality > 100 && quality < 500)
+      return 25;
+    else
+      return 20;
   }
 
   createProduct() async {
@@ -123,8 +395,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             description: description.text,
             image: imageName,
             price: price.text,
-            categoryId: categoryId,
-            formId: 2),
+            categoryId: categoryId),
         extension,
         imageCode.toString());
 
@@ -206,184 +477,6 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: key,
-      appBar: AppBar(
-        brightness: Brightness.dark,
-        title: Text(
-          widget.isUpdate == true ? 'Update Product' : 'Add Product',
-          style: GoogleFonts.cantoraOne(
-            textStyle: TextStyle(
-                color: Colors.orangeAccent,
-                fontWeight: FontWeight.bold,
-                fontSize: 25),
-          ),
-        ),
-        actions: <Widget>[
-          Visibility(
-            visible: widget.isUpdate,
-            child: IconButton(
-              icon: Icon(
-                Icons.delete,
-                color: Colors.red[200],
-              ),
-              onPressed: () {
-                deleteProduct();
-              },
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.save,
-              color: Colors.orangeAccent,
-            ),
-            onPressed: () {
-              //checking
-              if (name.text.length <= 0)
-                return _showSnackBar("Name Can't be blank!");
-              if (price.text.length <= 0)
-                return _showSnackBar("Price Can't be blank!");
-              //action
-              if (widget.isUpdate != true)
-                createProduct();
-              else
-                updateProduct();
-            },
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              InkWell(
-                child: _imageViewWidget(),
-                onTap: () => _showSelectionDialog(context),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: TextField(
-                  controller: name,
-                  textAlign: TextAlign.start,
-                  minLines: 1,
-                  maxLengthEnforced: true,
-                  maxLength: 25,
-                  style: TextStyle(fontSize: 14),
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                    hintText: 'Product Name',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: TextField(
-                  keyboardType: TextInputType.multiline,
-                  controller: description,
-                  textAlign: TextAlign.start,
-                  minLines: 3,
-                  maxLines: 5,
-                  maxLength: 100,
-                  maxLengthEnforced: true,
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 14),
-                    labelText: 'Description',
-                    labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                    hintText: 'Product Description',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: TextField(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
-                  ],
-                  keyboardType: TextInputType.number,
-                  controller: price,
-                  textAlign: TextAlign.start,
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 14),
-                    labelText: 'Price',
-                    labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                    hintText: 'Price',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
-                  ),
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Text('Status'),
-                  Switch(
-                    value: available,
-                    onChanged: (value) {
-                      setState(() {
-                        available = value;
-                      });
-                    },
-                    activeTrackColor: Colors.orangeAccent,
-                    activeColor: Colors.deepOrangeAccent,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              InkWell(
-                onTap: () => showCategoryDialog(context),
-                child: Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
-                  ),
-                  child: TextField(
-                    enabled: false,
-                    controller: category,
-                    textAlign: TextAlign.start,
-                    decoration: InputDecoration(
-                        hintStyle: TextStyle(fontSize: 14),
-                        labelText: 'Category',
-                        labelStyle:
-                            TextStyle(fontSize: 14, color: Colors.blueGrey),
-                        hintText: 'Product Category',
-                        border: new OutlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.teal)),
-                        suffixIcon:
-                            IconButton(icon: Icon(Icons.arrow_drop_down))),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> _showSelectionDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -433,25 +526,37 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   }
 
   Widget _imageViewWidget() {
-    if (_image == null) {
-      return Container(
-          constraints: BoxConstraints(maxHeight: 300),
-          child: FadeInImage(
-              fit: BoxFit.fill,
-              image: NetworkImage(Domain.imagePath +
-                  (widget.product != null
-                      ? widget.product.image
-                      : 'no-image-found.png')),
-              placeholder:
-                  NetworkImage('${Domain.imagePath}no-image-found.png')));
-    } else
-      return Container(
-        constraints: BoxConstraints(maxHeight: 300),
-        child: Image(
-          image: provider,
-          fit: BoxFit.fill,
-        ),
-      );
+    return StreamBuilder(
+        stream: imageStateStream.stream,
+        builder: (context, object) {
+          if (object.data == 'display') {
+            if (_image == null) {
+              return Container(
+                  constraints: BoxConstraints(maxHeight: 300),
+                  child: FadeInImage(
+                      fit: BoxFit.fill,
+                      image: NetworkImage(Domain.imagePath +
+                          (widget.product != null
+                              ? widget.product.image
+                              : 'no-image-found.png')),
+                      placeholder: NetworkImage(
+                          '${Domain.imagePath}no-image-found.png')));
+            } else
+              return Container(
+                constraints: BoxConstraints(maxHeight: 300),
+                child: Image(
+                  image: provider,
+                  fit: BoxFit.fill,
+                ),
+              );
+          }
+          return Container(
+            constraints: BoxConstraints(maxHeight: 300),
+            child: Center(
+              child: CustomProgressBar(),
+            ),
+          );
+        });
   }
 
   showCategoryDialog(mainContext) {
@@ -471,5 +576,9 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         );
       },
     );
+  }
+
+  getUrl() async {
+    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
   }
 }

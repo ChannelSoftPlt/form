@@ -25,7 +25,9 @@ class _ProductPageState extends State<ProductPage> {
             future: Domain().fetchProductWithPagination(currentPage,
                 itemPerPage, widget.query ?? '', widget.categoryName ?? ''),
             builder: (context, object) {
+
               if (object.hasData) {
+                print(object.data);
                 if (object.connectionState == ConnectionState.done) {
                   Map data = object.data;
                   if (data['status'] == '1') {
@@ -73,10 +75,10 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget notFound() {
     return NotFound(
-        title: widget.query.length > 1 ? 'No Item Found!' : 'No Group Found!',
+        title: widget.query.length > 1 ? 'No Item Found!' : 'No Product Found!',
         description: widget.query.length > 1
             ? 'Please try another keyword...'
-            : 'Argh...your order are on its way now. Be Smile :)',
+            : 'Argh...no item is uploaded yet.',
         showButton: widget.query.length < 1,
         refresh: () {
           setState(() {});
