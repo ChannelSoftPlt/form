@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'dart:io' show Platform;
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -57,6 +58,7 @@ class _ListState extends State<HomePage> {
 
   static Future<dynamic> backgroundMessageHandler(
       Map<String, dynamic> message) async {
+    print('onbackground here');
     if (message.containsKey('data')) {
       await notificationPlugin.showNotification(message['data']);
     }
@@ -80,9 +82,9 @@ class _ListState extends State<HomePage> {
     });
 
     //initialize
-//    notificationPlugin
-//        .setListenerForLowerVersions(onNotificationInLowerVersions);
-//    notificationPlugin.setOnNotificationClick(setOnNotificationClick);
+    notificationPlugin
+        .setListenerForLowerVersions(onNotificationInLowerVersions);
+    notificationPlugin.setOnNotificationClick(setOnNotificationClick);
 
     _firebaseMessaging.requestNotificationPermissions();
 
@@ -94,7 +96,7 @@ class _ListState extends State<HomePage> {
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
       },
-      onBackgroundMessage: backgroundMessageHandler,
+      onBackgroundMessage: Platform.isIOS ? null : backgroundMessageHandler,
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         setState(() {
@@ -104,11 +106,18 @@ class _ListState extends State<HomePage> {
     );
 
     _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: false));
+
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
     /*
     * register token
     * */
     _firebaseMessaging.getToken().then((token) async {
+      print(token);
       Map data = await Domain().registerDeviceToken(token);
       print(data);
     });
@@ -118,11 +127,15 @@ class _ListState extends State<HomePage> {
     print(message['data']);
     Merchant merchant =
         Merchant.fromJson(await SharePreferences().read('merchant'));
+    String merchantId = merchant.merchantId;
 
-    if (merchant != null &&
-        message['data']['merchant_id'] ==
-            Merchant.fromJson(await SharePreferences().read("merchant"))
-                .merchantId) {
+    if (merchant != null) {
+      if (Platform.isAndroid) {
+        if (message['data']['merchant_id'] != merchantId) return;
+      } else {
+        if (message['merchant_id'] != merchantId) return;
+      }
+
       showSnackBar('New Order Received', 'See Now');
       final assetsAudioPlayer = AssetsAudioPlayer();
       assetsAudioPlayer.open(

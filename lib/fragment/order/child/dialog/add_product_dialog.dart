@@ -65,7 +65,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 double.parse(price.text);
                 product.price = price.text;
                 if (inputQuantity > 0) {
-                  widget.addProduct(product, quantity.text.toString(), remark.text);
+                  widget.addProduct(
+                      product, quantity.text.toString(), remark.text);
                 } else {
                   CustomToast('Invalid input! 输入不正确!', context,
                           gravity: Toast.BOTTOM)
@@ -132,10 +133,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Image.network(
-            product.image,
-            height: 80,
-          ),
+          FadeInImage(
+              height: 80,
+              fit: BoxFit.cover,
+              image: NetworkImage('${Domain.imagePath}${product.image}'),
+              placeholder:
+                  NetworkImage('${Domain.imagePath}no-image-found.png')),
           Text(product.name, style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(
             height: 7,
@@ -153,7 +156,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   child: TextField(
                       keyboardType: TextInputType.number,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r"^\d*\.?\d*")),
                       ],
                       controller: price,
                       textAlign: TextAlign.center,
@@ -178,9 +182,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   ),
                   child: TextField(
                       keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       controller: quantity,
                       decoration: InputDecoration(
                         labelText: 'Quantity',
@@ -229,17 +231,20 @@ class _AddProductDialogState extends State<AddProductDialog> {
   Widget productList(Product product) {
     return ListTile(
         onTap: () => selectItem.add(product),
-        leading: Image.network(
-          product.image,
-          height: 50,
-        ),
+        leading: FadeInImage(
+            height: 50,
+            fit: BoxFit.cover,
+            image: NetworkImage('${Domain.imagePath}${product.image}'),
+            placeholder: NetworkImage('${Domain.imagePath}no-image-found.png')),
         title: Text(
           product.name,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         ),
         subtitle: Text(
           product.status == 0 ? 'Available' : 'Unavailable',
-          style: TextStyle(fontSize: 12, color: product.status == 0 ? Colors.green : Colors.red),
+          style: TextStyle(
+              fontSize: 12,
+              color: product.status == 0 ? Colors.green : Colors.red),
         ),
         trailing: Text(
           'RM ${product.price}',

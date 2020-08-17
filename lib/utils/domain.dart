@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 class Domain {
   static var domain = 'https://www.emenu.com.my/';
+
 //  static var domain = 'https://www.petkeeper.com.my/form/';
 
   static var registration = domain + 'registration/index.php';
@@ -285,14 +286,15 @@ class Domain {
   /*
   * update profile
   * */
-  updateProfile(
-      companyName, companyAddress, contactNumber, personInCharge) async {
+  updateProfile(companyName, companyAddress, contactNumber, personInCharge,
+      whatsAppNumber) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'address': companyAddress,
       'phone': contactNumber,
       'name': personInCharge,
       'company_name': companyName,
+      'whatsapp_number': whatsAppNumber,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,

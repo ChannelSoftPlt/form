@@ -7,6 +7,7 @@ class Merchant {
   String url;
   String address;
   String phone;
+  String whatsAppNumber;
   String bankDetail;
   String cashOnDelivery;
   String bankTransfer;
@@ -22,6 +23,7 @@ class Merchant {
       this.url,
       this.address,
       this.phone,
+      this.whatsAppNumber,
       this.bankDetail,
       this.cashOnDelivery,
       this.bankTransfer});
@@ -35,6 +37,7 @@ class Merchant {
         url = json['url'],
         address = json['address'],
         phone = json['phone'],
+        whatsAppNumber = json['whatsapp_number'],
         bankDetail = json['bank_details'],
         cashOnDelivery = json['cash_on_delivery'],
         bankTransfer = json['bank_transfer'];

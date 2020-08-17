@@ -144,6 +144,7 @@ class _CardViewState extends State<CardView> {
           child: Text("Phone Call"),
         ),
         PopupMenuItem(
+          enabled: widget.orders.status != '1',
           value: 'status',
           child: Text("Update Status"),
         ),

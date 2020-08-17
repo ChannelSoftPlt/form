@@ -49,26 +49,26 @@ class _GroupDetailState extends State<GroupDetail> {
             ),
           ),
           iconTheme: IconThemeData(color: Colors.orangeAccent),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.assignment,
-                color: Colors.orangeAccent,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GroupOrderList(
-                      orderGroup: widget.orderGroup,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
         ),
-        body: SafeArea(child: mainContent()));
+        body: SafeArea(child: mainContent()),
+        floatingActionButton: FloatingActionButton(
+          elevation: 5,
+          backgroundColor: Colors.orange[300],
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GroupOrderList(
+                  orderGroup: widget.orderGroup,
+                ),
+              ),
+            );
+          },
+          child: Icon(
+            Icons.assignment,
+            color: Colors.white,
+          ),
+        ));
   }
 
   Widget mainContent() {

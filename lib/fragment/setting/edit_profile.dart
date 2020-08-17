@@ -17,6 +17,7 @@ class _ResetPasswordState extends State<EditProfile> {
   var contactNumber = TextEditingController();
   var personInCharge = TextEditingController();
   var email = TextEditingController();
+  var whatsAppNumber = TextEditingController();
 
   @override
   void initState() {
@@ -59,6 +60,7 @@ class _ResetPasswordState extends State<EditProfile> {
                   contactNumber.text = merchant.phone;
                   personInCharge.text = merchant.name;
                   email.text = merchant.email;
+                  whatsAppNumber.text = merchant.whatsAppNumber;
 
                   return mainContent(context);
                 } else {
@@ -146,7 +148,7 @@ class _ResetPasswordState extends State<EditProfile> {
                             labelText: 'Contact Number',
                             labelStyle:
                                 TextStyle(fontSize: 16, color: Colors.blueGrey),
-                            hintText: 'Company Address',
+                            hintText: '6014315xxxx',
                             border: new OutlineInputBorder(
                                 borderSide: new BorderSide(color: Colors.teal)),
                           ),
@@ -170,6 +172,29 @@ class _ResetPasswordState extends State<EditProfile> {
                             labelStyle:
                                 TextStyle(fontSize: 16, color: Colors.blueGrey),
                             hintText: '',
+                            border: new OutlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.teal)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Theme(
+                        data: new ThemeData(
+                          primaryColor: Colors.orange,
+                        ),
+                        child: TextField(
+                          keyboardType: TextInputType.phone,
+                          controller: whatsAppNumber,
+                          textAlign: TextAlign.start,
+                          maxLengthEnforced: true,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.phone_android),
+                            labelText: 'WhatsApp Number',
+                            labelStyle:
+                                TextStyle(fontSize: 16, color: Colors.blueGrey),
+                            hintText: '6014315xxxx',
                             border: new OutlineInputBorder(
                                 borderSide: new BorderSide(color: Colors.teal)),
                           ),
@@ -234,12 +259,13 @@ class _ResetPasswordState extends State<EditProfile> {
     if (companyName.text.length > 0 &&
         companyAddress.text.length > 0 &&
         contactNumber.text.length > 0 &&
+        whatsAppNumber.text.length > 0 &&
         personInCharge.text.length > 0) {
       /*
         * update profile
         * */
       Map data = await Domain().updateProfile(companyName.text,
-          companyAddress.text, contactNumber.text, personInCharge.text);
+          companyAddress.text, contactNumber.text, personInCharge.text, whatsAppNumber.text);
 
       if (data['status'] == '1') {
         CustomSnackBar.show(context, 'Update Successfully!');
@@ -252,8 +278,7 @@ class _ResetPasswordState extends State<EditProfile> {
         * */
       else
         CustomSnackBar.show(context, 'Something Went Wrong!');
-    }
-    else
+    } else
       CustomSnackBar.show(context, 'All field above are required!');
   }
 }

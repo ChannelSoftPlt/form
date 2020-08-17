@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>FirebaseAppDelegatePoxyEnabled</key>
+	<false/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>my</string>
+	<string>EMenu</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -20,8 +20,34 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>whatsapp</string>
+		<string>comgooglemaps</string>
+		<string>baidumap</string>
+		<string>iosamap</string>
+		<string>waze</string>
+		<string>yandexmaps</string>
+		<string>yandexnavi</string>
+		<string>citymapper</string>
+		<string>mapsme</string>
+		<string>osmandmaps</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to the Camera.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires access to the Microphone.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to the photo library.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,26 +67,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	 <key>LSApplicationQueriesSchemes</key>
-      <array>
-          <string>whatsapp</string>
-          <string>comgooglemaps</string>
-          <string>baidumap</string>
-          <string>iosamap</string>
-          <string>waze</string>
-          <string>yandexmaps</string>
-          <string>yandexnavi</string>
-          <string>citymapper</string>
-          <string>mapsme</string>
-          <string>osmandmaps</string>
-     </array>
-    <key>FirebaseAppDelegateProxyEnabled</key>
-     <false/>
-     <key>NSPhotoLibraryUsageDescription</key>
-     <string>This app requires access to the photo library.</string>
-     <key>NSCameraUsageDescription</key>
-     <string>This app requires access to the Camera.</string>
-     <key>NSMicrophoneUsageDescription</key>
-     <string>This app requires access to the Microphone.</string>
 </dict>
 </plist>
