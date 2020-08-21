@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:my/object/merchant.dart';
-import 'package:my/utils/sharePreference.dart';
 import 'dart:io' show Platform;
 import 'package:rxdart/subjects.dart';
 
@@ -114,37 +112,6 @@ class NotificationPlugin {
         ?.createNotificationChannel(androidNotificationChannel);
   }
 
-//  Future<void> showNotification(data) async {
-//    print('notification data: $data');
-//    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-//    Merchant merchant =
-//        Merchant.fromJson(await SharePreferences().read('merchant'));
-//    if (merchant != null && data['merchant_id'] == Merchant.fromJson(await SharePreferences().read("merchant")).merchantId) {
-//      print("Merchant id 1 $data['merchant_id']");
-//      print("Merchant id 2 ${Merchant.fromJson(await SharePreferences().read("merchant")).merchantId}");
-//      var androidChannelSpecifics = AndroidNotificationDetails(
-//        data['id'],
-//        data['name'],
-//        "CHANNEL_DESCRIPTION",
-//        importance: Importance.Max,
-//        priority: Priority.High,
-//        playSound: true,
-//        sound: RawResourceAndroidNotificationSound('notification'),
-//        icon: 'logo',
-//        styleInformation: DefaultStyleInformation(true, true),
-//      );
-//      var iosChannelSpecifics = IOSNotificationDetails();
-//      var platformChannelSpecifics =
-//          NotificationDetails(androidChannelSpecifics, iosChannelSpecifics);
-//      await flutterLocalNotificationsPlugin.show(
-//        0,
-//        data['title'],
-//        data['message'], //null
-//        platformChannelSpecifics,
-//        payload: data['name'],
-//      );
-//    }
-//  }
 
   Future<int> getPendingNotificationCount() async {
     List<PendingNotificationRequest> p =

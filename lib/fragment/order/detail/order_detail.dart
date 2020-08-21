@@ -927,19 +927,11 @@ class _OrderDetailState extends State<OrderDetail> {
     String message = '';
     if (messageType == 0)
       message =
-          '👋你好, *${order.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${orderPrefix(widget.orderId)}'
+          '👋你好, *${order.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${Order().whatsAppOrderPrefix(widget.orderId)}'
           '\n\n\n*检查订单/Check Order*\n点击这里/Click here👇\n'
           '${Domain.whatsAppLink}?id=${order.publicUrl}';
 
     Order().openWhatsApp('+6' + order.phone, message, context);
-  }
-
-  String orderPrefix(orderID) {
-    String prefix = '';
-    for (int i = orderID.length; i < 5; i++) {
-      prefix = prefix + "0";
-    }
-    return prefix + orderID;
   }
 
   openMapsSheet(context) async {

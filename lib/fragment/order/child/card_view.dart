@@ -165,8 +165,9 @@ class _CardViewState extends State<CardView> {
           case 'whatsapp':
             Order().openWhatsApp(
                 '+6' + widget.orders.phone,
-                'Hi, ${widget.orders.name}\nThis is your Order Id ${widget.orders.orderID}\n\nDetails Please go through this link\n'
-                '${Domain.whatsAppLink}.?id=5915ad448f9d75bd91c247c874ff1914',
+                '👋你好, *${widget.orders.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${Order().whatsAppOrderPrefix(widget.orders.orderID)}'
+                '\n\n\n*检查订单/Check Order*\n点击这里/Click here👇\n'
+                '${Domain.whatsAppLink}?id=${widget.orders.publicUrl}',
                 context);
             break;
           case 'call':
@@ -196,7 +197,8 @@ class _CardViewState extends State<CardView> {
           onClick: (groupName, orderGroupId) async {
             await Future.delayed(Duration(milliseconds: 500));
             Navigator.pop(mainContext);
-            Map data = await Domain().setOrderGroup('1', groupName, widget.orders.id.toString(), orderGroupId);
+            Map data = await Domain().setOrderGroup(
+                '1', groupName, widget.orders.id.toString(), orderGroupId);
             if (data['status'] == '1') {
               CustomSnackBar.show(mainContext, 'Update Successfully!');
               widget.refresh();

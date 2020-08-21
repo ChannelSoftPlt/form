@@ -89,8 +89,7 @@ class _ListState extends State<HomePage> {
     });
 
     //initialize
-    notificationPlugin
-        .setListenerForLowerVersions(onNotificationInLowerVersions);
+    notificationPlugin.setListenerForLowerVersions(onNotificationInLowerVersions);
     notificationPlugin.setOnNotificationClick(setOnNotificationClick);
 
     _firebaseMessaging.requestNotificationPermissions();

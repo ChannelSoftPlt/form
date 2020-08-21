@@ -1,6 +1,7 @@
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:intl/intl.dart';
 import 'package:my/shareWidget/snack_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Order {
   String orderID,
@@ -86,7 +87,15 @@ class Order {
     for (int i = orderID.length; i < 5; i++) {
       prefix = prefix + "0";
     }
-    return '#' + prefix + orderID;
+    return '\#' + prefix + orderID;
+  }
+
+  String whatsAppOrderPrefix(orderID) {
+    String prefix = '';
+    for (int i = orderID.length; i < 5; i++) {
+      prefix = prefix + "0";
+    }
+    return prefix + orderID;
   }
 
   String formatDate(date) {
@@ -110,8 +119,7 @@ class Order {
 
   openWhatsApp(phone, message, context) async {
     try {
-//      await FlutterLaunch.launchWathsApp(phone: phone, message: message);
-      await FlutterOpenWhatsapp.sendSingleMessage(phone, message);
+      await launch(('https://api.whatsapp.com/send?phone=$phone&text=$message'));
     } on Exception {
       CustomSnackBar.show(context, 'WhatsApp Not Found!');
     }
