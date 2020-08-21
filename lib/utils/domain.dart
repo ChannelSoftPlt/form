@@ -354,6 +354,18 @@ class Domain {
   }
 
   /*
+  * update password
+  * */
+  updateTokenStatus(token) async {
+    var response = await http.post(Domain.registration, body: {
+      'log_out': '1',
+      'token': token,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * add order item
   * */
   addOrderItem(Product object, orderId, quantity, remark) async {

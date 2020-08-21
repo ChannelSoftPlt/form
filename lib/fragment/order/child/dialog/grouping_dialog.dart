@@ -18,7 +18,7 @@ class GroupingDialog extends StatefulWidget {
 
 class _GroupingDialogState extends State<GroupingDialog> {
   List<OrderGroup> groups = [];
-  List type = <String>["Add New/新建立", "Add Into Existing/添加到现有"];
+  List type = <String>["Add New", "Add Into Existing"];
   bool showAddNew = true;
 
   var newGroup = TextEditingController();

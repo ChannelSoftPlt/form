@@ -1,35 +1,42 @@
 {
   "project_info": {
-    "project_number": "774394266586",
-    "firebase_url": "https://form-6cf0c.firebaseio.com",
-    "project_id": "form-6cf0c",
-    "storage_bucket": "form-6cf0c.appspot.com"
+    "project_number": "330101574297",
+    "firebase_url": "https://notification-39294.firebaseio.com",
+    "project_id": "notification-39294",
+    "storage_bucket": "notification-39294.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:774394266586:android:d101739dcfb61ab31d36e3",
+        "mobilesdk_app_id": "1:330101574297:android:c35bc3ecbc5c46eca30608",
         "android_client_info": {
           "package_name": "channelsoft.com.my"
         }
       },
       "oauth_client": [
         {
-          "client_id": "774394266586-hnth2emslrlhsjhnqo3hm6jrn1eln6p6.apps.googleusercontent.com",
+          "client_id": "330101574297-e8ajamabct9a0bs3jaagojpafqoddm8d.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDz4MiTKUckZf9s1X_kVbeOi28Bb5YcFaQ"
+          "current_key": "AIzaSyApYENKSklMXGEwr5mQoxI25RreIugg4Vg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "774394266586-hnth2emslrlhsjhnqo3hm6jrn1eln6p6.apps.googleusercontent.com",
+              "client_id": "330101574297-e8ajamabct9a0bs3jaagojpafqoddm8d.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "330101574297-uces6csedkuvcplmj0u8h5dhao5i7f67.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.check.notification"
+              }
             }
           ]
         }

@@ -6,6 +6,7 @@ import 'package:my/fragment/setting/payment/edit_payment_method.dart';
 import 'package:my/fragment/setting/reset_password.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/page/loading.dart';
+import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -369,11 +370,21 @@ class _SettingFragmentState extends State<SettingFragment> {
     );
   }
 
-  logOut() {
-    SharePreferences().clear();
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => LoadingPage()),
-        ModalRoute.withName('/'));
+  logOut() async {
+    String token = await SharePreferences().read('token');
+
+    Map data = await Domain().updateTokenStatus(token);
+    //print(data);
+    print(data);
+    if (data['status'] == '1') {
+      SharePreferences().clear();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => LoadingPage()),
+          ModalRoute.withName('/'));
+    } else
+      key.currentState.showSnackBar(new SnackBar(
+        content: new Text("Something Went Wrong!"),
+      ));
   }
 }

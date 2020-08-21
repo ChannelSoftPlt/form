@@ -9,13 +9,16 @@ import 'package:my/utils/domain.dart';
 import 'package:my/utils/statusControl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'dialog/grouping_dialog.dart';
+
 class CardView extends StatefulWidget {
   final Order orders;
   final Function(String) longPress;
   final Function() refresh;
   final List selectedList;
 
-  CardView({Key key, this.orders, this.longPress, this.selectedList, this.refresh})
+  CardView(
+      {Key key, this.orders, this.longPress, this.selectedList, this.refresh})
       : super(key: key);
 
   @override
@@ -144,7 +147,6 @@ class _CardViewState extends State<CardView> {
           child: Text("Phone Call"),
         ),
         PopupMenuItem(
-          enabled: widget.orders.status != '1',
           value: 'status',
           child: Text("Update Status"),
         ),
@@ -171,12 +173,38 @@ class _CardViewState extends State<CardView> {
             launch(('tel://+6${widget.orders.phone}'));
             break;
           case 'status':
-            _showDialog(context);
+            if (widget.orders.status == '1')
+              showGroupingDialog(context);
+            else
+              _showDialog(context);
             break;
           case 'delete':
             showDeleteOrderDialog(context);
             break;
         }
+      },
+    );
+  }
+
+  showGroupingDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return GroupingDialog(
+          onClick: (groupName, orderGroupId) async {
+            await Future.delayed(Duration(milliseconds: 500));
+            Navigator.pop(mainContext);
+            Map data = await Domain().setOrderGroup('1', groupName, widget.orders.id.toString(), orderGroupId);
+            if (data['status'] == '1') {
+              CustomSnackBar.show(mainContext, 'Update Successfully!');
+              widget.refresh();
+            } else {
+              CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+            }
+          },
+        );
       },
     );
   }
@@ -194,7 +222,7 @@ class _CardViewState extends State<CardView> {
           orderId: widget.orders.orderID,
           id: widget.orders.id.toString(),
           publicUrl: widget.orders.publicUrl,
-          refresh: (){
+          refresh: () {
             widget.refresh();
           },
         ),
@@ -227,7 +255,8 @@ class _CardViewState extends State<CardView> {
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
-                Map data = await Domain().deleteOrder(widget.orders.id.toString());
+                Map data =
+                    await Domain().deleteOrder(widget.orders.id.toString());
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
                   CustomSnackBar.show(mainContext, 'Delete Successfully!');

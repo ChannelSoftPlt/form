@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:my/fragment/group/group.dart';
+import 'package:my/fragment/order/detail/order_detail.dart';
 import 'package:my/fragment/order/order.dart';
 import 'package:my/fragment/order/searchPage.dart';
 import 'package:my/fragment/product/product.dart';
@@ -66,6 +67,12 @@ class _ListState extends State<HomePage> {
     return null;
   }
 
+  onNotificationInLowerVersions(ReceivedNotification receivedNotification) {}
+
+  setOnNotificationClick(String payload) {
+    print('payload here: $payload');
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -96,7 +103,6 @@ class _ListState extends State<HomePage> {
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
       },
-      onBackgroundMessage: Platform.isIOS ? null : backgroundMessageHandler,
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         setState(() {
@@ -118,9 +124,23 @@ class _ListState extends State<HomePage> {
     * */
     _firebaseMessaging.getToken().then((token) async {
       print(token);
+      await SharePreferences().save('token', token);
       Map data = await Domain().registerDeviceToken(token);
       print(data);
     });
+  }
+
+  openOrderDetail() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrderDetail(
+          orderId: '24',
+          id: '142',
+          publicUrl: 'd528bc45745d1011c0680360d7e0045f',
+        ),
+      ),
+    );
   }
 
   _setupNotificationSound(message) async {
@@ -143,10 +163,6 @@ class _ListState extends State<HomePage> {
       );
     }
   }
-
-  onNotificationInLowerVersions(ReceivedNotification receivedNotification) {}
-
-  setOnNotificationClick(String payload) {}
 
   // Be sure to cancel subscription after you are done
   @override
