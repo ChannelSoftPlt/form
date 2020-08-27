@@ -36,11 +36,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the Camera.</string>
+	<string>This app requires access to the Camera to capture product pictures.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app requires access to the Microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+	<string>This app requires access to the photo library to select product pictures</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

@@ -5,6 +5,7 @@ import 'package:my/page/loading.dart';
 import 'package:my/page/login.dart';
 
 void main() => runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.white,
         accentColor: Colors.orange,
