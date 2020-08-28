@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geocoder/services/base.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:my/fragment/order/child/dialog/add_product_dialog.dart';
@@ -17,6 +18,7 @@ import 'package:my/shareWidget/status_dialog.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/statusControl.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 
 class OrderDetail extends StatefulWidget {
   final String orderId, id, publicUrl;
@@ -206,7 +208,10 @@ class _OrderDetailState extends State<OrderDetail> {
                         alignment: Alignment.center,
                         child: Text(
                           'No Item Found',
-                          style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       )),
@@ -240,6 +245,47 @@ class _OrderDetailState extends State<OrderDetail> {
           /*
                 * Payment part
                 * */
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 12, 8, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Remark',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(
+                    color: Colors.teal.shade100,
+                    thickness: 1.0,
+                  ),
+                  Container(
+                    alignment: order.note != ''
+                        ? Alignment.centerLeft
+                        : Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
+                      child: Text(
+                        order.note != '' ? order.note : 'No Remarks',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: order.note != ''
+                                ? Colors.red
+                                : Colors.grey[600],
+                            fontSize: 13),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Card(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 12, 8, 8),
@@ -936,13 +982,14 @@ class _OrderDetailState extends State<OrderDetail> {
 
   openMapsSheet(context) async {
     try {
-      final query =
-          '${order.address + ' ' + order.postcode + ' ' + order.city}';
+      final query = '${order.address + ' ' + order.postcode + ' ' + order.city}';
       var addresses = await Geocoder.local.findAddressesFromQuery(query);
+      
       var addressCoordinate = addresses.first;
 
       final coordinate = Coords(addressCoordinate.coordinates.latitude,
           addressCoordinate.coordinates.longitude);
+
       final availableMaps = await MapLauncher.installedMaps;
 
       showModalBottomSheet(

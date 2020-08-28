@@ -16,7 +16,7 @@ class Order {
       status,
       note,
       tax,
-      extraNote,
+      merchantRemark,
       paymentMethod,
       userDeviceType,
       publicUrl,
@@ -45,7 +45,7 @@ class Order {
       this.total,
       this.tax,
       this.deliveryFee,
-      this.extraNote,
+      this.merchantRemark,
       this.paymentMethod,
       this.userDeviceType,
       this.orderGroupId,
@@ -75,7 +75,9 @@ class Order {
         driverId: json['driver_id'] as int,
         driverName: json['driver_name'] as String,
         total: checkDouble(json['total_amount']),
-        status: json['status'] as String);
+        status: json['status'] as String,
+        note: json['note'] as String,
+        merchantRemark: json['remark'] as String);
   }
 
   static double checkDouble(num value) {
@@ -119,7 +121,8 @@ class Order {
 
   openWhatsApp(phone, message, context) async {
     try {
-      await launch(('https://api.whatsapp.com/send?phone=$phone&text=$message'));
+      await launch(
+          ('https://api.whatsapp.com/send?phone=$phone&text=$message'));
     } on Exception {
       CustomSnackBar.show(context, 'WhatsApp Not Found!');
     }
