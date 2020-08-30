@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:geocoder/services/base.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:my/fragment/order/child/dialog/add_product_dialog.dart';
@@ -983,13 +982,11 @@ class _OrderDetailState extends State<OrderDetail> {
   openMapsSheet(context) async {
     try {
       final query = '${order.address + ' ' + order.postcode + ' ' + order.city}';
-      var addresses = await Geocoder.local.findAddressesFromQuery(query);
-      
+
+      var addresses = await Geocoder.google("AIzaSyCwM-x-buI6LgVHfJDdU7mkL57HnAxul9Y").findAddressesFromQuery(query);
       var addressCoordinate = addresses.first;
 
-      final coordinate = Coords(addressCoordinate.coordinates.latitude,
-          addressCoordinate.coordinates.longitude);
-
+      final coordinate = Coords(addressCoordinate.coordinates.latitude, addressCoordinate.coordinates.longitude);
       final availableMaps = await MapLauncher.installedMaps;
 
       showModalBottomSheet(
