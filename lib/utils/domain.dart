@@ -254,11 +254,22 @@ class Domain {
   }
 
   /*
+  * update delivery date & time
+  * */
+  updateDeliveryDate(date, time, orderId) async {
+    var response = await http.post(Domain.orderItem, body: {
+      'update': '1',
+      'delivery_date': date,
+      'delivery_time': time,
+      'order_id': orderId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * update order delivery and tax
   * */
   updateShippingFeeAndTax(Order object) async {
-    print('delivery: ' + object.deliveryFee);
-    print('tax: ' + object.tax);
     var response = await http.post(Domain.orderItem, body: {
       'update': '1',
       'delivery_fee': object.deliveryFee,
@@ -303,7 +314,7 @@ class Domain {
   }
 
   /*
-  * update profile
+  * update payment
   * */
   updatePayment(bankDetail, bankTransfer, cod) async {
     var response = await http.post(Domain.profile, body: {
@@ -311,6 +322,24 @@ class Domain {
       'bank_details': bankDetail,
       'cash_on_delivery': cod,
       'bank_transfer': bankTransfer,
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * update order setting
+  * */
+  updateOrderSetting(emailOption, selfCollectOption, deliveryDateOption,
+      deliveryTimeOption) async {
+    var response = await http.post(Domain.profile, body: {
+      'update': '1',
+      'self_collect': selfCollectOption,
+      'delivery_date_option': deliveryDateOption,
+      'delivery_time_option': deliveryTimeOption,
+      'email_option': emailOption,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
@@ -360,7 +389,9 @@ class Domain {
     var response = await http.post(Domain.registration, body: {
       'log_out': '1',
       'token': token,
-      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
     });
     return jsonDecode(response.body);
   }

@@ -110,6 +110,18 @@ class _CardViewState extends State<CardView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
+                  Visibility(
+                    visible: widget.orders.selfCollect == 0,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+                      decoration: BoxDecoration(color: Colors.blue),
+                      child: Text(
+                        'Self-Collect',
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
                   Container(
                     padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
                     decoration: BoxDecoration(

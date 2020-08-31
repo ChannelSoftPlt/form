@@ -129,19 +129,6 @@ class _ListState extends State<HomePage> {
     });
   }
 
-  openOrderDetail() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => OrderDetail(
-          orderId: '24',
-          id: '142',
-          publicUrl: 'd528bc45745d1011c0680360d7e0045f',
-        ),
-      ),
-    );
-  }
-
   _setupNotificationSound(message) async {
     print(message['data']);
     Merchant merchant =

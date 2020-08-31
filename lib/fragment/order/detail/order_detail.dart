@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:my/fragment/order/child/dialog/add_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
@@ -15,9 +17,9 @@ import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 import 'package:my/shareWidget/status_dialog.dart';
 import 'package:my/utils/domain.dart';
+import 'package:my/utils/sharePreference.dart';
 import 'package:my/utils/statusControl.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class OrderDetail extends StatefulWidget {
   final String orderId, id, publicUrl;
@@ -33,6 +35,7 @@ class _OrderDetailState extends State<OrderDetail> {
   Order order = Order();
   List<OrderItem> orderItems = [];
   int updatePosition = -1;
+  final key = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -43,6 +46,7 @@ class _OrderDetailState extends State<OrderDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: key,
       appBar: AppBar(
         brightness: Brightness.dark,
         title: Text(
@@ -56,11 +60,14 @@ class _OrderDetailState extends State<OrderDetail> {
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),
         actions: <Widget>[
-          IconButton(
-            icon: Image.asset('drawable/location.png'),
-            onPressed: () {
-              openMapsSheet(context);
-            },
+          Visibility(
+            visible: order.selfCollect == 1,
+            child: IconButton(
+              icon: Image.asset('drawable/location.png'),
+              onPressed: () {
+                openMapsSheet(context);
+              },
+            ),
           ),
           whatsAppMenu(context),
         ],
@@ -119,6 +126,40 @@ class _OrderDetailState extends State<OrderDetail> {
                         color: Colors.black87,
                         fontSize: 18,
                         fontWeight: FontWeight.bold),
+                  ),
+                  Visibility(
+                    visible: order.selfCollect != 1,
+                    child: Text(
+                      'Self-Collect',
+                      style: TextStyle(color: Colors.black87, fontSize: 14),
+                    ),
+                  ),
+                  Visibility(
+                    visible:
+                        order.deliveryDate != '' || order.deliveryTime != '',
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Delivery Date: ${order.deliveryDate} ${order.deliveryTime}',
+                          style: TextStyle(color: Colors.black87, fontSize: 12),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: GestureDetector(
+                            onTap: () => checkCurrentTimeForDatePicker(),
+                            child: Text(
+                              'Edit',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 14,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 5,
@@ -419,53 +460,78 @@ class _OrderDetailState extends State<OrderDetail> {
                   SizedBox(
                     height: 10,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              order.name,
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 13),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              order.address,
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 13),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              '${order.postcode} ${order.city}',
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 13),
-                            ),
-                          ],
+                  Visibility(
+                    visible: order.selfCollect == 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 6,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                order.name,
+                                style: TextStyle(
+                                    color: Colors.grey[600], fontSize: 13),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                order.address,
+                                style: TextStyle(
+                                    color: Colors.grey[600], fontSize: 13),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                '${order.postcode} ${order.city}',
+                                style: TextStyle(
+                                    color: Colors.grey[600], fontSize: 13),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: IconButton(
-                            icon: Icon(Icons.edit),
-                            color: Colors.grey,
-                            onPressed: () => showEditAddressDialog(context)),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: IconButton(
-                            icon: Icon(Icons.navigation),
-                            color: Colors.blueAccent,
-                            onPressed: () => openMapsSheet(context)),
-                      ),
-                    ],
+                        Expanded(
+                          flex: 1,
+                          child: IconButton(
+                              icon: Icon(Icons.edit),
+                              color: Colors.grey,
+                              onPressed: () => showEditAddressDialog(context)),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: IconButton(
+                              icon: Icon(Icons.navigation),
+                              color: Colors.blueAccent,
+                              onPressed: () => openMapsSheet(context)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                    visible: order.selfCollect != 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          order.name,
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 13),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Self-Collect',
+                          textAlign: TextAlign.center,
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 14),
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 10,
@@ -614,6 +680,7 @@ class _OrderDetailState extends State<OrderDetail> {
       itemBuilder: (context) => [
         _buildMenuItem('message', 'Send Message', true),
         _buildMenuItem('confirm', 'Confirm Order', true),
+        _buildMenuItem('receipt', 'Send Receipt', true),
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -624,6 +691,9 @@ class _OrderDetailState extends State<OrderDetail> {
             break;
           case 'confirm':
             openWhatsApp(0);
+            break;
+          case 'receipt':
+            openWhatsApp(2);
             break;
         }
       },
@@ -676,6 +746,56 @@ class _OrderDetailState extends State<OrderDetail> {
       child: Text(text),
       enabled: enabled,
     );
+  }
+
+  /*
+  * edit calculate current time for date picker
+  * */
+  checkCurrentTimeForDatePicker() {
+    try {
+      var date, time;
+      var now = new DateTime.now();
+      print(now);
+
+      if (order.deliveryDate != '') {
+        date = order.deliveryDate.split("\-");
+      }
+
+      if (order.deliveryTime != '') {
+        time = order.deliveryTime.split("\:");
+      }
+
+      showDatePicker(DateTime(
+          date != null ? int.parse(date[0]) : now.year,
+          date != null ? int.parse(date[1]) : now.month,
+          date != null ? int.parse(date[2]) : now.day,
+          time != null ? int.parse(time[0]) : now.hour,
+          time != null ? int.parse(time[1]) : now.minute));
+    } catch (e) {
+      showDatePicker(null);
+    }
+  }
+
+  showDatePicker(DateTime date) {
+    DatePicker.showDateTimePicker(context,
+        showTitleActions: true, currentTime: date, onChanged: (date) {
+      print('change $date in time zone ' +
+          date.timeZoneOffset.inHours.toString());
+    }, onConfirm: (date) async {
+      String selectedDate = DateFormat("yyyy-MM-dd").format(date);
+      String selectedTime = DateFormat("hh:mm").format(date);
+
+      Map data = await Domain()
+          .updateDeliveryDate(selectedDate, selectedTime, order.id.toString());
+      if (data['status'] == '1') {
+        showSnackBar('Update Successfully!');
+        setState(() {
+          orderItems.clear();
+        });
+      } else {
+        showSnackBar("Something Went Wrong!");
+      }
+    });
   }
 
   /*
@@ -975,18 +1095,25 @@ class _OrderDetailState extends State<OrderDetail> {
           '👋你好, *${order.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${Order().whatsAppOrderPrefix(widget.orderId)}'
           '\n\n\n*检查订单/Check Order*\n点击这里/Click here👇\n'
           '${Domain.whatsAppLink}?id=${order.publicUrl}';
+    else if (messageType == 2) {
+      message = '${Domain.whatsAppLink}?id=${order.publicUrl}';
+    }
 
     Order().openWhatsApp('+6' + order.phone, message, context);
   }
 
   openMapsSheet(context) async {
     try {
-      final query = '${order.address + ' ' + order.postcode + ' ' + order.city}';
+      final query =
+          '${order.address + ' ' + order.postcode + ' ' + order.city}';
+      String apiKey = await SharePreferences().read('google_api_key');
 
-      var addresses = await Geocoder.google("AIzaSyCwM-x-buI6LgVHfJDdU7mkL57HnAxul9Y").findAddressesFromQuery(query);
+      var addresses =
+          await Geocoder.google(apiKey).findAddressesFromQuery(query);
       var addressCoordinate = addresses.first;
 
-      final coordinate = Coords(addressCoordinate.coordinates.latitude, addressCoordinate.coordinates.longitude);
+      final coordinate = Coords(addressCoordinate.coordinates.latitude,
+          addressCoordinate.coordinates.longitude);
       final availableMaps = await MapLauncher.installedMaps;
 
       showModalBottomSheet(
@@ -1021,5 +1148,11 @@ class _OrderDetailState extends State<OrderDetail> {
     } catch (e) {
       print(e);
     }
+  }
+
+  showSnackBar(message) {
+    key.currentState.showSnackBar(new SnackBar(
+      content: new Text(message),
+    ));
   }
 }

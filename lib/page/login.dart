@@ -96,15 +96,6 @@ class _LoginFormState extends State<LoginPage> {
           ),
         );
       }),
-//      bottomNavigationBar: BottomAppBar(
-//        color: Colors.transparent,
-//        child: Text(
-//          _platformVersion,
-//          textAlign: TextAlign.center,
-//          style: TextStyle(color: Colors.grey, fontSize: 10),
-//        ),
-//        elevation: 0,
-//      ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.transparent,
         child: Container(
@@ -153,6 +144,9 @@ class _LoginFormState extends State<LoginPage> {
       Map data = jsonDecode(response.body);
       print(data);
       if (data['status'] == '1') {
+        //google api key
+        storeGoogleApiKey(data['key']);
+        //user information
         storeUser(data['user_detail']);
         showSnackBar(context, 'Login Successfully!');
       } else
@@ -174,6 +168,15 @@ class _LoginFormState extends State<LoginPage> {
               url: 'https://www.emenu.com.my/${data['url']}',
               email: data['email']));
       Navigator.pushReplacementNamed(context, '/home');
+    } on Exception catch (e) {
+      print('Error!! $e');
+    }
+  }
+
+  storeGoogleApiKey(data) async{
+    try {
+      //google api key
+      await SharePreferences().save('google_api_key', data[0]['google_api_key']);
     } on Exception catch (e) {
       print('Error!! $e');
     }

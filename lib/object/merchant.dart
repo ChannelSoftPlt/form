@@ -11,6 +11,10 @@ class Merchant {
   String bankDetail;
   String cashOnDelivery;
   String bankTransfer;
+  String selfCollectOption;
+  String emailOption;
+  String dateOption;
+  String timeOption;
   bool grouping = true;
 
   Merchant(
@@ -26,7 +30,11 @@ class Merchant {
       this.whatsAppNumber,
       this.bankDetail,
       this.cashOnDelivery,
-      this.bankTransfer});
+      this.bankTransfer,
+      this.emailOption,
+      this.selfCollectOption,
+      this.dateOption,
+      this.timeOption});
 
   Merchant.fromJson(Map<String, dynamic> json)
       : merchantId = json['merchantId'],
@@ -40,7 +48,10 @@ class Merchant {
         whatsAppNumber = json['whatsapp_number'],
         bankDetail = json['bank_details'],
         cashOnDelivery = json['cash_on_delivery'],
-        bankTransfer = json['bank_transfer'];
+        emailOption = json['email_option'].toString(),
+        selfCollectOption = json['self_collect'].toString(),
+        dateOption = json['delivery_date_option'].toString(),
+        timeOption = json['delivery_time_option'].toString();
 
   Map<String, dynamic> toJson() => {
         'merchantId': merchantId,

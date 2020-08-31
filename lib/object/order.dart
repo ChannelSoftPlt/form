@@ -22,9 +22,11 @@ class Order {
       publicUrl,
       groupName,
       driverName,
-      deliveryFee;
+      deliveryFee,
+      deliveryDate,
+      deliveryTime;
 
-  int id, formId, orderGroupId, driverId;
+  int id, formId, orderGroupId, driverId, selfCollect;
   double total;
   final dateFormat = DateFormat("dd MMM hh:mm");
 
@@ -45,6 +47,8 @@ class Order {
       this.total,
       this.tax,
       this.deliveryFee,
+      this.deliveryDate,
+      this.deliveryTime,
       this.merchantRemark,
       this.paymentMethod,
       this.userDeviceType,
@@ -52,32 +56,37 @@ class Order {
       this.driverId,
       this.driverName,
       this.groupName,
-      this.publicUrl});
+      this.publicUrl,
+      this.selfCollect});
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
-        id: json['order_id'] as int,
-        formId: json['form_id'] as int,
-        orderID: json['invoice_id'] as String,
-        name: json['name'] as String,
-        phone: json['phone'] as String,
-        email: json['email'] as String,
-        address: json['address'] as String,
-        postcode: json['postcode'] as String,
-        city: json['city'] as String,
-        state: json['state'] as String,
-        date: json['created_at'] as String,
-        publicUrl: json['public_url'] as String,
-        deliveryFee: json['delivery_fee'] as String,
-        tax: json['tax'] == '' ? '0.00' : json['tax'] as String,
-        orderGroupId: json['order_group_id'] as int,
-        groupName: json['group_name'] as String,
-        driverId: json['driver_id'] as int,
-        driverName: json['driver_name'] as String,
-        total: checkDouble(json['total_amount']),
-        status: json['status'] as String,
-        note: json['note'] as String,
-        merchantRemark: json['remark'] as String);
+      id: json['order_id'] as int,
+      formId: json['form_id'] as int,
+      orderID: json['invoice_id'] as String,
+      name: json['name'] as String,
+      phone: json['phone'] as String,
+      email: json['email'] as String,
+      address: json['address'] as String,
+      postcode: json['postcode'] as String,
+      city: json['city'] as String,
+      state: json['state'] as String,
+      date: json['created_at'] as String,
+      publicUrl: json['public_url'] as String,
+      deliveryFee: json['delivery_fee'] as String,
+      deliveryDate: json['delivery_date'] as String,
+      deliveryTime: json['delivery_time'] as String,
+      tax: json['tax'] == '' ? '0.00' : json['tax'] as String,
+      orderGroupId: json['order_group_id'] as int,
+      groupName: json['group_name'] as String,
+      driverId: json['driver_id'] as int,
+      driverName: json['driver_name'] as String,
+      total: checkDouble(json['total_amount']),
+      status: json['status'] as String,
+      note: json['note'] as String,
+      merchantRemark: json['remark'] as String,
+      selfCollect: json['self_collect'] as int,
+    );
   }
 
   static double checkDouble(num value) {

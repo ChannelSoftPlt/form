@@ -104,6 +104,7 @@ class NotificationPlugin {
       name,
       description,
       playSound: true,
+      importance: Importance.High,
       sound: RawResourceAndroidNotificationSound('notification'),
     );
     await flutterLocalNotificationsPlugin

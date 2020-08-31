@@ -11,6 +11,8 @@ import 'package:my/utils/sharePreference.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'order_setting.dart';
+
 class SettingFragment extends StatefulWidget {
   @override
   _SettingFragmentState createState() => _SettingFragmentState();
@@ -148,6 +150,35 @@ class _SettingFragmentState extends State<SettingFragment> {
                     ),
                     title: Text(
                       'Payment Method',
+                      style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
+                    ),
+                    trailing: Icon(
+                      Icons.keyboard_arrow_right,
+                      size: 30,
+                    )),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  child: Divider(
+                    color: Colors.teal.shade100,
+                    thickness: 1.0,
+                  ),
+                ),
+                ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderSetting(),
+                        ),
+                      );
+                    },
+                    leading: Icon(
+                      Icons.settings_applications,
+                      size: 35,
+                      color: Colors.red,
+                    ),
+                    title: Text(
+                      'Order Setting',
                       style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                     ),
                     trailing: Icon(
