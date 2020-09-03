@@ -308,8 +308,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                           hintText: 'Product Category',
                           border: new OutlineInputBorder(
                               borderSide: new BorderSide(color: Colors.teal)),
-                          suffixIcon:
-                              IconButton(icon: Icon(Icons.arrow_drop_down))),
+                          suffixIcon: Icon(Icons.arrow_drop_down)),
                     ),
                   ),
                 ),
@@ -404,6 +403,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       widget.refresh();
       await Future.delayed(Duration(milliseconds: 300));
       Navigator.of(context).pop();
+    } else if (data['status'] == '4') {
+      _showSnackBar('You already reached your product limit');
     } else
       _showSnackBar('Something Went Wrong!');
   }

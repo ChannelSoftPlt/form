@@ -60,14 +60,11 @@ class _OrderDetailState extends State<OrderDetail> {
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),
         actions: <Widget>[
-          Visibility(
-            visible: order.selfCollect == 1,
-            child: IconButton(
-              icon: Image.asset('drawable/location.png'),
-              onPressed: () {
-                openMapsSheet(context);
-              },
-            ),
+          IconButton(
+            icon: Image.asset('drawable/location.png'),
+            onPressed: () {
+              openMapsSheet(context);
+            },
           ),
           whatsAppMenu(context),
         ],
@@ -292,7 +289,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Remark',
+                    'Special Remark',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   SizedBox(
@@ -554,22 +551,29 @@ class _OrderDetailState extends State<OrderDetail> {
                           onPressed: () => launch(('tel://+${order.phone}')))
                     ],
                   ),
-                  Divider(
-                    color: Colors.teal.shade100,
-                    thickness: 1.0,
+                  Visibility(
+                    visible: order.email != '',
+                    child: Divider(
+                      color: Colors.teal.shade100,
+                      thickness: 1.0,
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        order.email,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                      ),
-                      IconButton(
-                          icon: Icon(Icons.email),
-                          color: Colors.red,
-                          onPressed: () => launch(('mailto:${order.email}')))
-                    ],
+                  Visibility(
+                    visible: order.email != '',
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          order.email,
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 14),
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.email),
+                            color: Colors.red,
+                            onPressed: () => launch(('mailto:${order.email}')))
+                      ],
+                    ),
                   ),
                   Divider(
                     color: Colors.teal.shade100,
@@ -1146,7 +1150,7 @@ class _OrderDetailState extends State<OrderDetail> {
         },
       );
     } catch (e) {
-      print(e);
+      showSnackBar('Invalid Address!');
     }
   }
 

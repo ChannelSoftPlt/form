@@ -54,12 +54,15 @@ class _UserListViewState extends State<UserListView> {
                     onPressed: () => User()
                         .openWhatsApp('+6${widget.user.phone}', '', context),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.email,
-                      color: Colors.red,
+                  Visibility(
+                    visible: widget.user.email != '',
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.email,
+                        color: Colors.red,
+                      ),
+                      onPressed: () => launch(openEmail().toString()),
                     ),
-                    onPressed: () => launch(openEmail().toString()),
                   ),
                   IconButton(
                     icon: Icon(
