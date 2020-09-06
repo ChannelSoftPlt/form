@@ -9,6 +9,8 @@ import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/utils/domain.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../edit_group_name_dialog.dart';
+
 class GroupDetail extends StatefulWidget {
   final OrderGroup orderGroup;
 
@@ -20,6 +22,7 @@ class GroupDetail extends StatefulWidget {
 
 class _GroupDetailState extends State<GroupDetail> {
   List<OrderItem> totalList = [];
+  final key = new GlobalKey<ScaffoldState>();
 
   /*
   * pagination
@@ -37,10 +40,11 @@ class _GroupDetailState extends State<GroupDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: key,
         appBar: AppBar(
           brightness: Brightness.dark,
           title: Text(
-            'Group ${Order().orderPrefix(widget.orderGroup.groupName)}',
+            'Group ${getGroupName(widget.orderGroup.groupName)}',
             style: GoogleFonts.cantoraOne(
               textStyle: TextStyle(
                   color: Colors.orangeAccent,
@@ -49,6 +53,14 @@ class _GroupDetailState extends State<GroupDetail> {
             ),
           ),
           iconTheme: IconThemeData(color: Colors.orangeAccent),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                showEditGroupNameDialog(context);
+              },
+            ),
+          ],
         ),
         body: SafeArea(child: mainContent()),
         floatingActionButton: FloatingActionButton(
@@ -228,16 +240,30 @@ class _GroupDetailState extends State<GroupDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 new Expanded(
-                  flex: 3,
-                  child: Text(
-                    orderItem.name,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.black87),
-                  ),
-                ),
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          orderItem.name,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.black87),
+                        ),
+                        Visibility(
+                          visible: orderItem.remark != '',
+                          child: Text(
+                            orderItem.remark,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.red[300]),
+                          ),
+                        )
+                      ],
+                    )),
                 Spacer(),
                 new Expanded(
                   flex: 1,
@@ -266,6 +292,41 @@ class _GroupDetailState extends State<GroupDetail> {
     }
   }
 
+  /*
+  * edit product dialog
+  * */
+  showEditGroupNameDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return EditGroupNameDialog(
+            orderGroup: widget.orderGroup,
+            onClick: (OrderGroup orderGroup) async {
+              await Future.delayed(Duration(milliseconds: 300));
+              Navigator.pop(mainContext);
+
+              Map data = await Domain().updateGroupName(orderGroup);
+              print(data);
+              if (data['status'] == '1') {
+                showSnackBar('Update Successfully!');
+                setState(() {});
+              } else
+                showSnackBar('Something Went Wrong!');
+            });
+      },
+    );
+  }
+
+  String getGroupName(groupName) {
+    try {
+      return groupName.split('\-')[1];
+    } catch (e) {
+      return groupName;
+    }
+  }
+
   Widget notFound() {
     return NotFound(
         title: 'No Item Found!',
@@ -290,5 +351,11 @@ class _GroupDetailState extends State<GroupDetail> {
   _onLoading() async {
     if (mounted) {}
     _refreshController.loadComplete();
+  }
+
+  showSnackBar(message) {
+    key.currentState.showSnackBar(new SnackBar(
+      content: new Text(message),
+    ));
   }
 }

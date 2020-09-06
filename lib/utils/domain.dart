@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:my/object/merchant.dart';
 import 'package:my/object/order.dart';
+import 'package:my/object/order_group.dart';
 import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
 import 'package:my/utils/sharePreference.dart';
@@ -392,6 +393,18 @@ class Domain {
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * update group name
+  * */
+  updateGroupName(OrderGroup orderGroup) async {
+    var response = await http.post(Domain.orderGroup, body: {
+      'update': '1',
+      'order_group_id': orderGroup.orderGroupId.toString(),
+      'group_name': orderGroup.groupName,
     });
     return jsonDecode(response.body);
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:my/fragment/group/edit_group_name_dialog.dart';
 import 'package:my/object/order_group.dart';
+import 'package:my/shareWidget/snack_bar.dart';
+import 'package:my/utils/domain.dart';
 
 import 'detail/group_detail.dart';
-
 
 class GroupGridView extends StatefulWidget {
   final OrderGroup orderGroup;
@@ -31,7 +33,7 @@ class _GroupGridViewState extends State<GroupGridView> {
               ),
               Expanded(
                 child: Text(
-                  widget.orderGroup.groupName,
+                  getGroupName(),
                   style: TextStyle(color: Colors.black87, fontSize: 13),
                   textAlign: TextAlign.left,
                 ),
@@ -56,15 +58,12 @@ class _GroupGridViewState extends State<GroupGridView> {
     );
   }
 
-  openGroupDetail() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => GroupDetail(
-          orderGroup: widget.orderGroup,
-        ),
-      ),
-    );
+  String getGroupName(){
+    try{
+      return widget.orderGroup.groupName.split('\-')[1];
+    } catch (e) {
+      return widget.orderGroup.groupName;
+    }
   }
 
   Widget popUpMenu(id, context) {
@@ -80,12 +79,59 @@ class _GroupGridViewState extends State<GroupGridView> {
           child: Text("View Details"),
         ),
         PopupMenuItem(
-          value: 'whatsapp',
-          child: Text("WhatsApp"),
+          value: 'edit',
+          child: Text("Edit Name"),
         ),
       ],
       onCanceled: () {},
-      onSelected: (value) {},
+      onSelected: (value) {
+        switch (value) {
+          case 'detail':
+            openGroupDetail();
+            break;
+          case 'edit':
+            showEditGroupNameDialog(context);
+            break;
+        }
+      },
+    );
+  }
+
+  openGroupDetail() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GroupDetail(
+          orderGroup: widget.orderGroup,
+        ),
+      ),
+    );
+  }
+
+  /*
+  * edit product dialog
+  * */
+  showEditGroupNameDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return EditGroupNameDialog(
+            orderGroup: widget.orderGroup,
+            onClick: (OrderGroup orderGroup) async {
+              await Future.delayed(Duration(milliseconds: 300));
+              Navigator.pop(mainContext);
+
+              Map data = await Domain().updateGroupName(orderGroup);
+              print(data);
+              if (data['status'] == '1') {
+                CustomSnackBar.show(mainContext, 'Update Successfully!');
+                setState(() {});
+              } else
+                CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+            });
+      },
     );
   }
 }
