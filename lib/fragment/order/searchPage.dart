@@ -7,6 +7,7 @@ import 'package:my/fragment/product/product.dart';
 import 'package:my/fragment/user/user.dart';
 import 'package:my/object/order.dart';
 import 'package:my/shareWidget/not_found.dart';
+import 'package:my/translation/AppLocalizations.dart';
 
 class SearchPage extends StatefulWidget {
   final String type;
@@ -39,7 +40,8 @@ class _SearchPageState extends State<SearchPage> {
         title: TextField(
           controller: queryController,
           decoration: InputDecoration(
-            hintText: 'Search By ${widget.type}s',
+            hintText:
+                '${AppLocalizations.of(context).translate('search_by')} ${widget.type}s',
             border: InputBorder.none,
             suffixIcon: IconButton(
                 icon: Icon(Icons.clear),
@@ -75,12 +77,11 @@ class _SearchPageState extends State<SearchPage> {
                   startDate: '',
                   endDate: '',
                 );
-              } else if (widget.type == 'User'){
+              } else if (widget.type == 'User') {
                 return UserPage(
                   query: object.data,
                 );
-              }
-              else{
+              } else {
                 return ProductPage(
                   query: object.data,
                 );
@@ -88,8 +89,10 @@ class _SearchPageState extends State<SearchPage> {
             }
 
             return NotFound(
-                title: 'Search ${widget.type}',
-                description: 'Type some keyword to find your ${widget.type}',
+                title:
+                    '${AppLocalizations.of(context).translate('search')} ${widget.type}',
+                description:
+                    '${AppLocalizations.of(context).translate('try_some_keyword_to_find')} ${widget.type}',
                 showButton: false,
                 button: '',
                 drawable: 'drawable/search_icon.png');

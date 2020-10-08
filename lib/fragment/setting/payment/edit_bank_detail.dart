@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:notustohtml/notustohtml.dart';
 import 'package:quill_delta/quill_delta.dart';
 import 'package:zefyr/zefyr.dart';
@@ -41,7 +42,7 @@ class _ResetPasswordState extends State<EditBankDetail> {
         appBar: AppBar(
           brightness: Brightness.dark,
           title: Text(
-            'Bank Details',
+            '${AppLocalizations.of(context).translate('bank_detail')}',
             style: GoogleFonts.cantoraOne(
               textStyle: TextStyle(
                   color: Colors.orangeAccent,

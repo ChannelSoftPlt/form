@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my/shareWidget/snack_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class ResetPassword extends StatefulWidget {
@@ -25,7 +26,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         appBar: AppBar(
           brightness: Brightness.dark,
           title: Text(
-            'Update Password',
+            '${AppLocalizations.of(context).translate('update_password')}',
             style: GoogleFonts.cantoraOne(
               textStyle: TextStyle(
                   color: Colors.orangeAccent,
@@ -57,7 +58,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                               height: 5,
                             ),
                             Text(
-                              'Remember! a stronger password make your data more secure! Make it stronger today!',
+                              '${AppLocalizations.of(context).translate('update_password_label')}',
                               style: TextStyle(
                                 color: Colors.grey[400],
                               ),
@@ -79,10 +80,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 obscureText: hideCurrentPassword,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.lock_outline),
-                                  labelText: 'Current Password',
+                                  labelText: '${AppLocalizations.of(context).translate('current_password')}',
                                   labelStyle: TextStyle(
                                       fontSize: 16, color: Colors.blueGrey),
-                                  hintText: 'Current Password',
+                                  hintText: '${AppLocalizations.of(context).translate('current_password')}',
                                   border: new OutlineInputBorder(
                                       borderSide:
                                           new BorderSide(color: Colors.teal)),
@@ -109,10 +110,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 obscureText: hideNewPassword,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.lock_outline),
-                                  labelText: 'New Password',
+                                  labelText: '${AppLocalizations.of(context).translate('new_password')}',
                                   labelStyle: TextStyle(
                                       fontSize: 16, color: Colors.blueGrey),
-                                  hintText: 'New Password',
+                                  hintText: '${AppLocalizations.of(context).translate('new_password')}',
                                   border: new OutlineInputBorder(
                                       borderSide:
                                           new BorderSide(color: Colors.teal)),
@@ -139,10 +140,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 obscureText: hideConfirmPassword,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.lock_outline),
-                                  labelText: 'Confirm Password',
+                                  labelText: '${AppLocalizations.of(context).translate('confirm_password')}',
                                   labelStyle: TextStyle(
                                       fontSize: 16, color: Colors.blueGrey),
-                                  hintText: 'Confirm Password',
+                                  hintText: '${AppLocalizations.of(context).translate('confirm_password')}',
                                   border: new OutlineInputBorder(
                                       borderSide:
                                           new BorderSide(color: Colors.teal)),
@@ -168,7 +169,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 elevation: 5,
                                 onPressed: () => updatePassword(innerContext),
                                 child: Text(
-                                  'Sign In',
+                                  '${AppLocalizations.of(context).translate('sign_in')}',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 color: Colors.orange,
@@ -200,7 +201,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             .updatePassword(currentPassword.text, newPassword.text);
 
         if (data['status'] == '1') {
-          CustomSnackBar.show(context, 'Update Successfully!');
+          CustomSnackBar.show(context, '${AppLocalizations.of(context).translate('update_success')}');
           currentPassword.clear();
           newPassword.clear();
           confirmPassword.clear();
@@ -208,20 +209,20 @@ class _ResetPasswordState extends State<ResetPassword> {
           * invalid password
           * */
         } else if (data['status'] == '3')
-          CustomSnackBar.show(context, 'Current Password not match!');
+          CustomSnackBar.show(context, '${AppLocalizations.of(context).translate('current_password_not_match')}');
         /*
         * server error
         * */
         else
-          CustomSnackBar.show(context, 'Something Went Wrong!');
+          CustomSnackBar.show(context, '${AppLocalizations.of(context).translate('something_went_wrong')}');
       }
       /*
       * password not match
       * */
       else
-        CustomSnackBar.show(context, 'Password not match!');
+        CustomSnackBar.show(context, '${AppLocalizations.of(context).translate('password_not_match')}');
     } else {
-      CustomSnackBar.show(context, 'Password too short!');
+      CustomSnackBar.show(context, '${AppLocalizations.of(context).translate('password_too_short')}');
     }
   }
 }

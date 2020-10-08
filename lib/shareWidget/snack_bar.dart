@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my/translation/AppLocalizations.dart';
 
 class CustomSnackBar {
   final String message;
@@ -24,7 +25,7 @@ class CustomSnackBar {
         //backgroundColor: Colors.redAccent,
         action: SnackBarAction(
           textColor: Color(0xFFFAF2FB),
-          label: 'OK',
+          label: '${AppLocalizations.of(context).translate('okay')}',
           onPressed: () {},
         ),
       ),

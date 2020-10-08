@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my/object/order.dart';
 import 'package:my/shareWidget/toast.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:toast/toast.dart';
 
@@ -37,17 +38,17 @@ class _EditAddressDialogState extends State<EditAddressDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text('Edit Address'),
+      title: new Text('${AppLocalizations.of(context).translate('edit_address')}'),
       actions: <Widget>[
         FlatButton(
-          child: Text('Cancel'),
+          child: Text('${AppLocalizations.of(context).translate('cancel')}'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         FlatButton(
           child: Text(
-            'Confirm',
+            '${AppLocalizations.of(context).translate('confirm')}',
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
@@ -61,7 +62,7 @@ class _EditAddressDialogState extends State<EditAddressDialog> {
               order.state = state.text;
               widget.onClick(order);
             } else
-              CustomToast('Invalid input! 输入不正确!', context,
+              CustomToast('${AppLocalizations.of(context).translate('invalid_input')}', context,
                       gravity: Toast.BOTTOM)
                   .show();
           },
@@ -80,12 +81,12 @@ class _EditAddressDialogState extends State<EditAddressDialog> {
                   controller: address,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
-                    labelText: 'Address',
+                    labelText: '${AppLocalizations.of(context).translate('address')}',
                     labelStyle: TextStyle(
                         fontSize: 14,
                         color: Colors.blueGrey,
                         fontWeight: FontWeight.bold),
-                    hintText: 'Delivery Address 送货地址',
+                    hintText: '${AppLocalizations.of(context).translate('delivery_address')}',
                     border: new OutlineInputBorder(
                         borderSide: new BorderSide(color: Colors.teal)),
                   )),
@@ -104,7 +105,7 @@ class _EditAddressDialogState extends State<EditAddressDialog> {
                   maxLength: 5,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
-                    labelText: 'Postcode',
+                    labelText: '${AppLocalizations.of(context).translate('postcode')}',
                     labelStyle: TextStyle(
                         fontSize: 14,
                         color: Colors.blueGrey,
@@ -136,7 +137,7 @@ class _EditAddressDialogState extends State<EditAddressDialog> {
                         controller: city,
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
-                          labelText: 'City',
+                          labelText: '${AppLocalizations.of(context).translate('city')}',
                           labelStyle: TextStyle(
                               fontSize: 13,
                               color: Colors.blueGrey,
@@ -159,7 +160,7 @@ class _EditAddressDialogState extends State<EditAddressDialog> {
                         controller: state,
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
-                          labelText: 'State',
+                          labelText: '${AppLocalizations.of(context).translate('state')}',
                           labelStyle: TextStyle(
                               fontSize: 14,
                               color: Colors.blueGrey,

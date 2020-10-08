@@ -4,6 +4,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:my/object/driver.dart';
 import 'package:my/shareWidget/toast.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:toast/toast.dart';
 
@@ -43,17 +44,17 @@ class _FilterDialogState extends State<FilterDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
         insetPadding: EdgeInsets.all(0),
-        title: new Text('Sorting'),
+        title: new Text('${AppLocalizations.of(context).translate('sorting')}'),
         actions: <Widget>[
           FlatButton(
-            child: Text('Cancel'),
+            child: Text('${AppLocalizations.of(context).translate('cancel')}'),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           FlatButton(
             child: Text(
-              'Apply',
+              '${AppLocalizations.of(context).translate('apply')}',
               style: TextStyle(color: Colors.red),
             ),
             onPressed: () {
@@ -64,7 +65,9 @@ class _FilterDialogState extends State<FilterDialog> {
                     toDate != null ? toDate : null, driver ?? null);
                 return;
               }
-              CustomToast('Invalid Date! 日期不正确！', context,
+              CustomToast(
+                      '${AppLocalizations.of(context).translate('invalid_date')}',
+                      context,
                       gravity: Toast.BOTTOM)
                   .show();
             },
@@ -79,7 +82,7 @@ class _FilterDialogState extends State<FilterDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Date/日期',
+          '${AppLocalizations.of(context).translate('date')}',
           style: TextStyle(color: Colors.black54),
         ),
         Row(
@@ -88,7 +91,7 @@ class _FilterDialogState extends State<FilterDialog> {
                 label: Text(
                   fromDate != null
                       ? displayDateFormat.format(fromDate).toString()
-                      : 'From Date',
+                      : '${AppLocalizations.of(context).translate('from_date')}',
                   style: TextStyle(color: Colors.orangeAccent),
                 ),
                 icon: Icon(Icons.date_range),
@@ -99,13 +102,15 @@ class _FilterDialogState extends State<FilterDialog> {
                     setState(() {
                       fromDate = date;
                     });
-                  }, currentTime: fromDate != null ? fromDate : DateTime.now(), locale: LocaleType.zh);
+                  },
+                      currentTime: fromDate != null ? fromDate : DateTime.now(),
+                      locale: LocaleType.zh);
                 }),
             FlatButton.icon(
                 label: Text(
                   toDate != null
                       ? displayDateFormat.format(toDate).toString()
-                      : 'To Date',
+                      : '${AppLocalizations.of(context).translate('to_date')}',
                   style: TextStyle(color: Colors.orangeAccent),
                 ),
                 icon: Icon(Icons.date_range),
@@ -116,7 +121,9 @@ class _FilterDialogState extends State<FilterDialog> {
                     setState(() {
                       toDate = date;
                     });
-                  }, currentTime: toDate != null ? toDate : DateTime.now(), locale: LocaleType.zh);
+                  },
+                      currentTime: toDate != null ? toDate : DateTime.now(),
+                      locale: LocaleType.zh);
                 })
           ],
         ),
@@ -132,9 +139,10 @@ class _FilterDialogState extends State<FilterDialog> {
     return Visibility(
         visible: widget.showDriver,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Driver/司机',
+              '${AppLocalizations.of(context).translate('driver')}',
               style: TextStyle(color: Colors.black54),
             ),
             SizedBox(
@@ -142,17 +150,22 @@ class _FilterDialogState extends State<FilterDialog> {
             ),
             DropdownSearch<Driver>(
                 mode: Mode.BOTTOM_SHEET,
-                label: 'Driver Name / 司机名称',
-                popupTitle: Text(
-                  'Existing Driver / 现有司机',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+                label:
+                    '${AppLocalizations.of(context).translate('driver_name')}',
+                popupTitle: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '${AppLocalizations.of(context).translate('existing_driver')}',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 searchBoxDecoration: InputDecoration(
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
                   prefixIcon: Icon(Icons.search),
-                  labelText: "Search a Driver",
+                  labelText:
+                      "${AppLocalizations.of(context).translate('search_driver')}",
                 ),
                 showSearchBox: true,
                 showClearButton: true,

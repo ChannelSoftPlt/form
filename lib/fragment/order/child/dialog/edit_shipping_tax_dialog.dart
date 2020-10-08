@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my/object/order.dart';
 import 'package:my/shareWidget/toast.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:toast/toast.dart';
 
 class EditShippingTaxDialog extends StatefulWidget {
@@ -33,18 +34,19 @@ class _EditShippingTaxDialogState extends State<EditShippingTaxDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text(
-          widget.type == 'delivery_fee' ? 'Edit Delivery Fee' : 'Edit Tax'),
+      title: new Text(widget.type == 'delivery_fee'
+          ? '${AppLocalizations.of(context).translate('edit_delivery_fee')}'
+          : '${AppLocalizations.of(context).translate('edit_tax')}'),
       actions: <Widget>[
         FlatButton(
-          child: Text('Cancel'),
+          child: Text('${AppLocalizations.of(context).translate('cancel')}'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         FlatButton(
           child: Text(
-            'Confirm',
+            '${AppLocalizations.of(context).translate('confirm')}',
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
@@ -52,12 +54,14 @@ class _EditShippingTaxDialogState extends State<EditShippingTaxDialog> {
               double.parse(deliveryFree.text);
               double.parse(tax.text);
 
-                object.tax = tax.text;
-                object.deliveryFee = deliveryFree.text;
-                widget.onClick(object);
-
+              object.tax = tax.text;
+              object.deliveryFee = deliveryFree.text;
+              widget.onClick(object);
             } on FormatException {
-              CustomToast('Invalid input! 输入不正确!', context, gravity: Toast.BOTTOM)
+              CustomToast(
+                      '${AppLocalizations.of(context).translate('invalid_input')}',
+                      context,
+                      gravity: Toast.BOTTOM)
                   .show();
             }
           },
@@ -78,8 +82,9 @@ class _EditShippingTaxDialogState extends State<EditShippingTaxDialog> {
                 controller: widget.type == 'delivery_fee' ? deliveryFree : tax,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                  labelText:
-                      widget.type == 'delivery_fee' ? 'Delivery Fee' : 'Tax',
+                  labelText: widget.type == 'delivery_fee'
+                      ? '${AppLocalizations.of(context).translate('delivery_fee')}'
+                      : '${AppLocalizations.of(context).translate('tax')}',
                   labelStyle: TextStyle(
                       fontSize: 16,
                       color: Colors.blueGrey,

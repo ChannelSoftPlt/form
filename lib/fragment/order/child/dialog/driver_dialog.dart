@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:my/object/driver.dart';
 import 'package:my/shareWidget/toast.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:toast/toast.dart';
 
@@ -19,7 +20,7 @@ class DriverDialog extends StatefulWidget {
 
 class _DriverDialogState extends State<DriverDialog> {
   List<Driver> drivers = [];
-  List type = <String>["Add New/新建立", "Add Into Existing/添加到现有"];
+  List type;
   bool showAddNew = true;
 
   var newDriver = TextEditingController();
@@ -34,17 +35,18 @@ class _DriverDialogState extends State<DriverDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: new Text('Assign Driver / 司机'),
+        title: new Text(
+            '${AppLocalizations.of(context).translate('assign_driver')}'),
         actions: <Widget>[
           FlatButton(
-            child: Text('Cancel'),
+            child: Text('${AppLocalizations.of(context).translate('cancel')}'),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           FlatButton(
             child: Text(
-              'Confirm',
+              '${AppLocalizations.of(context).translate('confirm')}',
               style: TextStyle(color: Colors.red),
             ),
             onPressed: () {
@@ -60,7 +62,9 @@ class _DriverDialogState extends State<DriverDialog> {
                   return;
                 }
               }
-              CustomToast('All field above are required!', context,
+              CustomToast(
+                      '${AppLocalizations.of(context).translate('all_field_required')}',
+                      context,
                       gravity: Toast.BOTTOM)
                   .show();
             },
@@ -69,7 +73,15 @@ class _DriverDialogState extends State<DriverDialog> {
         content: mainContent(context));
   }
 
+  void setUpType(context) {
+    type = <String>[
+      "${AppLocalizations.of(context).translate('add_new')}",
+      "${AppLocalizations.of(context).translate('add_into_existing')}"
+    ];
+  }
+
   Widget mainContent(context) {
+    setUpType(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -114,12 +126,14 @@ class _DriverDialogState extends State<DriverDialog> {
               controller: newDriver,
               textAlign: TextAlign.center,
               decoration: InputDecoration(
-                labelText: 'New Driver / 新司机',
+                labelText:
+                    '${AppLocalizations.of(context).translate('new_driver')}',
                 labelStyle: TextStyle(
                     fontSize: 14,
                     color: Colors.blueGrey,
                     fontWeight: FontWeight.bold),
-                hintText: 'Driver Name / 司机名',
+                hintText:
+                    '${AppLocalizations.of(context).translate('driver_name')}',
                 border: new OutlineInputBorder(
                     borderSide: new BorderSide(color: Colors.teal)),
               )),
@@ -131,17 +145,21 @@ class _DriverDialogState extends State<DriverDialog> {
       visible: !showAddNew,
       child: DropdownSearch<Driver>(
         mode: Mode.BOTTOM_SHEET,
-        label: 'Driver Name / 司机名称',
-        popupTitle: Text(
-          'Existing Driver / 现有司机',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+        label: '${AppLocalizations.of(context).translate('driver_name')}',
+        popupTitle: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '${AppLocalizations.of(context).translate('existing_driver')}',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
         ),
         searchBoxDecoration: InputDecoration(
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
           prefixIcon: Icon(Icons.search),
-          labelText: "Search a Driver",
+          labelText:
+              '${AppLocalizations.of(context).translate('search_driver')}',
         ),
         showSearchBox: true,
         onFind: (String filter) => getData(filter),

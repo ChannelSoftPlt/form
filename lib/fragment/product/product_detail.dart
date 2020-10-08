@@ -12,6 +12,7 @@ import 'package:my/fragment/product/category/category_dialog.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/object/product.dart';
 import 'package:my/shareWidget/progress_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -76,18 +77,21 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("Confirm to exit?"),
-          content: Text("Changes you made not be saved"),
+          title: Text(
+              "${AppLocalizations.of(context).translate('confirm_to_exit')}"),
+          content:
+              Text('${AppLocalizations.of(context).translate('exit_message')}'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
               child: Text(
-                'Confirm',
+                '${AppLocalizations.of(context).translate('confirm')}',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
@@ -132,7 +136,9 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       appBar: AppBar(
         brightness: Brightness.dark,
         title: Text(
-          widget.isUpdate == true ? 'Update Product' : 'Add Product',
+          widget.isUpdate == true
+              ? '${AppLocalizations.of(context).translate('update_product')}'
+              : '${AppLocalizations.of(context).translate('add_product')}',
           style: GoogleFonts.cantoraOne(
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
@@ -173,9 +179,9 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             onPressed: () {
               //checking
               if (name.text.length <= 0)
-                return _showSnackBar("Name Can't be blank!");
+                return _showSnackBar('${AppLocalizations.of(context).translate('name_cant_be_blank')}');
               if (price.text.length <= 0)
-                return _showSnackBar("Price Can't be blank!");
+                return _showSnackBar('${AppLocalizations.of(context).translate('price_cant_be_blank')}');
               //action
               if (widget.isUpdate != true)
                 createProduct();
@@ -212,10 +218,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     maxLength: 25,
                     style: TextStyle(fontSize: 14),
                     decoration: InputDecoration(
-                      labelText: 'Name',
+                      labelText: '${AppLocalizations.of(context).translate('name')}',
                       labelStyle:
                           TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText: 'Product Name',
+                      hintText: '${AppLocalizations.of(context).translate('product_name')}',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
                     ),
@@ -238,10 +244,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     maxLengthEnforced: true,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(fontSize: 14),
-                      labelText: 'Description',
+                      labelText: '${AppLocalizations.of(context).translate('description')}',
                       labelStyle:
                           TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText: 'Product Description',
+                      hintText: '${AppLocalizations.of(context).translate('product_description')}',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
                     ),
@@ -263,10 +269,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     textAlign: TextAlign.start,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(fontSize: 14),
-                      labelText: 'Price',
+                      labelText: '${AppLocalizations.of(context).translate('price')}',
                       labelStyle:
                           TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText: 'Price',
+                      hintText: '${AppLocalizations.of(context).translate('price')}',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
                     ),
@@ -274,7 +280,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                 ),
                 Row(
                   children: <Widget>[
-                    Text('Status'),
+                    Text('${AppLocalizations.of(context).translate('status')}'),
                     Switch(
                       value: available,
                       onChanged: (value) {
@@ -302,10 +308,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                           hintStyle: TextStyle(fontSize: 14),
-                          labelText: 'Category',
+                          labelText: '${AppLocalizations.of(context).translate('category')}',
                           labelStyle:
                               TextStyle(fontSize: 14, color: Colors.blueGrey),
-                          hintText: 'Product Category',
+                          hintText: '${AppLocalizations.of(context).translate('product_category')}',
                           border: new OutlineInputBorder(
                               borderSide: new BorderSide(color: Colors.teal)),
                           suffixIcon: Icon(Icons.arrow_drop_down)),
@@ -399,14 +405,14 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         imageCode.toString());
 
     if (data['status'] == '1') {
-      _showSnackBar('Product Uploaded');
+      _showSnackBar('${AppLocalizations.of(context).translate('product_uploaded')}');
       widget.refresh();
       await Future.delayed(Duration(milliseconds: 300));
       Navigator.of(context).pop();
     } else if (data['status'] == '4') {
-      _showSnackBar('You already reached your product limit');
+      _showSnackBar('${AppLocalizations.of(context).translate('exceed_limit')}');
     } else
-      _showSnackBar('Something Went Wrong!');
+      _showSnackBar('${AppLocalizations.of(context).translate('something_went_wrong')}');
   }
 
   updateProduct() async {
@@ -426,9 +432,9 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         imageCode.toString());
 
     if (data['status'] == '1') {
-      _showSnackBar('Product Updated!');
+      _showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
     } else
-      _showSnackBar('Something Went Wrong!');
+      _showSnackBar('${AppLocalizations.of(context).translate('something_went_wrong')}');
   }
 
   _showSnackBar(message) {
@@ -443,18 +449,18 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("Delete Request"),
-          content: Text("Confirm to this this item? \n${widget.product.name}"),
+          title: Text("${AppLocalizations.of(context).translate('delete_request')}"),
+          content: Text("${AppLocalizations.of(context).translate('delete_message')} \n${widget.product.name}"),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
               child: Text(
-                'Confirm',
+                '${AppLocalizations.of(context).translate('confirm')}',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
@@ -464,12 +470,12 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                 Map data = await Domain()
                     .deleteProduct(widget.product.productId.toString());
                 if (data['status'] == '1') {
-                  _showSnackBar('Product Delete');
+                  _showSnackBar('${AppLocalizations.of(context).translate('product_delete')}');
                   await Future.delayed(Duration(milliseconds: 300));
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 } else
-                  _showSnackBar('Something Went Wrong!');
+                  _showSnackBar('${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -483,14 +489,14 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Text("From where do you want to take the photo?"),
+              title: Text("${AppLocalizations.of(context).translate('take_photo_from_where')}"),
               content: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
                     height: 40,
                     child: RaisedButton.icon(
-                      label: Text('Gallery',
+                      label: Text('${AppLocalizations.of(context).translate('gallery')}',
                           style: TextStyle(color: Colors.white)),
                       color: Colors.orangeAccent,
                       icon: Icon(
@@ -507,7 +513,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     height: 40,
                     child: RaisedButton.icon(
                       label: Text(
-                        'Camera',
+                        '${AppLocalizations.of(context).translate('camera')}',
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.blueAccent,

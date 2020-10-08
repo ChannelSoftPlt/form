@@ -9,7 +9,6 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:my/fragment/group/group.dart';
-import 'package:my/fragment/order/detail/order_detail.dart';
 import 'package:my/fragment/order/order.dart';
 import 'package:my/fragment/order/searchPage.dart';
 import 'package:my/fragment/product/product.dart';
@@ -57,6 +56,8 @@ class _ListState extends State<HomePage> {
   * */
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+  var appLanguage;
+
   static Future<dynamic> backgroundMessageHandler(
       Map<String, dynamic> message) async {
     print('onbackground here');
@@ -78,7 +79,6 @@ class _ListState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     getUrl();
-
     connectivity = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
@@ -159,6 +159,7 @@ class _ListState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+   print('refresh');
     return Scaffold(
       key: key,
       appBar: AppBar(

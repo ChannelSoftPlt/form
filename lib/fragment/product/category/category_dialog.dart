@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my/object/category.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/toast.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class CategoryDialog extends StatefulWidget {
@@ -34,7 +35,8 @@ class _GroupingDialogState extends State<CategoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: new Text('Product Category'),
+        title: new Text(
+            '${AppLocalizations.of(context).translate('product_category')}'),
         actions: <Widget>[
           action == 'display' ? displayCategoryButton() : createCategoryButton()
         ],
@@ -60,7 +62,7 @@ class _GroupingDialogState extends State<CategoryDialog> {
               });
             },
             child: Text(
-              'Close',
+              '${AppLocalizations.of(context).translate('close')}',
               style: TextStyle(color: Colors.red, fontSize: 16),
             ),
           ),
@@ -76,7 +78,7 @@ class _GroupingDialogState extends State<CategoryDialog> {
                 deleteCategory(context);
               },
               child: Text(
-                'Delete',
+                '${AppLocalizations.of(context).translate('delete')}',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
@@ -91,7 +93,9 @@ class _GroupingDialogState extends State<CategoryDialog> {
               createOrUpdateCategory(context);
             },
             child: Text(
-              action == 'create' ? 'Create' : 'Update',
+              action == 'create'
+                  ? '${AppLocalizations.of(context).translate('create')}'
+                  : '${AppLocalizations.of(context).translate('update')}',
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
@@ -107,16 +111,19 @@ class _GroupingDialogState extends State<CategoryDialog> {
         : await Domain().createCategory(categoryName.text);
 
     if (data['status'] == '1') {
-      _showToast(
-          action == 'create' ? 'Create Successfully!' : 'Update Successfully!');
+      _showToast(action == 'create'
+          ? '${AppLocalizations.of(context).translate('create_success')}'
+          : '${AppLocalizations.of(context).translate('update_success')}');
 
       setState(() {
         _reset();
       });
     } else if (data['status'] == '3')
-      _showToast('This category already existed!');
+      _showToast(
+          '${AppLocalizations.of(context).translate('category_existed')}');
     else
-      _showToast('Something Went Wrong!');
+      _showToast(
+          '${AppLocalizations.of(context).translate('something_went_wrong')}');
   }
 
   deleteCategory(context) async {
@@ -125,32 +132,33 @@ class _GroupingDialogState extends State<CategoryDialog> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("Delete Request"),
+          title: Text(
+              "${AppLocalizations.of(context).translate('delete_request')}"),
           content: Text(
-              "Confirm to this this item? \n${categoryName.text}\n\n*This category will remove from other products as well"),
+              "${AppLocalizations.of(context).translate('confirm_to_delete')} \n${categoryName.text}\n\n*${AppLocalizations.of(context).translate('category_will_remove_product')}"),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
               child: Text(
-                'Confirm',
+                '${AppLocalizations.of(context).translate('confirm')}',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
                 Map data = await Domain().deleteCategory(selectedId.toString());
 
                 if (data['status'] == '1') {
-                  _showToast('Delete Successfully!');
+                  _showToast('${AppLocalizations.of(context).translate('delete_success')}');
                   setState(() {
                     Navigator.of(context).pop();
                     _reset();
                   });
                 } else
-                  _showToast('Something Went Wrong!');
+                  _showToast('${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -173,7 +181,7 @@ class _GroupingDialogState extends State<CategoryDialog> {
               Navigator.of(context).pop();
             },
             child: Text(
-              'Close',
+              '${AppLocalizations.of(context).translate('close')}',
               style: TextStyle(color: Colors.red, fontSize: 16),
             ),
           ),
@@ -190,7 +198,7 @@ class _GroupingDialogState extends State<CategoryDialog> {
               });
             },
             child: Text(
-              'Create New',
+              '${AppLocalizations.of(context).translate('create_new')}',
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
@@ -235,7 +243,7 @@ class _GroupingDialogState extends State<CategoryDialog> {
 
                 return customListView();
               } else {
-                return Text('No Category Found!');
+                return Text('${AppLocalizations.of(context).translate('no_category_found')}');
               }
             }
           }
@@ -257,9 +265,9 @@ class _GroupingDialogState extends State<CategoryDialog> {
           textAlign: TextAlign.start,
           decoration: InputDecoration(
             hintStyle: TextStyle(fontSize: 14),
-            labelText: 'Category Name',
+            labelText: '${AppLocalizations.of(context).translate('category_name')}',
             labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-            hintText: 'Category Name',
+            hintText: '${AppLocalizations.of(context).translate('category_name')}',
             border: new OutlineInputBorder(
                 borderSide: new BorderSide(color: Colors.teal)),
           ),

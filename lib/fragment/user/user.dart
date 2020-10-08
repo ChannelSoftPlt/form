@@ -3,6 +3,7 @@ import 'package:my/fragment/user/user_list.dart';
 import 'package:my/object/user.dart';
 import 'package:my/shareWidget/not_found.dart';
 import 'package:my/shareWidget/progress_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class UserPage extends StatefulWidget {
@@ -46,15 +47,15 @@ class _UserPageState extends State<UserPage> {
 
   Widget notFound() {
     return NotFound(
-        title: widget.query.length > 1 ? 'No Item Found!' : 'No Customer Found!',
+        title: widget.query.length > 1 ? '${AppLocalizations.of(context).translate('not_item_found')}' : '${AppLocalizations.of(context).translate('no_customer_found')}',
         description: widget.query.length > 1
-            ? 'Please try another keyword...'
-            : 'Don\'t worry, your customer are coming soon...',
+            ? '${AppLocalizations.of(context).translate('try_other_keyword')}'
+            : '${AppLocalizations.of(context).translate('no_customer_found_description')}',
         showButton: widget.query.length < 1,
         refresh: () {
           setState(() {});
         },
-        button: widget.query.length > 1 ? '' : 'Refresh',
+        button: widget.query.length > 1 ? '' : '${AppLocalizations.of(context).translate('refresh')}',
         drawable:
             widget.query.length > 1 ? 'drawable/not_found.png' : 'drawable/user.png');
   }

@@ -1,6 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:my/object/category.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class ProductFilter extends StatefulWidget {
@@ -26,17 +27,17 @@ class _FilterDialogState extends State<ProductFilter> {
   Widget build(BuildContext context) {
     return AlertDialog(
         insetPadding: EdgeInsets.all(0),
-        title: new Text('Sorting'),
+        title: new Text('${AppLocalizations.of(context).translate('sorting')}'),
         actions: <Widget>[
           FlatButton(
-            child: Text('Cancel'),
+            child: Text('${AppLocalizations.of(context).translate('cancel')}'),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           FlatButton(
             child: Text(
-              'Apply',
+              '${AppLocalizations.of(context).translate('apply')}',
               style: TextStyle(color: Colors.red),
             ),
             onPressed: () {
@@ -61,7 +62,7 @@ class _FilterDialogState extends State<ProductFilter> {
     return Column(
       children: <Widget>[
         Text(
-          'Category',
+          '${AppLocalizations.of(context).translate('category')}',
           style: TextStyle(color: Colors.black54),
         ),
         SizedBox(
@@ -69,10 +70,10 @@ class _FilterDialogState extends State<ProductFilter> {
         ),
         DropdownSearch<Category>(
             mode: Mode.BOTTOM_SHEET,
-            label: 'Select a category',
+            label: '${AppLocalizations.of(context).translate('select_category')}',
 
             popupTitle: Text(
-              'Existing Category',
+              '${AppLocalizations.of(context).translate('existing_category')}',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
@@ -80,7 +81,7 @@ class _FilterDialogState extends State<ProductFilter> {
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
               prefixIcon: Icon(Icons.search),
-              labelText: "Search a Category",
+              labelText: '${AppLocalizations.of(context).translate('search_category')}',
             ),
             showSearchBox: true,
             showClearButton: true,

@@ -5,6 +5,7 @@ import 'package:my/object/order.dart';
 import 'package:flutter/material.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 import 'package:my/shareWidget/status_dialog.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/statusControl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -97,14 +98,14 @@ class _CardViewState extends State<CardView> {
                   visible: widget.orders.orderGroupId != null,
                   child: Text(
                       widget.orders.groupName != null
-                          ? 'Group: ${widget.orders.groupName}'
+                          ? '${AppLocalizations.of(context).translate('group')}: ${widget.orders.groupName}'
                           : '',
                       style: TextStyle(fontSize: 10, color: Colors.grey))),
               Visibility(
                   visible: widget.orders.driverId != null,
                   child: Text(
                       widget.orders.driverName != null
-                          ? 'Deliver By: ${widget.orders.driverName}'
+                          ? '${AppLocalizations.of(context).translate('delivery_by')}: ${widget.orders.driverName}'
                           : '',
                       style: TextStyle(fontSize: 10, color: Colors.grey))),
               Row(
@@ -116,7 +117,7 @@ class _CardViewState extends State<CardView> {
                       padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
                       decoration: BoxDecoration(color: Colors.blue),
                       child: Text(
-                        'Self-Collect',
+                        '${AppLocalizations.of(context).translate('self_collect')}',
                         style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
                     ),
@@ -148,23 +149,26 @@ class _CardViewState extends State<CardView> {
       itemBuilder: (context) => [
         PopupMenuItem(
           value: 'detail',
-          child: Text("View Details"),
+          child:
+              Text('${AppLocalizations.of(context).translate('view_detail')}'),
         ),
         PopupMenuItem(
           value: 'whatsapp',
-          child: Text("WhatsApp"),
+          child: Text('${AppLocalizations.of(context).translate('whatsapp')}'),
         ),
         PopupMenuItem(
           value: 'call',
-          child: Text("Phone Call"),
+          child:
+              Text('${AppLocalizations.of(context).translate('phone_call')}'),
         ),
         PopupMenuItem(
           value: 'status',
-          child: Text("Update Status"),
+          child: Text(
+              '${AppLocalizations.of(context).translate('update_status')}'),
         ),
         PopupMenuItem(
           value: 'delete',
-          child: Text("Delete"),
+          child: Text('${AppLocalizations.of(context).translate('delete')}'),
         ),
       ],
       onCanceled: () {},
@@ -212,10 +216,12 @@ class _CardViewState extends State<CardView> {
             Map data = await Domain().setOrderGroup(
                 '1', groupName, widget.orders.id.toString(), orderGroupId);
             if (data['status'] == '1') {
-              CustomSnackBar.show(mainContext, 'Update Successfully!');
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(context).translate('update_success')}');
               widget.refresh();
             } else {
-              CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(context).translate('something_went_wrong')}');
             }
           },
         );
@@ -254,18 +260,20 @@ class _CardViewState extends State<CardView> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("Delete Request"),
-          content: Text("Confirm to this these item?"),
+          title: Text(
+              '${AppLocalizations.of(context).translate('delete_request')}'),
+          content: Text(
+              '${AppLocalizations.of(context).translate('delete_message')}'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
               child: Text(
-                'Confirm',
+                '${AppLocalizations.of(context).translate('confirm')}',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
@@ -273,10 +281,11 @@ class _CardViewState extends State<CardView> {
                     await Domain().deleteOrder(widget.orders.id.toString());
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
-                  CustomSnackBar.show(mainContext, 'Delete Successfully!');
+                  CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('delete_success')}');
                   widget.refresh();
                 } else
-                  CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -300,12 +309,14 @@ class _CardViewState extends State<CardView> {
                   .updateStatus(value, widget.orders.id.toString());
 
               if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext, 'Update Successfully!');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {
                   widget.orders.status = value;
                 });
               } else
-                CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );

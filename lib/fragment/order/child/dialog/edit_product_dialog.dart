@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my/object/order_item.dart';
 import 'package:my/shareWidget/toast.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:toast/toast.dart';
 
 class EditProductDialog extends StatefulWidget {
@@ -33,17 +34,17 @@ class _EditProductDialogState extends State<EditProductDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text('Edit Order Product'),
+      title: new Text('${AppLocalizations.of(context).translate('edit_order_product')}'),
       actions: <Widget>[
         FlatButton(
-          child: Text('Cancel'),
+          child: Text('${AppLocalizations.of(context).translate('cancel')}'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         FlatButton(
           child: Text(
-            'Confirm',
+            '${AppLocalizations.of(context).translate('confirm')}',
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
@@ -57,7 +58,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
 
               widget.onClick(object);
             } on FormatException {
-              CustomToast('Invalid input! 输入不正确!', context,
+              CustomToast('${AppLocalizations.of(context).translate('invalid_input')}', context,
                       gravity: Toast.BOTTOM)
                   .show();
             }
@@ -94,7 +95,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
                         controller: price,
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
-                          labelText: 'Price',
+                          labelText: '${AppLocalizations.of(context).translate('price')}',
                           labelStyle: TextStyle(
                               fontSize: 14,
                               color: Colors.blueGrey,
@@ -119,7 +120,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
                         ],
                         controller: quantity,
                         decoration: InputDecoration(
-                          labelText: 'Quantity',
+                          labelText: '${AppLocalizations.of(context).translate('quantity')}',
                           labelStyle: TextStyle(
                               fontSize: 14,
                               color: Colors.blueGrey,
@@ -137,7 +138,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
             ),
             Row(
               children: <Widget>[
-                Text('Product Available'),
+                Text('${AppLocalizations.of(context).translate('product_available')}'),
                 Switch(
                   value: available,
                   onChanged: (value) {

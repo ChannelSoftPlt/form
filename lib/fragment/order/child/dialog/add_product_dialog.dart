@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:my/object/product.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/toast.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:toast/toast.dart';
 
@@ -41,10 +42,11 @@ class _AddProductDialogState extends State<AddProductDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text('Add New Product'),
+      title: new Text(
+          '${AppLocalizations.of(context).translate('add_new_product')}'),
       actions: <Widget>[
         FlatButton(
-          child: Text('Cancel'),
+          child: Text('${AppLocalizations.of(context).translate('cancel')}'),
           onPressed: () {
             if (product != null) {
               product = null;
@@ -55,7 +57,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
         ),
         FlatButton(
           child: Text(
-            'Confirm',
+            '${AppLocalizations.of(context).translate('confirm')}',
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
@@ -68,17 +70,23 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   widget.addProduct(
                       product, quantity.text.toString(), remark.text);
                 } else {
-                  CustomToast('Invalid input! 输入不正确!', context,
+                  CustomToast(
+                          '${AppLocalizations.of(context).translate('invalid_input')}',
+                          context,
                           gravity: Toast.BOTTOM)
                       .show();
                 }
               } on FormatException {
-                CustomToast('Invalid input! 输入不正确!', context,
+                CustomToast(
+                        '${AppLocalizations.of(context).translate('invalid_input')}',
+                        context,
                         gravity: Toast.BOTTOM)
                     .show();
               }
             } else {
-              CustomToast('Please select an item!', context,
+              CustomToast(
+                      '${AppLocalizations.of(context).translate('select_an_item')}',
+                      context,
                       gravity: Toast.BOTTOM)
                   .show();
             }
@@ -162,7 +170,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
                       controller: price,
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
-                        labelText: 'Price',
+                        labelText:
+                            '${AppLocalizations.of(context).translate('price')}',
                         labelStyle: TextStyle(
                             fontSize: 14,
                             color: Colors.blueGrey,
@@ -185,7 +194,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       controller: quantity,
                       decoration: InputDecoration(
-                        labelText: 'Quantity',
+                        labelText:
+                            '${AppLocalizations.of(context).translate('quantity')}',
                         labelStyle: TextStyle(
                             fontSize: 14,
                             color: Colors.blueGrey,
@@ -212,12 +222,14 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   keyboardType: TextInputType.text,
                   controller: remark,
                   decoration: InputDecoration(
-                    labelText: 'Remark',
+                    labelText:
+                        '${AppLocalizations.of(context).translate('remark')}',
                     labelStyle: TextStyle(
                         fontSize: 14,
                         color: Colors.blueGrey,
                         fontWeight: FontWeight.bold),
-                    hintText: 'Remark...',
+                    hintText:
+                        '${AppLocalizations.of(context).translate('remark_hint')}',
                     border: new OutlineInputBorder(
                         borderSide: new BorderSide(color: Colors.teal)),
                   )),
@@ -241,7 +253,9 @@ class _AddProductDialogState extends State<AddProductDialog> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         ),
         subtitle: Text(
-          product.status == 0 ? 'Available' : 'Unavailable',
+          product.status == 0
+              ? '${AppLocalizations.of(context).translate('available')}'
+              : '${AppLocalizations.of(context).translate('unavailable')}',
           style: TextStyle(
               fontSize: 12,
               color: product.status == 0 ? Colors.green : Colors.red),

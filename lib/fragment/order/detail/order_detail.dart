@@ -16,6 +16,7 @@ import 'package:my/object/product.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 import 'package:my/shareWidget/status_dialog.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:my/utils/statusControl.dart';
@@ -50,7 +51,7 @@ class _OrderDetailState extends State<OrderDetail> {
       appBar: AppBar(
         brightness: Brightness.dark,
         title: Text(
-          'Order ${Order().orderPrefix(widget.orderId)}',
+          '${AppLocalizations.of(context).translate('order')} ${Order().orderPrefix(widget.orderId)}',
           style: GoogleFonts.cantoraOne(
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
@@ -127,7 +128,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   Visibility(
                     visible: order.selfCollect != 1,
                     child: Text(
-                      'Self-Collect',
+                      '${AppLocalizations.of(context).translate('self_collect')}',
                       style: TextStyle(color: Colors.black87, fontSize: 14),
                     ),
                   ),
@@ -138,7 +139,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Delivery Date: ${order.deliveryDate} ${order.deliveryTime}',
+                          '${AppLocalizations.of(context).translate('delivery_date')}: ${order.deliveryDate} ${order.deliveryTime}',
                           style: TextStyle(color: Colors.black87, fontSize: 12),
                         ),
                         Padding(
@@ -146,7 +147,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           child: GestureDetector(
                             onTap: () => checkCurrentTimeForDatePicker(),
                             child: Text(
-                              'Edit',
+                              '${AppLocalizations.of(context).translate('edit')}',
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontSize: 14,
@@ -185,7 +186,8 @@ class _OrderDetailState extends State<OrderDetail> {
                               )),
                           Visibility(
                               visible: order.orderGroupId != null,
-                              child: Text('Group: ${order.groupName}',
+                              child: Text(
+                                  '${AppLocalizations.of(context).translate('group')}: ${order.groupName}',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold))),
                           Visibility(
@@ -196,7 +198,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           Visibility(
                             visible: order.driverId != null,
                             child: Text(
-                              'Delivery By: ${order.driverName}',
+                              '${AppLocalizations.of(context).translate('delivery_by')}: ${order.driverName}',
                               style:
                                   TextStyle(fontSize: 12, color: Colors.grey),
                             ),
@@ -223,7 +225,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Products',
+                    '${AppLocalizations.of(context).translate('products')}',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   SizedBox(
@@ -244,7 +246,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         padding: EdgeInsets.all(10),
                         alignment: Alignment.center,
                         child: Text(
-                          'No Item Found',
+                          '${AppLocalizations.of(context).translate('no_item_found')}',
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
@@ -266,7 +268,7 @@ class _OrderDetailState extends State<OrderDetail> {
                               color: Colors.white,
                             ),
                             label: Text(
-                              'Add Item',
+                              '${AppLocalizations.of(context).translate('add_item')}',
                               style: TextStyle(color: Colors.white),
                             )),
                       )
@@ -289,7 +291,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Special Remark',
+                    '${AppLocalizations.of(context).translate('special_remark')}',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   SizedBox(
@@ -306,7 +308,9 @@ class _OrderDetailState extends State<OrderDetail> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
                       child: Text(
-                        order.note != '' ? order.note : 'No Remarks',
+                        order.note != ''
+                            ? order.note
+                            : '${AppLocalizations.of(context).translate('no_remark')}',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: order.note != ''
@@ -330,7 +334,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Payment',
+                    '${AppLocalizations.of(context).translate('payment')}',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   SizedBox(
@@ -346,7 +350,8 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text('Products Total'),
+                      Text(
+                          '${AppLocalizations.of(context).translate('products_total')}'),
                       Text('RM ${order.total.toStringAsFixed(2)}'),
                     ],
                   ),
@@ -356,7 +361,8 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text('Shipping'),
+                      Text(
+                          '${AppLocalizations.of(context).translate('shipping')}'),
                       Spacer(),
                       GestureDetector(
                         onTap: () =>
@@ -383,7 +389,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text('Taxes'),
+                      Text('${AppLocalizations.of(context).translate('tax')}'),
                       Spacer(),
                       GestureDetector(
                         onTap: () => showEditShippingTaxDialog(context, 'tax'),
@@ -408,7 +414,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Order total',
+                        '${AppLocalizations.of(context).translate('order_total')}',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 15),
                       ),
@@ -436,7 +442,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Customer Information',
+                    '${AppLocalizations.of(context).translate('customer_information')}',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   SizedBox(
@@ -450,7 +456,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     height: 10,
                   ),
                   Text(
-                    'Details',
+                    '${AppLocalizations.of(context).translate('details')}',
                     style: TextStyle(
                         color: Colors.black87, fontWeight: FontWeight.bold),
                   ),
@@ -522,7 +528,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           height: 5,
                         ),
                         Text(
-                          'Self-Collect',
+                          '${AppLocalizations.of(context).translate('self_collect')}',
                           textAlign: TextAlign.center,
                           style:
                               TextStyle(color: Colors.grey[600], fontSize: 14),
@@ -622,7 +628,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       visible: orderItem.remark != null &&
                           orderItem.remark.length > 0,
                       child: Text(
-                        'Remark: ${orderItem.remark}',
+                        '${AppLocalizations.of(context).translate('remark')}: ${orderItem.remark}',
                         style: TextStyle(
                             color: Colors.red[400],
                             fontSize: 12,
@@ -682,9 +688,9 @@ class _OrderDetailState extends State<OrderDetail> {
       icon: Image.asset('drawable/whatsapp.png'),
       offset: Offset(0, 10),
       itemBuilder: (context) => [
-        _buildMenuItem('message', 'Send Message', true),
-        _buildMenuItem('confirm', 'Confirm Order', true),
-        _buildMenuItem('receipt', 'Send Receipt', true),
+        _buildMenuItem('message', '${AppLocalizations.of(context).translate('send_message')}', true),
+        _buildMenuItem('confirm', '${AppLocalizations.of(context).translate('confirm_order')}', true),
+        _buildMenuItem('receipt', '${AppLocalizations.of(context).translate('send_receipt')}', true),
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -718,10 +724,10 @@ class _OrderDetailState extends State<OrderDetail> {
       ),
       offset: Offset(0, 10),
       itemBuilder: (context) => [
-        _buildMenuItem('group', 'Assign Group / 统计', true),
-        _buildMenuItem('status', 'Change Status / 状态', order.status != '1'),
-        _buildMenuItem('driver', 'Assign Driver / 司机', order.status != '1'),
-        _buildMenuItem('delete', 'Delete Order / 删除', true)
+        _buildMenuItem('group', '${AppLocalizations.of(context).translate('assign_group')}', true),
+        _buildMenuItem('status', '${AppLocalizations.of(context).translate('change_status')}', order.status != '1'),
+        _buildMenuItem('driver', '${AppLocalizations.of(context).translate('assign_driver')}', order.status != '1'),
+        _buildMenuItem('delete', '${AppLocalizations.of(context).translate('delete_order')}', true)
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -792,12 +798,12 @@ class _OrderDetailState extends State<OrderDetail> {
       Map data = await Domain()
           .updateDeliveryDate(selectedDate, selectedTime, order.id.toString());
       if (data['status'] == '1') {
-        showSnackBar('Update Successfully!');
+        showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
         setState(() {
           orderItems.clear();
         });
       } else {
-        showSnackBar("Something Went Wrong!");
+        showSnackBar("${AppLocalizations.of(context).translate('something_went_wrong')}");
       }
     });
   }
@@ -812,18 +818,18 @@ class _OrderDetailState extends State<OrderDetail> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("Delete Request"),
-          content: Text("Confirm to this this item?"),
+          title: Text("${AppLocalizations.of(context).translate('delete_request')}"),
+          content: Text('${AppLocalizations.of(context).translate('delete_message')}'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
               child: Text(
-                'Confirm',
+                '${AppLocalizations.of(context).translate('confirm')}',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
@@ -833,7 +839,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 } else
-                  CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                  CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -859,12 +865,12 @@ class _OrderDetailState extends State<OrderDetail> {
             print(data);
 
             if (data['status'] == '1') {
-              CustomSnackBar.show(mainContext, 'Update Successfully!');
+              showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
               setState(() {
                 orderItems.clear();
               });
             } else {
-              CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+              CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
             }
           },
         );
@@ -887,12 +893,12 @@ class _OrderDetailState extends State<OrderDetail> {
                 .setDriver(driverName, order.id.toString(), driverId);
 
             if (data['status'] == '1') {
-              CustomSnackBar.show(mainContext, 'Update Successfully!');
+              showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
               setState(() {
                 orderItems.clear();
               });
             } else {
-              CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+              CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
             }
           },
         );
@@ -918,13 +924,13 @@ class _OrderDetailState extends State<OrderDetail> {
                   await Domain().updateStatus(value, order.id.toString());
 
               if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext, 'Update Successfully!');
+                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {
                   orderItems.clear();
                   order.status = value;
                 });
               } else
-                CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -947,12 +953,12 @@ class _OrderDetailState extends State<OrderDetail> {
 
               Map data = await Domain().updateOrderItem(orderItem);
               if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext, 'Update Successfully!');
+                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {
                   orderItems.clear();
                 });
               } else
-                CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -987,12 +993,12 @@ class _OrderDetailState extends State<OrderDetail> {
                     .deleteOrderItem(orderItem.orderProductId.toString());
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
-                  CustomSnackBar.show(mainContext, 'Delete Successfully!');
+                  CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('delete_success')}');
                   setState(() {
                     orderItems.clear();
                   });
                 } else
-                  CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                  CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -1020,12 +1026,12 @@ class _OrderDetailState extends State<OrderDetail> {
               Map data = await Domain().updateShippingFeeAndTax(order);
               print(data);
               if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext, 'Update Successfully!');
+                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {
                   orderItems.clear();
                 });
               } else
-                CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -1051,12 +1057,12 @@ class _OrderDetailState extends State<OrderDetail> {
 
               print(data);
               if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext, 'Add Successfully!');
+                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('add_success')}');
                 setState(() {
                   orderItems.clear();
                 });
               } else
-                CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -1080,12 +1086,12 @@ class _OrderDetailState extends State<OrderDetail> {
               Map data = await Domain().updateAddress(order);
 
               if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext, 'Update Successfully!');
+                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {
                   orderItems.clear();
                 });
               } else
-                CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -1150,7 +1156,7 @@ class _OrderDetailState extends State<OrderDetail> {
         },
       );
     } catch (e) {
-      showSnackBar('Invalid Address!');
+      showSnackBar('${AppLocalizations.of(context).translate('invalid_address')}');
     }
   }
 

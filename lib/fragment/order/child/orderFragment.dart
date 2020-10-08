@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my/object/order.dart';
 import 'package:my/shareWidget/progress_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import '../../../shareWidget/not_found.dart';
 import 'order_list_state.dart';
@@ -62,16 +63,17 @@ class _OrderFragmentState extends State<OrderFragment> {
 
   Widget notFound() {
     return NotFound(
-        title:
-            widget.query.length > 1 ? 'No Item Found!' : 'No Order Right Now!',
+        title: widget.query.length > 1
+            ? '${AppLocalizations.of(context).translate('no_item_found')}'
+            : '${AppLocalizations.of(context).translate('no_order')}',
         description: widget.query.length > 1
-            ? 'Please try another keyword...'
-            : 'You\'re up-to-date! would work well',
+            ? '${AppLocalizations.of(context).translate('try_other_keyword')}'
+            : '${AppLocalizations.of(context).translate('up_to_date')}',
         showButton: widget.query.length < 1,
         refresh: () {
           setState(() {});
         },
-        button: widget.query.length > 1 ? '' : 'Refresh',
+        button: widget.query.length > 1 ? '' : '${AppLocalizations.of(context).translate('refresh')}',
         drawable: widget.query.length > 1
             ? 'drawable/not_found.png'
             : 'drawable/no_order.png');

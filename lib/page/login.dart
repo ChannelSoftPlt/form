@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/page/forgot_password.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:http/http.dart' as http;
 import 'package:my/utils/sharePreference.dart';
@@ -40,14 +41,14 @@ class _LoginFormState extends State<LoginPage> {
                 children: <Widget>[
                   Image.asset('drawable/logo.png', height: 200),
                   Theme(
-                    child: customTextField(email, 'Email', null),
+                    child: customTextField(email, 'email', null),
                     data: Theme.of(context).copyWith(
                       primaryColor: Colors.orangeAccent,
                     ),
                   ),
                   SizedBox(height: 20.0),
                   Theme(
-                    child: customTextField(password, 'Password', hidePassword),
+                    child: customTextField(password, 'password', hidePassword),
                     data: Theme.of(context).copyWith(
                       primaryColor: Colors.orangeAccent,
                     ),
@@ -66,7 +67,7 @@ class _LoginFormState extends State<LoginPage> {
                       alignment: Alignment.centerLeft,
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Text(
-                        'Forgot Password',
+                        '${AppLocalizations.of(context).translate('forgot_password')}',
                         style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54),
                       ),
@@ -79,7 +80,7 @@ class _LoginFormState extends State<LoginPage> {
                     child: RaisedButton(
                       elevation: 5,
                       child: Text(
-                        'Sign In',
+                        '${AppLocalizations.of(context).translate('sign_in')}',
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.orange,
@@ -105,12 +106,12 @@ class _LoginFormState extends State<LoginPage> {
             children: <Widget>[
               Image.asset('drawable/logo.jpg', height: 50),
               Text(
-                'All Right Reserved By CHANNEL SOFT PLT',
+                '${AppLocalizations.of(context).translate('all_right_reserved_by')} CHANNEL SOFT PLT',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey, fontSize: 10),
               ),
               Text(
-                'Version $_platformVersion',
+                '${AppLocalizations.of(context).translate('version')} $_platformVersion',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey, fontSize: 10),
               ),
@@ -148,11 +149,11 @@ class _LoginFormState extends State<LoginPage> {
         storeGoogleApiKey(data['key']);
         //user information
         storeUser(data['user_detail']);
-        showSnackBar(context, 'Login Successfully!');
+        showSnackBar(context, '${AppLocalizations.of(context).translate('login_success')}');
       } else
-        showSnackBar(context, 'Invalid email or username!');
+        showSnackBar(context, '${AppLocalizations.of(context).translate('invalid_email_password')}');
     } else {
-      showSnackBar(context, 'All fields are required!');
+      showSnackBar(context, '${AppLocalizations.of(context).translate('all_field_required')}');
     }
   }
 
@@ -190,9 +191,9 @@ class _LoginFormState extends State<LoginPage> {
   TextField customTextField(controller, String hint, hidePassword) {
     return TextField(
       controller: controller,
-      obscureText: hint == 'Password' ? hidePassword : false,
+      obscureText: hint == 'password' ? hidePassword : false,
       decoration: InputDecoration(
-        hintText: hint,
+        hintText: '${AppLocalizations.of(context).translate(hint)}',
         border: InputBorder.none,
         enabledBorder: new OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey[300]),
@@ -205,12 +206,12 @@ class _LoginFormState extends State<LoginPage> {
           borderSide: BorderSide(color: Colors.orangeAccent),
         ),
         suffixIcon: IconButton(
-            icon: hint == 'Password'
+            icon: hint == 'password'
                 ? Icon(Icons.remove_red_eye)
                 : Icon(Icons.clear),
             onPressed: () =>
-                hint == 'Password' ? showPassword() : controller.clear()),
-        prefixIcon: Icon(hint == 'Password' ? Icons.lock : Icons.email),
+                hint == 'password' ? showPassword() : controller.clear()),
+        prefixIcon: Icon(hint == 'password' ? Icons.lock : Icons.email),
       ),
     );
   }

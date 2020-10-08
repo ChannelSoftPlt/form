@@ -10,6 +10,7 @@ import 'package:my/fragment/setting/payment/edit_bank_detail.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class EditPaymentMethod extends StatefulWidget {
@@ -35,7 +36,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
       appBar: AppBar(
         brightness: Brightness.dark,
         title: Text(
-          'Payment Setting|付款设定',
+          '${AppLocalizations.of(context).translate('payment_setting')}',
           style: GoogleFonts.cantoraOne(
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
@@ -99,7 +100,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                   color: Colors.grey,
                                 ),
                                 Text(
-                                  'Payment Setting|付款设定',
+                                  '${AppLocalizations.of(context).translate('payment_setting')}',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Color.fromRGBO(89, 100, 109, 1),
@@ -108,7 +109,8 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                               ],
                             ),
                             CheckboxListTile(
-                              title: Text("Manual Bank Transfer|银行转账"),
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('bank_transfer')}'),
                               value: manualBankTransfer,
                               onChanged: (newValue) {
                                 refreshController.add('');
@@ -118,7 +120,8 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                   .leading, //  <-- leading Checkbox
                             ),
                             CheckboxListTile(
-                              title: Text("Cash On Delivery|货到付款"),
+                              title: Text(
+                                  "${AppLocalizations.of(context).translate('cash_on_delivery')}"),
                               value: cod,
                               onChanged: (newValue) {
                                 refreshController.add('');
@@ -141,7 +144,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                         color: Colors.grey,
                                       ),
                                       Text(
-                                        'Bank Details|银行信息',
+                                        '${AppLocalizations.of(context).translate('bank_detail')}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Color.fromRGBO(
@@ -244,7 +247,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                 elevation: 5,
                                 onPressed: () => updatePayment(context),
                                 child: Text(
-                                  'Update Payment',
+                                  '${AppLocalizations.of(context).translate('update_payment')}',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 color: Colors.orange,
@@ -266,16 +269,18 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
 
   updatePayment(context) async {
     if (manualBankTransfer && bankDetails.text.length <= 0) {
-      return CustomSnackBar.show(
-          context, 'Manual Bank Transfer require bank details!');
+      return CustomSnackBar.show(context,
+          '${AppLocalizations.of(context).translate('bank_transfer_hint')}');
     }
 
     Map data = await Domain().updatePayment(
         bankDetails.text, (manualBankTransfer ? '0' : '1'), (cod ? '0' : '1'));
 
     if (data['status'] == '1') {
-      CustomSnackBar.show(context, 'Update Successfully!');
+      CustomSnackBar.show(context,
+          '${AppLocalizations.of(context).translate('update_success')}');
     } else
-      CustomSnackBar.show(context, 'Something Went Wrong!');
+      CustomSnackBar.show(context,
+          '${AppLocalizations.of(context).translate('something_went_wrong')}');
   }
 }

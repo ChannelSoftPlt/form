@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my/fragment/setting/edit_profile.dart';
 import 'package:my/fragment/setting/payment/edit_payment_method.dart';
+import 'package:my/fragment/setting/payment/language_setting.dart';
 import 'package:my/fragment/setting/reset_password.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/page/loading.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:package_info/package_info.dart';
@@ -45,7 +47,7 @@ class _SettingFragmentState extends State<SettingFragment> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'User Detail',
+                  '${AppLocalizations.of(context).translate('user_detail')}',
                   style: TextStyle(color: Colors.grey, fontSize: 12),
                 ),
                 SizedBox(
@@ -70,7 +72,8 @@ class _SettingFragmentState extends State<SettingFragment> {
                         onPressed: () {
                           Clipboard.setData(new ClipboardData(text: url));
                           key.currentState.showSnackBar(new SnackBar(
-                            content: new Text("Copied to Clipboard"),
+                            content: new Text(
+                                '${AppLocalizations.of(context).translate('copy_to_clipboard')}'),
                           ));
                         })),
                 SizedBox(
@@ -91,7 +94,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                       color: Colors.blue,
                     ),
                     title: Text(
-                      'Edit Profile',
+                      '${AppLocalizations.of(context).translate('edit_profile')}',
                       style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                     ),
                     trailing: Icon(
@@ -120,7 +123,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                       color: Colors.green,
                     ),
                     title: Text(
-                      'Change Password',
+                      '${AppLocalizations.of(context).translate('change_password')}',
                       style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                     ),
                     trailing: Icon(
@@ -149,7 +152,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                       color: Colors.lightBlue,
                     ),
                     title: Text(
-                      'Payment Method',
+                      '${AppLocalizations.of(context).translate('payment_method')}',
                       style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                     ),
                     trailing: Icon(
@@ -178,7 +181,31 @@ class _SettingFragmentState extends State<SettingFragment> {
                       color: Colors.red,
                     ),
                     title: Text(
-                      'Order Setting',
+                      '${AppLocalizations.of(context).translate('order_setting')}',
+                      style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
+                    ),
+                    trailing: Icon(
+                      Icons.keyboard_arrow_right,
+                      size: 30,
+                    )),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  child: Divider(
+                    color: Colors.teal.shade100,
+                    thickness: 1.0,
+                  ),
+                ),
+                ListTile(
+                    onTap: () {
+                      showLanguageDialog();
+                    },
+                    leading: Icon(
+                      Icons.language,
+                      size: 35,
+                      color: Colors.amberAccent,
+                    ),
+                    title: Text(
+                      '${AppLocalizations.of(context).translate('language')}',
                       style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                     ),
                     trailing: Icon(
@@ -200,7 +227,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        'Settings',
+                        '${AppLocalizations.of(context).translate('setting')}',
                         style: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                       SizedBox(
@@ -213,7 +240,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                             color: Colors.red,
                           ),
                           title: Text(
-                            'Notification',
+                            '${AppLocalizations.of(context).translate('notification')}',
                             style: TextStyle(
                                 color: Color.fromRGBO(89, 100, 109, 1)),
                           ),
@@ -235,7 +262,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                   height: 20,
                 ),
                 Text(
-                  'About the App',
+                  '${AppLocalizations.of(context).translate('about_the_app')}',
                   style: TextStyle(color: Colors.grey, fontSize: 12),
                 ),
                 SizedBox(
@@ -262,7 +289,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                     onTap: () =>
                         launch(('https://www.channelsoft.com.my/contact-us/')),
                     title: Text(
-                      'Contact Us',
+                      '${AppLocalizations.of(context).translate('contact_us')}',
                       style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                     ),
                     trailing: Icon(
@@ -280,7 +307,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                     onTap: () => launch(
                         ('https://www.channelsoft.com.my/privacy-policy/')),
                     title: Text(
-                      'Privacy Policy',
+                      '${AppLocalizations.of(context).translate('privacy_policy')}',
                       style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                     ),
                     trailing: Icon(
@@ -318,7 +345,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                               });
                             },
                             child: Text(
-                              'Log Out',
+                              '${AppLocalizations.of(context).translate('log_out')}',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 18),
                             ),
@@ -331,7 +358,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                     ),
                     Image.asset('drawable/logo.jpg', height: 30),
                     Text(
-                      'All Right Reserved By CHANNEL SOFT PLT',
+                      '${AppLocalizations.of(context).translate('all_right_reserved_by')} CHANNEL SOFT PLT',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.grey, fontSize: 10),
                     ),
@@ -365,30 +392,43 @@ class _SettingFragmentState extends State<SettingFragment> {
     });
   }
 
+  Future<void> showLanguageDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return LanguageDialog();
+      },
+    );
+  }
+
   Future<void> showLogOutDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Sign Out Request'),
+          title: Text(
+              '${AppLocalizations.of(context).translate('sign_out_request')}'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Are you sure that you want to sign out?'),
+                Text(
+                    '${AppLocalizations.of(context).translate('sign_out_message')}'),
               ],
             ),
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
               child: Text(
-                'Confirm',
+                '${AppLocalizations.of(context).translate('confirm')}',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () {
@@ -415,7 +455,8 @@ class _SettingFragmentState extends State<SettingFragment> {
           ModalRoute.withName('/'));
     } else
       key.currentState.showSnackBar(new SnackBar(
-        content: new Text("Something Went Wrong!"),
+        content: new Text(
+            '${AppLocalizations.of(context).translate('something_went_wrong')}'),
       ));
   }
 }

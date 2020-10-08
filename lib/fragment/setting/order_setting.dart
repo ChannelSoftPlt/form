@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class OrderSetting extends StatefulWidget {
@@ -31,7 +32,7 @@ class _OrderSettingState extends State<OrderSetting> {
       appBar: AppBar(
         brightness: Brightness.dark,
         title: Text(
-          'Order Setting',
+          '${AppLocalizations.of(context).translate('order_setting')}',
           style: GoogleFonts.cantoraOne(
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
@@ -103,7 +104,8 @@ class _OrderSettingState extends State<OrderSetting> {
                                           color: Colors.black, fontSize: 16),
                                       children: <TextSpan>[
                                         TextSpan(
-                                            text: 'Optional Fields',
+                                            text:
+                                                '${AppLocalizations.of(context).translate('optional_fields')}',
                                             style: TextStyle(
                                                 color: Color.fromRGBO(
                                                     89, 100, 109, 1),
@@ -111,7 +113,7 @@ class _OrderSettingState extends State<OrderSetting> {
                                         TextSpan(text: '\n'),
                                         TextSpan(
                                           text:
-                                              'These fields will shows in your E-Menu',
+                                              '${AppLocalizations.of(context).translate('field_will_show_in_emenu')}',
                                           style: TextStyle(
                                               color: Colors.grey, fontSize: 12),
                                         ),
@@ -122,9 +124,10 @@ class _OrderSettingState extends State<OrderSetting> {
                               ],
                             ),
                             CheckboxListTile(
-                              title: Text("Email"),
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('email')}'),
                               subtitle: Text(
-                                'Customer required to fill in their email in thier order.',
+                                '${AppLocalizations.of(context).translate('email_required_hint')}',
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey),
                               ),
@@ -144,7 +147,8 @@ class _OrderSettingState extends State<OrderSetting> {
                               ),
                             ),
                             CheckboxListTile(
-                              title: Text("Self Collect"),
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('self_collect')}'),
                               subtitle: RichText(
                                 text: TextSpan(
                                   style: TextStyle(
@@ -152,13 +156,13 @@ class _OrderSettingState extends State<OrderSetting> {
                                   children: <TextSpan>[
                                     TextSpan(
                                         text:
-                                            'Customer enable to select self-collect as delivery method.',
+                                            '${AppLocalizations.of(context).translate('self_collect_enable_hint')}',
                                         style: TextStyle(
                                             fontSize: 12, color: Colors.grey)),
                                     TextSpan(text: '\n'),
                                     TextSpan(
                                       text:
-                                          '* Delivery fee will be waived automatically',
+                                          '${AppLocalizations.of(context).translate('self_collect_enable_hint_2')}',
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12),
                                     ),
@@ -181,9 +185,10 @@ class _OrderSettingState extends State<OrderSetting> {
                               ),
                             ),
                             CheckboxListTile(
-                              title: Text("Delivery Date"),
+                              title: Text(
+                                  "${AppLocalizations.of(context).translate('delivery_date')}"),
                               subtitle: Text(
-                                'Customer able to select the delivery date in their order.',
+                                '${AppLocalizations.of(context).translate('delivery_date_hint')}',
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey),
                               ),
@@ -203,9 +208,10 @@ class _OrderSettingState extends State<OrderSetting> {
                               ),
                             ),
                             CheckboxListTile(
-                              title: Text("Delivery Time"),
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('delivery_time')}'),
                               subtitle: Text(
-                                'Customer able to select the delivery time in their order.',
+                                '${AppLocalizations.of(context).translate('delivery_time_hint')}',
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey),
                               ),
@@ -227,7 +233,7 @@ class _OrderSettingState extends State<OrderSetting> {
                                 elevation: 5,
                                 onPressed: () => updatePayment(context),
                                 child: Text(
-                                  'Update Setting',
+                                  '${AppLocalizations.of(context).translate('update_setting')}',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 color: Colors.orange,
@@ -255,8 +261,10 @@ class _OrderSettingState extends State<OrderSetting> {
         deliveryTime ? '0' : '1');
 
     if (data['status'] == '1') {
-      CustomSnackBar.show(context, 'Update Successfully!');
+      CustomSnackBar.show(context,
+          '${AppLocalizations.of(context).translate('update_success')}');
     } else
-      CustomSnackBar.show(context, 'Something Went Wrong!');
+      CustomSnackBar.show(context,
+          '${AppLocalizations.of(context).translate('something_went_wrong')}');
   }
 }

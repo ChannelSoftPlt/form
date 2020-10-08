@@ -7,6 +7,7 @@ import 'package:my/object/order.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 import 'package:my/shareWidget/status_dialog.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -70,15 +71,19 @@ class _OrderListState extends State<OrderList> {
           builder: (BuildContext context, LoadStatus mode) {
             Widget body;
             if (mode == LoadStatus.idle) {
-              body = Text("pull up load");
+              body = Text(
+                  '${AppLocalizations.of(context).translate('pull_up_load')}');
             } else if (mode == LoadStatus.loading) {
               body = CustomProgressBar();
             } else if (mode == LoadStatus.failed) {
-              body = Text("Load Failed!Click retry!");
+              body = Text(
+                  '${AppLocalizations.of(context).translate('load_failed')}');
             } else if (mode == LoadStatus.canLoading) {
-              body = Text("release to load more");
+              body = Text(
+                  '${AppLocalizations.of(context).translate('release_to_load_more')}');
             } else {
-              body = Text("No more Data");
+              body = Text(
+                  '${AppLocalizations.of(context).translate('no_more_data')}');
             }
             return Container(
               height: 55.0,
@@ -112,7 +117,7 @@ class _OrderListState extends State<OrderList> {
       slivers: <Widget>[
         SliverAppBar(
           title: Text(
-            'Select Item ${selectedList.length}',
+            '${AppLocalizations.of(context).translate('select_item')} ${selectedList.length}',
             style: TextStyle(fontSize: 14),
           ),
           floating: true,
@@ -137,7 +142,7 @@ class _OrderListState extends State<OrderList> {
                           color: Colors.white,
                         ),
                         label: Text(
-                          'Clear All',
+                          '${AppLocalizations.of(context).translate('clear_all')}',
                           style: TextStyle(color: Colors.white),
                         )),
                     RaisedButton.icon(
@@ -150,7 +155,7 @@ class _OrderListState extends State<OrderList> {
                           color: Colors.white,
                         ),
                         label: Text(
-                          'Select All',
+                          '${AppLocalizations.of(context).translate('select_all')}',
                           style: TextStyle(color: Colors.white),
                         )),
                     popUpMenu(context),
@@ -190,10 +195,18 @@ class _OrderListState extends State<OrderList> {
       ),
       offset: Offset(0, 10),
       itemBuilder: (context) => [
-        _buildMenuItem('group', 'Assign Group / 统计', true),
-        _buildMenuItem('status', 'Change Status / 状态', status != '1'),
-        _buildMenuItem('driver', 'Assign Driver / 司机', status != '1'),
-        _buildMenuItem('delete', 'Delete Order / 删除', true)
+        _buildMenuItem('group',
+            '${AppLocalizations.of(context).translate('assign_group')}', true),
+        _buildMenuItem(
+            'status',
+            '${AppLocalizations.of(context).translate('change_status')}',
+            status != '1'),
+        _buildMenuItem(
+            'driver',
+            '${AppLocalizations.of(context).translate('assign_driver')}',
+            status != '1'),
+        _buildMenuItem('delete',
+            '${AppLocalizations.of(context).translate('delete_order')}', true)
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -293,10 +306,12 @@ class _OrderListState extends State<OrderList> {
                 status, groupName, selectedList.join(","), orderGroupId);
 
             if (data['status'] == '1') {
-              CustomSnackBar.show(mainContext, 'Update Successfully!');
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(context).translate('update_success')}');
               _onRefresh();
             } else {
-              CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(context).translate('something_went_wrong')}');
             }
           },
         );
@@ -319,10 +334,12 @@ class _OrderListState extends State<OrderList> {
                 .setDriver(driverName, selectedList.join(","), driverId);
 
             if (data['status'] == '1') {
-              CustomSnackBar.show(mainContext, 'Update Successfully!');
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(context).translate('update_success')}');
               _onRefresh();
             } else {
-              CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(context).translate('something_went_wrong')}');
             }
           },
         );
@@ -345,10 +362,12 @@ class _OrderListState extends State<OrderList> {
                   .updateMultipleStatus(value, selectedList.join(','));
 
               if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext, 'Update Successfully!');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('update_success')}');
                 _onRefresh();
               } else
-                CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -364,28 +383,33 @@ class _OrderListState extends State<OrderList> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("Delete Request"),
-          content: Text("Confirm to this these item?"),
+          title: Text(
+              '${AppLocalizations.of(context).translate('delete_request')}'),
+          content: Text(
+              '${AppLocalizations.of(context).translate('delete_message')}'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
               child: Text(
-                'Confirm',
+                '${AppLocalizations.of(context).translate('confirm')}',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
                 Map data = await Domain().deleteOrder(selectedList.join(','));
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
-                  CustomSnackBar.show(mainContext, 'Delete Successfully!');
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(context).translate('delete_success')}');
                   _onRefresh();
                 } else
-                  CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],

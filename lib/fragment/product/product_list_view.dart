@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my/fragment/product/product_detail.dart';
 import 'package:my/object/product.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class ProductListView extends StatefulWidget {
@@ -41,7 +42,8 @@ class _ProductListViewState extends State<ProductListView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.product.categoryName ?? 'No Category',
+                        widget.product.categoryName ??
+                            '${AppLocalizations.of(context).translate('label_no_category')}',
                         maxLines: 2,
                         style: TextStyle(fontSize: 12, color: Colors.grey),
                         overflow: TextOverflow.ellipsis,
@@ -59,7 +61,9 @@ class _ProductListViewState extends State<ProductListView> {
                         height: 3,
                       ),
                       Text(
-                        widget.product.status == 0 ? 'Active' : 'Disable',
+                        widget.product.status == 0
+                            ? '${AppLocalizations.of(context).translate('active')}'
+                            : '${AppLocalizations.of(context).translate('disable')}',
                         maxLines: 2,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -92,7 +96,7 @@ class _ProductListViewState extends State<ProductListView> {
                     height: 60,
                   ),
                   Text(
-                    'Details',
+                    '${AppLocalizations.of(context).translate('details')}',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 13,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my/object/user.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserListView extends StatefulWidget {
@@ -97,11 +98,12 @@ class _UserListViewState extends State<UserListView> {
       itemBuilder: (context) => [
         PopupMenuItem(
           value: 'detail',
-          child: Text("View Details"),
+          child:
+              Text("${AppLocalizations.of(context).translate('view_detail')}"),
         ),
         PopupMenuItem(
           value: 'whatsapp',
-          child: Text("WhatsApp"),
+          child: Text("${AppLocalizations.of(context).translate('whatsapp')}"),
         ),
       ],
       onCanceled: () {},

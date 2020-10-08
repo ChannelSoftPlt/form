@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class EditProfile extends StatefulWidget {
@@ -31,7 +32,7 @@ class _ResetPasswordState extends State<EditProfile> {
       appBar: AppBar(
         brightness: Brightness.dark,
         title: Text(
-          'Company Info',
+          '${AppLocalizations.of(context).translate('company_info')}',
           style: GoogleFonts.cantoraOne(
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
@@ -97,10 +98,10 @@ class _ResetPasswordState extends State<EditProfile> {
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.home),
-                              labelText: 'Company',
+                              labelText: '${AppLocalizations.of(context).translate('company')}',
                               labelStyle: TextStyle(
                                   fontSize: 16, color: Colors.blueGrey),
-                              hintText: 'Company ABC',
+                              hintText: '${AppLocalizations.of(context).translate('company_hint')}',
                               border: new OutlineInputBorder(
                                   borderSide:
                                       new BorderSide(color: Colors.teal)),
@@ -122,10 +123,10 @@ class _ResetPasswordState extends State<EditProfile> {
                           maxLengthEnforced: true,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.location_on),
-                            labelText: 'Address',
+                            labelText: '${AppLocalizations.of(context).translate('address')}',
                             labelStyle:
                                 TextStyle(fontSize: 16, color: Colors.blueGrey),
-                            hintText: 'Company Address',
+                            hintText: '${AppLocalizations.of(context).translate('address_hint')}',
                             border: new OutlineInputBorder(
                                 borderSide: new BorderSide(color: Colors.teal)),
                           ),
@@ -145,10 +146,10 @@ class _ResetPasswordState extends State<EditProfile> {
                           maxLengthEnforced: true,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.phone_android),
-                            labelText: 'Contact Number',
+                            labelText: '${AppLocalizations.of(context).translate('contact_number')}',
                             labelStyle:
                                 TextStyle(fontSize: 16, color: Colors.blueGrey),
-                            hintText: '6014315xxxx',
+                            hintText: '${AppLocalizations.of(context).translate('contact_number_hint')}',
                             border: new OutlineInputBorder(
                                 borderSide: new BorderSide(color: Colors.teal)),
                           ),
@@ -168,7 +169,7 @@ class _ResetPasswordState extends State<EditProfile> {
                           maxLengthEnforced: true,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.person),
-                            labelText: 'Person In Charge',
+                            labelText: '${AppLocalizations.of(context).translate('person_in_charge')}',
                             labelStyle:
                                 TextStyle(fontSize: 16, color: Colors.blueGrey),
                             hintText: '',
@@ -191,10 +192,10 @@ class _ResetPasswordState extends State<EditProfile> {
                           maxLengthEnforced: true,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.phone_android),
-                            labelText: 'WhatsApp Number',
+                            labelText: '${AppLocalizations.of(context).translate('whatsapp_number')}',
                             labelStyle:
                                 TextStyle(fontSize: 16, color: Colors.blueGrey),
-                            hintText: '6014315xxxx',
+                            hintText: '${AppLocalizations.of(context).translate('contact_number_hint')}',
                             border: new OutlineInputBorder(
                                 borderSide: new BorderSide(color: Colors.teal)),
                           ),
@@ -215,7 +216,7 @@ class _ResetPasswordState extends State<EditProfile> {
                           maxLengthEnforced: true,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.email),
-                            labelText: 'Email',
+                            labelText: '${AppLocalizations.of(context).translate('email')}',
                             labelStyle:
                                 TextStyle(fontSize: 16, color: Colors.blueGrey),
                             hintText: '',
@@ -235,7 +236,7 @@ class _ResetPasswordState extends State<EditProfile> {
                           elevation: 5,
                           onPressed: () => updateProfile(context),
                           child: Text(
-                            'Update Profile',
+                            '${AppLocalizations.of(context).translate('update_profile')}',
                             style: TextStyle(color: Colors.white),
                           ),
                           color: Colors.orange,
@@ -255,7 +256,6 @@ class _ResetPasswordState extends State<EditProfile> {
   }
 
   updateProfile(context) async {
-    print('hah');
     if (companyName.text.length > 0 &&
         companyAddress.text.length > 0 &&
         contactNumber.text.length > 0 &&
@@ -268,7 +268,7 @@ class _ResetPasswordState extends State<EditProfile> {
           companyAddress.text, contactNumber.text, personInCharge.text, whatsAppNumber.text);
 
       if (data['status'] == '1') {
-        CustomSnackBar.show(context, 'Update Successfully!');
+        CustomSnackBar.show(context, '${AppLocalizations.of(context).translate('update_success')}');
         /*
           * invalid password
           * */
@@ -277,8 +277,8 @@ class _ResetPasswordState extends State<EditProfile> {
         * server error
         * */
       else
-        CustomSnackBar.show(context, 'Something Went Wrong!');
+        CustomSnackBar.show(context, '${AppLocalizations.of(context).translate('something_went_wrong')}');
     } else
-      CustomSnackBar.show(context, 'All field above are required!');
+      CustomSnackBar.show(context, '${AppLocalizations.of(context).translate('all_field_required')}');
   }
 }

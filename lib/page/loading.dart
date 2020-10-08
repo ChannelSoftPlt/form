@@ -17,6 +17,12 @@ class _LoadingPageState extends State<LoadingPage> {
   final key = new GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     checkMerchantInformation();
     return Scaffold(

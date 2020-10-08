@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/statusControl.dart';
 
 class StatusDialog extends StatelessWidget {
@@ -11,7 +12,7 @@ class StatusDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text('Select Status'),
+      title: new Text('${AppLocalizations.of(context).translate('select_status')}'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[

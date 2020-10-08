@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my/translation/AppLocalizations.dart';
 
 import 'child/orderFragment.dart';
 
@@ -30,9 +31,9 @@ class _OrderPageState extends State<OrderPage>
                     labelColor: Colors.orangeAccent,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
-                      Tab(text: "New Orders"),
-                      Tab(text: "Processing"),
-                      Tab(text: "All Orders"),
+                      Tab(text: '${AppLocalizations.of(context).translate('new_order')}'),
+                      Tab(text: '${AppLocalizations.of(context).translate('processing')}'),
+                      Tab(text: '${AppLocalizations.of(context).translate('all_orders')}'),
                     ]),
               ),
               Expanded(

@@ -4,6 +4,7 @@ import 'package:my/fragment/user/user_list_view.dart';
 
 import 'package:my/object/user.dart';
 import 'package:my/shareWidget/progress_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -44,15 +45,15 @@ class _UserListState extends State<UserList> {
           builder: (BuildContext context, LoadStatus mode) {
             Widget body;
             if (mode == LoadStatus.idle) {
-              body = Text("pull up load");
+              body = Text("${AppLocalizations.of(context).translate('pull_up_load')}");
             } else if (mode == LoadStatus.loading) {
               body = CustomProgressBar();
             } else if (mode == LoadStatus.failed) {
-              body = Text("Load Failed!Click retry!");
+              body = Text("${AppLocalizations.of(context).translate('load_failed')}");
             } else if (mode == LoadStatus.canLoading) {
-              body = Text("release to load more");
+              body = Text('${AppLocalizations.of(context).translate('release_to_load_more')}');
             } else {
-              body = Text("No more Data");
+              body = Text('${AppLocalizations.of(context).translate('no_more_data')}');
             }
             return Container(
               height: 55.0,
