@@ -88,7 +88,7 @@
   "create": "Create",
   "update": "Update",
   "category_existed": "This category already existed!",
-  "confirm_to_delete": "Confirm to this this item?",
+  "confirm_to_delete": "Confirm to delete this item?",
   "category_will_remove_product": "This category will remove from other products as well",
   "no_category_found": "No Category Found!",
   "category_name": "Category Name",
@@ -179,7 +179,6 @@
   "select_status": "Select Status",
 
 
-
   "update_success": "Update Successfully!",
   "delete_success": "Delete Successfully!",
   "add_success": "Add Successfully!",
@@ -248,5 +247,16 @@
   "version": "Version",
   "login_success": "Version",
   "invalid_email_password": "Invalid email or password!",
-  "password": "Password"
+  "password": "Password",
+
+  "new_order_received": "New Order Received!",
+  "see_now": "See Now",
+  "no_network_found": "No Network Found!",
+  "no_network_found_description": "We can\\'t detect any network connection from your device...",
+  "retry": "Retry",
+  "welcome_visit_my_store": "Welcome to visit My Store!",
+  "share_link": "Share Link",
+  "share": "Share Link",
+  "content": "Content",
+  "write_share_content": "Write some content to share.."
 }

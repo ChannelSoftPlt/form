@@ -21,6 +21,7 @@ import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/notification_plugin.dart';
 import 'package:my/shareWidget/filter_dialog.dart';
 import 'package:my/shareWidget/not_found.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:share/share.dart';
@@ -89,7 +90,8 @@ class _ListState extends State<HomePage> {
     });
 
     //initialize
-    notificationPlugin.setListenerForLowerVersions(onNotificationInLowerVersions);
+    notificationPlugin
+        .setListenerForLowerVersions(onNotificationInLowerVersions);
     notificationPlugin.setOnNotificationClick(setOnNotificationClick);
 
     _firebaseMessaging.requestNotificationPermissions();
@@ -142,7 +144,9 @@ class _ListState extends State<HomePage> {
         if (message['merchant_id'] != merchantId) return;
       }
 
-      showSnackBar('New Order Received', 'See Now');
+      showSnackBar(
+          '${AppLocalizations.of(context).translate('new_order_received')}',
+          '${AppLocalizations.of(context).translate('see_now')}');
       final assetsAudioPlayer = AssetsAudioPlayer();
       assetsAudioPlayer.open(
         Audio("audio/notification.mp3"),
@@ -159,7 +163,7 @@ class _ListState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-   print('refresh');
+    print('refresh');
     return Scaffold(
       key: key,
       appBar: AppBar(
@@ -231,23 +235,24 @@ class _ListState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            title: Text('Order'),
+            title: Text('${AppLocalizations.of(context).translate('order')}'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.folder),
-            title: Text('Group'),
+            title: Text('${AppLocalizations.of(context).translate('group')}'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            title: Text('Customer'),
+            title:
+                Text('${AppLocalizations.of(context).translate('customer')}'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.apps),
-            title: Text('Product'),
+            title: Text('${AppLocalizations.of(context).translate('product')}'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            title: Text('Setting'),
+            title: Text('${AppLocalizations.of(context).translate('setting')}'),
           ),
         ],
         onTap: (index) {
@@ -261,14 +266,14 @@ class _ListState extends State<HomePage> {
 
   Widget notFound() {
     return NotFound(
-        title: 'No Network Found!',
+        title: '${AppLocalizations.of(context).translate('no_network_found')}',
         description:
-            'We can\'t detect any network connection from your device...',
+            '${AppLocalizations.of(context).translate('no_network_found_description')}',
         showButton: true,
         refresh: () {
           setState(() {});
         },
-        button: 'Retry',
+        button: '${AppLocalizations.of(context).translate('retry')}',
         drawable: 'drawable/no_wifi.png');
   }
 
@@ -305,26 +310,27 @@ class _ListState extends State<HomePage> {
   String getTitle() {
     switch (currentIndex) {
       case 0:
-        return 'Order';
+        return '${AppLocalizations.of(context).translate('order')}';
         break;
       case 1:
-        return 'Group';
+        return '${AppLocalizations.of(context).translate('group')}';
         break;
       case 2:
-        return 'Customer';
+        return '${AppLocalizations.of(context).translate('customer')}';
         break;
       case 3:
-        return 'Product';
+        return '${AppLocalizations.of(context).translate('product')}';
         break;
       default:
-        return 'Setting';
+        return '${AppLocalizations.of(context).translate('setting')}';
     }
   }
 
   getUrl() async {
     this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
 
-    shareContent.text = 'Welcome to visit My Store!\n$url';
+    shareContent.text =
+        '${AppLocalizations.of(context).translate('welcome_visit_my_store')}\n$url';
     setState(() {});
   }
 
@@ -338,7 +344,7 @@ class _ListState extends State<HomePage> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("Share Link"),
+          title: Text("${AppLocalizations.of(context).translate('share_link')}"),
           content: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
@@ -360,10 +366,10 @@ class _ListState extends State<HomePage> {
                     maxLengthEnforced: true,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.textsms),
-                      labelText: 'Content',
+                      labelText: '${AppLocalizations.of(context).translate('content')}',
                       labelStyle:
                           TextStyle(fontSize: 16, color: Colors.blueGrey),
-                      hintText: 'Write some content to share..',
+                      hintText: '${AppLocalizations.of(context).translate('write_share_content')}',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
                     ),
@@ -374,14 +380,14 @@ class _ListState extends State<HomePage> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
               child: Text(
-                'Share',
+                '${AppLocalizations.of(context).translate('share')}',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
@@ -409,13 +415,13 @@ class _ListState extends State<HomePage> {
   String getSearchType() {
     switch (currentIndex) {
       case 0:
-        return 'Order';
+        return 'order';
       case 1:
-        return 'Group';
+        return 'group';
       case 2:
-        return 'User';
+        return 'user';
       default:
-        return 'Product';
+        return 'product';
     }
   }
 

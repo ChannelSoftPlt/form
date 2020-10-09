@@ -39,6 +39,8 @@ class MyApp extends StatelessWidget {
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate
           ],
           debugShowCheckedModeBanner: false,
           theme: ThemeData(

@@ -245,7 +245,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
         onTap: () => selectItem.add(product),
         leading: FadeInImage(
             height: 50,
-            fit: BoxFit.cover,
+            width: 50,
             image: NetworkImage('${Domain.imagePath}${product.image}'),
             placeholder: NetworkImage('${Domain.imagePath}no-image-found.png')),
         title: Text(

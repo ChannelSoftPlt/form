@@ -41,7 +41,7 @@ class _SearchPageState extends State<SearchPage> {
           controller: queryController,
           decoration: InputDecoration(
             hintText:
-                '${AppLocalizations.of(context).translate('search_by')} ${widget.type}s',
+                '${AppLocalizations.of(context).translate('search_by')} ${AppLocalizations.of(context).translate(widget.type)}s',
             border: InputBorder.none,
             suffixIcon: IconButton(
                 icon: Icon(Icons.clear),
@@ -63,7 +63,7 @@ class _SearchPageState extends State<SearchPage> {
           stream: queryStream.stream,
           builder: (context, object) {
             if (object.hasData && object.data.toString().length >= 1) {
-              if (widget.type == 'Order') {
+              if (widget.type == 'order') {
                 return OrderFragment(
                   query: object.data,
                   orderStatus: '',
@@ -71,13 +71,13 @@ class _SearchPageState extends State<SearchPage> {
                   startDate: '',
                   endDate: '',
                 );
-              } else if (widget.type == 'Group') {
+              } else if (widget.type == 'group') {
                 return GroupPage(
                   query: object.data,
                   startDate: '',
                   endDate: '',
                 );
-              } else if (widget.type == 'User') {
+              } else if (widget.type == 'user') {
                 return UserPage(
                   query: object.data,
                 );
