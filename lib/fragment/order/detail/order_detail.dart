@@ -97,6 +97,7 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   Widget mainContent(context) {
+    print('${AppLocalizations.of(context).translate('edit')}');
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -370,7 +371,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: Text(
-                            'Edit',
+                            '${AppLocalizations.of(context).translate('edit')}',
                             style: TextStyle(
                               color: Colors.blue,
                               fontSize: 14,
@@ -395,7 +396,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         onTap: () => showEditShippingTaxDialog(context, 'tax'),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Text('Edit',
+                          child: Text('${AppLocalizations.of(context).translate('edit')}',
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontSize: 14,

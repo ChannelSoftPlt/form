@@ -41,7 +41,7 @@ class _SearchPageState extends State<SearchPage> {
           controller: queryController,
           decoration: InputDecoration(
             hintText:
-                '${AppLocalizations.of(context).translate('search_by')} ${AppLocalizations.of(context).translate(widget.type)}s',
+                '${AppLocalizations.of(context).translate('search_by')}${AppLocalizations.of(context).translate(widget.type)}',
             border: InputBorder.none,
             suffixIcon: IconButton(
                 icon: Icon(Icons.clear),
@@ -90,9 +90,9 @@ class _SearchPageState extends State<SearchPage> {
 
             return NotFound(
                 title:
-                    '${AppLocalizations.of(context).translate('search')} ${widget.type}',
+                    '${AppLocalizations.of(context).translate('search')}${AppLocalizations.of(context).translate(widget.type)}',
                 description:
-                    '${AppLocalizations.of(context).translate('try_some_keyword_to_find')} ${widget.type}',
+                    '${AppLocalizations.of(context).translate('try_some_keyword_to_find')}${AppLocalizations.of(context).translate(widget.type)}',
                 showButton: false,
                 button: '',
                 drawable: 'drawable/search_icon.png');

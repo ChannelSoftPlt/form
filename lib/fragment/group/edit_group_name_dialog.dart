@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my/object/order_group.dart';
 import 'package:my/shareWidget/toast.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:toast/toast.dart';
 
 class EditGroupNameDialog extends StatefulWidget {
@@ -28,25 +29,30 @@ class _EditGroupNameDialogState extends State<EditGroupNameDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text('Edit Group Name'),
+      title: new Text(
+          '${AppLocalizations.of(context).translate('edit_group_name')}'),
       actions: <Widget>[
         FlatButton(
-          child: Text('Cancel'),
+          child: Text('${AppLocalizations.of(context).translate('cancel')}'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         FlatButton(
           child: Text(
-            'Confirm',
+            '${AppLocalizations.of(context).translate('confirm')}',
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
             if (groupName.text.length > 0) {
               object.groupName = groupName.text;
               widget.onClick(object);
-            } else{
-              CustomToast('Invalid Input!', context, gravity: Toast.BOTTOM).show();
+            } else {
+              CustomToast(
+                      '${AppLocalizations.of(context).translate('invalid_input')}',
+                      context,
+                      gravity: Toast.BOTTOM)
+                  .show();
             }
           },
         ),
@@ -62,12 +68,14 @@ class _EditGroupNameDialogState extends State<EditGroupNameDialog> {
                 controller: groupName,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                  labelText: 'Group Name',
+                  labelText:
+                      '${AppLocalizations.of(context).translate('group_name')}',
                   labelStyle: TextStyle(
                       fontSize: 16,
                       color: Colors.blueGrey,
                       fontWeight: FontWeight.bold),
-                  hintText: 'Name...',
+                  hintText:
+                      '${AppLocalizations.of(context).translate('group_name_hint')}',
                   border: new OutlineInputBorder(
                       borderSide: new BorderSide(color: Colors.teal)),
                 )),
@@ -77,8 +85,8 @@ class _EditGroupNameDialogState extends State<EditGroupNameDialog> {
     );
   }
 
-  String getGroupName(groupName){
-    try{
+  String getGroupName(groupName) {
+    try {
       return groupName.split('\-')[1];
     } catch (e) {
       return groupName;

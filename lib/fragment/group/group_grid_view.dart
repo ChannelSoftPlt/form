@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my/fragment/group/edit_group_name_dialog.dart';
 import 'package:my/object/order_group.dart';
 import 'package:my/shareWidget/snack_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 import 'detail/group_detail.dart';
@@ -42,7 +43,7 @@ class _GroupGridViewState extends State<GroupGridView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'No Order: ${widget.orderGroup.totalOrder.toString()}',
+                    '${AppLocalizations.of(context).translate('number_order')} ${widget.orderGroup.totalOrder.toString()}',
                     style: TextStyle(
                         color: Colors.black87,
                         fontSize: 12,
@@ -58,8 +59,8 @@ class _GroupGridViewState extends State<GroupGridView> {
     );
   }
 
-  String getGroupName(){
-    try{
+  String getGroupName() {
+    try {
       return widget.orderGroup.groupName.split('\-')[1];
     } catch (e) {
       return widget.orderGroup.groupName;
@@ -76,11 +77,12 @@ class _GroupGridViewState extends State<GroupGridView> {
       itemBuilder: (context) => [
         PopupMenuItem(
           value: 'detail',
-          child: Text("View Details"),
+          child:
+              Text("${AppLocalizations.of(context).translate('view_detail')}"),
         ),
         PopupMenuItem(
           value: 'edit',
-          child: Text("Edit Name"),
+          child: Text("${AppLocalizations.of(context).translate('edit_name')}"),
         ),
       ],
       onCanceled: () {},
@@ -126,10 +128,12 @@ class _GroupGridViewState extends State<GroupGridView> {
               Map data = await Domain().updateGroupName(orderGroup);
               print(data);
               if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext, 'Update Successfully!');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {});
               } else
-                CustomSnackBar.show(mainContext, 'Something Went Wrong!');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );

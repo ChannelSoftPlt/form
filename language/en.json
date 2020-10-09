@@ -1,5 +1,4 @@
 {
-
   "order": "Order",
   "new_order": "New Orders",
   "processing": "Processing",
@@ -21,7 +20,6 @@
 
   "products": "Products",
   "no_item_found": "No Item Found",
-
 
   "assign_group": "Assign Group",
   "change_status": "Update Status",
@@ -205,7 +203,6 @@
   "up_to_date": "You\\'re up-to-date! would work well!",
   "refresh": "Refresh",
 
-
   "group": "Group",
   "customer": "Customer",
   "product": "Product",
@@ -258,5 +255,18 @@
   "share_link": "Share Link",
   "share": "Share Link",
   "content": "Content",
-  "write_share_content": "Write some content to share.."
+  "write_share_content": "Write some content to share..",
+
+  "no_group_description": "Argh...your order are on its way now. Be Smile :)",
+  "no_group_found": "No Group Found",
+
+  "edit_group_name": "Edit Group Name",
+  "group_name_hint": "Name...",
+
+  "number_order": "No Order:",
+  "edit_name": "Edit Name",
+
+  "item_finish": "Item Finished",
+
+  "total_order": "Total Order:"
 }

@@ -3,6 +3,7 @@ import 'package:my/fragment/group/group_list.dart';
 import 'package:my/object/order_group.dart';
 import 'package:my/shareWidget/not_found.dart';
 import 'package:my/shareWidget/progress_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class GroupPage extends StatefulWidget {
@@ -48,16 +49,17 @@ class _GroupPageState extends State<GroupPage> {
 
   Widget notFound() {
     return NotFound(
-        title:
-            widget.query.length > 1 ? 'No Item Found!' : 'No Group Found!',
+        title: widget.query.length > 1
+            ? '${AppLocalizations.of(context).translate('not_item_found')}'
+            : '${AppLocalizations.of(context).translate('no_group_found')}',
         description: widget.query.length > 1
-            ? 'Please try another keyword...'
-            : 'Argh...your order are on its way now. Be Smile :)',
+            ? '${AppLocalizations.of(context).translate('try_other_keyword')}'
+            : '${AppLocalizations.of(context).translate('no_group_description')}',
         showButton: widget.query.length < 1,
         refresh: () {
           setState(() {});
         },
-        button: widget.query.length > 1 ? '' : 'Refresh',
+        button: widget.query.length > 1 ? '' : '${AppLocalizations.of(context).translate('refresh')}',
         drawable: widget.query.length > 1
             ? 'drawable/not_found.png'
             : 'drawable/folder.png');

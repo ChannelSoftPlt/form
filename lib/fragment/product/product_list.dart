@@ -43,15 +43,19 @@ class _ProductListState extends State<ProductList> {
           builder: (BuildContext context, LoadStatus mode) {
             Widget body;
             if (mode == LoadStatus.idle) {
-              body = Text('${AppLocalizations.of(context).translate('pull_up_load')}');
+              body = Text(
+                  '${AppLocalizations.of(context).translate('pull_up_load')}');
             } else if (mode == LoadStatus.loading) {
               body = CustomProgressBar();
             } else if (mode == LoadStatus.failed) {
-              body = Text('${AppLocalizations.of(context).translate('load_failed')}');
+              body = Text(
+                  '${AppLocalizations.of(context).translate('load_failed')}');
             } else if (mode == LoadStatus.canLoading) {
-              body = Text('${AppLocalizations.of(context).translate('release_to_load_more')}');
+              body = Text(
+                  '${AppLocalizations.of(context).translate('release_to_load_more')}');
             } else {
-              body = Text('${AppLocalizations.of(context).translate('no_more_data')}');
+              body = Text(
+                  '${AppLocalizations.of(context).translate('no_more_data')}');
             }
             return Container(
               height: 55.0,
@@ -99,8 +103,8 @@ class _ProductListState extends State<ProductList> {
   }
 
   Future fetchProduct() async {
-    Map data = await Domain()
-        .fetchProductWithPagination(currentPage, itemPerPage, widget.query, widget.categoryName);
+    Map data = await Domain().fetchProductWithPagination(
+        currentPage, itemPerPage, widget.query, widget.categoryName);
     print('data goes here: $data');
     setState(() {
       if (data['status'] == '1') {

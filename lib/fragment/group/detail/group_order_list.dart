@@ -5,6 +5,7 @@ import 'package:my/object/order.dart';
 import 'package:my/object/order_group.dart';
 import 'package:my/shareWidget/not_found.dart';
 import 'package:my/shareWidget/progress_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -23,11 +24,10 @@ class _GroupOrderListState extends State<GroupOrderList> {
   /*
   * pagination
   * */
-  int itemPerPage = 5,
-      currentPage = 1;
+  int itemPerPage = 5, currentPage = 1;
   bool itemFinish = false;
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -65,16 +65,22 @@ class _GroupOrderListState extends State<GroupOrderList> {
             footer: CustomFooter(
               builder: (BuildContext context, LoadStatus mode) {
                 Widget body;
+
                 if (mode == LoadStatus.idle) {
-                  body = Text("pull up load");
+                  body = Text(
+                      '${AppLocalizations.of(context).translate('pull_up_load')}');
                 } else if (mode == LoadStatus.loading) {
                   body = CustomProgressBar();
                 } else if (mode == LoadStatus.failed) {
-                  body = Text("Load Failed!Click retry!");
+                  body = Text(
+                      '${AppLocalizations.of(context).translate('load_failed')}');
                 } else if (mode == LoadStatus.canLoading) {
-                  body = Text("release to load more");
+                  body = Text(
+                      '${AppLocalizations.of(context).translate('release_to_load_more')}');
                 } else {
-                  body = Text(list.length > 0 ? "No more Data" : '');
+                  body = Text(list.length > 0
+                      ? '${AppLocalizations.of(context).translate('no_more_data')}'
+                      : '');
                 }
                 return Container(
                   height: 55.0,
@@ -107,15 +113,8 @@ class _GroupOrderListState extends State<GroupOrderList> {
   }
 
   Future fetchOrder() async {
-    Map data = await Domain().fetchOrder(
-        currentPage,
-        itemPerPage,
-        '',
-        '',
-        widget.orderGroup.orderGroupId,
-        '',
-        '',
-        '');
+    Map data = await Domain().fetchOrder(currentPage, itemPerPage, '', '',
+        widget.orderGroup.orderGroupId, '', '', '');
 
     setState(() {
       if (data['status'] == '1') {
