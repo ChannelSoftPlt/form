@@ -268,5 +268,12 @@
 
   "item_finish": "Item Finished",
 
-  "total_order": "Total Order:"
+  "total_order": "Total Order:",
+
+  "order_item": "Order Item",
+  "no_item_found_in_group": "No Order Found in this Group!",
+  "no_item_found_in_group_description": "No order is added into this group so far..!",
+
+  "cancelled": "Cancelled",
+  "completed": "Completed"
 }

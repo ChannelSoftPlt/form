@@ -175,7 +175,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                 color: StatusControl()
                                     .setStatusColor(order.status)),
                             child: Text(
-                              StatusControl().setStatus(order.status),
+                              StatusControl().setStatus(order.status, context),
                               style:
                                   TextStyle(fontSize: 12, color: Colors.white),
                             ),

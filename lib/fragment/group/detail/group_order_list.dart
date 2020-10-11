@@ -42,7 +42,7 @@ class _GroupOrderListState extends State<GroupOrderList> {
         appBar: AppBar(
           brightness: Brightness.dark,
           title: Text(
-            'Order Item ${Order().orderPrefix(widget.orderGroup.groupName)}',
+            '${AppLocalizations.of(context).translate('order_item')} ${Order().orderPrefix(widget.orderGroup.groupName)}',
             style: GoogleFonts.cantoraOne(
               textStyle: TextStyle(
                   color: Colors.orangeAccent,
@@ -131,8 +131,10 @@ class _GroupOrderListState extends State<GroupOrderList> {
 
   Widget notFound() {
     return NotFound(
-        title: 'No Order Found in this Group!',
-        description: 'No order is added into this group so far..!',
+        title:
+            '${AppLocalizations.of(context).translate('no_item_found_in_group')}',
+        description:
+            '${AppLocalizations.of(context).translate('no_item_found_in_group_description')}',
         showButton: false,
         button: '',
         drawable: 'drawable/folder.png');

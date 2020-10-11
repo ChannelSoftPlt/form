@@ -20,8 +20,8 @@ class StatusDialog extends StatelessWidget {
               child:
               RadioButtonGroup(
                 orientation: GroupedButtonsOrientation.VERTICAL,
-                picked: status != '-1' ? StatusControl().setStatus(status) : null,
-                onSelected: (String selected) =>onClick(StatusControl().setStatusCode(selected)),
+                picked: status != '-1' ? StatusControl().setStatus(status, context) : null,
+                onSelected: (String selected) =>onClick(StatusControl().setStatusCode(selected, context)),
                 labels: StatusControl().statusList,
                 itemBuilder: (Radio cb, Text txt, int i){
                   return Column(

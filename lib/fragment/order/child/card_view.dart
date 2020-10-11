@@ -129,7 +129,7 @@ class _CardViewState extends State<CardView> {
                         color: StatusControl()
                             .setStatusColor(widget.orders.status)),
                     child: Text(
-                      StatusControl().setStatus(widget.orders.status),
+                      StatusControl().setStatus(widget.orders.status, context),
                       style: TextStyle(fontSize: 12, color: Colors.white),
                     ),
                   ),

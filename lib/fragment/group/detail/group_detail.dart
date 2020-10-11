@@ -315,10 +315,10 @@ class _GroupDetailState extends State<GroupDetail> {
               Map data = await Domain().updateGroupName(orderGroup);
               print(data);
               if (data['status'] == '1') {
-                showSnackBar('Update Successfully!');
+                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {});
               } else
-                showSnackBar('Something Went Wrong!');
+                showSnackBar('${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -334,8 +334,8 @@ class _GroupDetailState extends State<GroupDetail> {
 
   Widget notFound() {
     return NotFound(
-        title: 'No Item Found!',
-        description: 'No order is added into this group so far..!',
+        title: '${AppLocalizations.of(context).translate('no_item_found_in_group')}',
+        description: '${AppLocalizations.of(context).translate('no_item_found_in_group_description')}',
         showButton: false,
         button: '',
         drawable: 'drawable/folder.png');

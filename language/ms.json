@@ -258,5 +258,25 @@
   "share_link": "Kongsi pautan",
   "share": "Kongsi",
   "content": "Kandungan",
-  "write_share_content": "Tulis beberapa kandungan untuk dikongsi .."
+  "write_share_content": "Tulis beberapa kandungan untuk dikongsi ..",
+
+  "no_group_description": "Argh ... pesanan anda dalam perjalanan sekarang. Be Smile :)",
+  "no_group_found": "Kumpulan Tidak Ditemui",
+
+  "edit_group_name": "Edit Nama Kumpulan",
+  "group_name_hint": "Nama...",
+
+  "number_order": "bilangan Pesanan",
+  "edit_name": "Edit Nama",
+
+  "item_finish": "Item Selesai",
+
+  "total_order": "Jumlah Pesanan:",
+
+  "order_item": "Item Pesanan",
+  "no_item_found_in_group": "Tiada Pesanan Ditemui dalam Kumpulan ini!",
+  "no_item_found_in_group_description": "Tidak ada pesanan yang ditambahkan ke dalam kumpulan ini setakat ini ..!",
+
+  "cancelled": "Cancelled",
+  "completed": "Completed"
 }

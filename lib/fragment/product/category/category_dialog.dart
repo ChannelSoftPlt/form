@@ -138,7 +138,8 @@ class _GroupingDialogState extends State<CategoryDialog> {
               "${AppLocalizations.of(context).translate('confirm_to_delete')} \n${categoryName.text}\n\n*${AppLocalizations.of(context).translate('category_will_remove_product')}"),
           actions: <Widget>[
             FlatButton(
-              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -152,13 +153,15 @@ class _GroupingDialogState extends State<CategoryDialog> {
                 Map data = await Domain().deleteCategory(selectedId.toString());
 
                 if (data['status'] == '1') {
-                  _showToast('${AppLocalizations.of(context).translate('delete_success')}');
+                  _showToast(
+                      '${AppLocalizations.of(context).translate('delete_success')}');
                   setState(() {
                     Navigator.of(context).pop();
                     _reset();
                   });
                 } else
-                  _showToast('${AppLocalizations.of(context).translate('something_went_wrong')}');
+                  _showToast(
+                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -243,7 +246,8 @@ class _GroupingDialogState extends State<CategoryDialog> {
 
                 return customListView();
               } else {
-                return Text('${AppLocalizations.of(context).translate('no_category_found')}');
+                return Text(
+                    '${AppLocalizations.of(context).translate('no_category_found')}');
               }
             }
           }
@@ -265,9 +269,11 @@ class _GroupingDialogState extends State<CategoryDialog> {
           textAlign: TextAlign.start,
           decoration: InputDecoration(
             hintStyle: TextStyle(fontSize: 14),
-            labelText: '${AppLocalizations.of(context).translate('category_name')}',
+            labelText:
+                '${AppLocalizations.of(context).translate('category_name')}',
             labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-            hintText: '${AppLocalizations.of(context).translate('category_name')}',
+            hintText:
+                '${AppLocalizations.of(context).translate('category_name')}',
             border: new OutlineInputBorder(
                 borderSide: new BorderSide(color: Colors.teal)),
           ),

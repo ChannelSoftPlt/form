@@ -23,7 +23,7 @@
   "no_item_found": "找不到任何产品",
 
 
-  "assign_group": "分配群组",
+  "assign_group": "分配统计",
   "change_status": "更新状态",
   "assign_driver": "分配司机",
   "delete_order": "删除订单",
@@ -74,10 +74,10 @@
   "city": "城市",
   "state": "州",
 
-  "new_group": "新的群组",
-  "group_name": "群组名字",
-  "existing_group": "现有群组",
-  "search_group": "搜寻群组",
+  "new_group": "新的统计",
+  "group_name": "统计名字",
+  "existing_group": "现有统计",
+  "search_group": "搜寻统计",
 
   "search_by": "搜寻跟据",
   "search": "搜寻",
@@ -206,7 +206,7 @@
   "refresh": "刷新",
 
 
-  "group": "群组",
+  "group": "统计",
   "customer": "顾客",
   "product": "产品",
 
@@ -258,5 +258,25 @@
   "share_link": "分享链接",
   "share": "分享",
   "content": "内容",
-  "write_share_content": "写下你想分享的内容。。"
+  "write_share_content": "写下你想分享的内容。。",
+
+  "no_group_description": "啊...目前没有任何订单在统计里哦。。",
+  "no_group_found": "未找到任何统计",
+
+  "edit_group_name": "更改统计名称",
+  "group_name_hint": "统计名。。",
+
+  "number_order": "订单数量",
+  "edit_name": "更改名称",
+
+  "item_finish": "以完成",
+
+  "total_order": "总订单：",
+
+  "order_item": "订单产品",
+  "no_item_found_in_group": "未找到任何订单",
+  "no_item_found_in_group_description": "啊...目前没有任何订单在统计里哦。。",
+
+  "cancelled": "已取消",
+  "completed": "已完成"
 }
