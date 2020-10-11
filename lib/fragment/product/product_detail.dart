@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:my/fragment/product/category/category_dialog.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/object/product.dart';
+import 'package:my/object/product_gallery.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
@@ -53,6 +54,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
 
   String url = '';
 
+  List<ProductGallery> galleryList = [];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -68,6 +71,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       category.text = widget.product.categoryName;
       available = widget.product.status == 0;
       getUrl();
+      getImageGallery();
     }
   }
 
@@ -179,9 +183,11 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             onPressed: () {
               //checking
               if (name.text.length <= 0)
-                return _showSnackBar('${AppLocalizations.of(context).translate('name_cant_be_blank')}');
+                return _showSnackBar(
+                    '${AppLocalizations.of(context).translate('name_cant_be_blank')}');
               if (price.text.length <= 0)
-                return _showSnackBar('${AppLocalizations.of(context).translate('price_cant_be_blank')}');
+                return _showSnackBar(
+                    '${AppLocalizations.of(context).translate('price_cant_be_blank')}');
               //action
               if (widget.isUpdate != true)
                 createProduct();
@@ -199,9 +205,31 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                /*
+                  * product main picture
+                  * */
                 InkWell(
                   child: _imageViewWidget(),
                   onTap: () => _showSelectionDialog(context),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                /*
+                  * product gallery
+                  * */
+                Container(
+                  height: 90,
+                  child: ReorderableListView(
+                    scrollDirection: Axis.horizontal,
+                    children: galleryList
+                        .asMap()
+                        .map((index, imageGallery) => MapEntry(
+                            index, imageGalleryList(imageGallery, index)))
+                        .values
+                        .toList(),
+                    onReorder: _onReorder,
+                  ),
                 ),
                 SizedBox(
                   height: 10,
@@ -218,10 +246,12 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     maxLength: 25,
                     style: TextStyle(fontSize: 14),
                     decoration: InputDecoration(
-                      labelText: '${AppLocalizations.of(context).translate('name')}',
+                      labelText:
+                          '${AppLocalizations.of(context).translate('name')}',
                       labelStyle:
                           TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText: '${AppLocalizations.of(context).translate('product_name')}',
+                      hintText:
+                          '${AppLocalizations.of(context).translate('product_name')}',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
                     ),
@@ -244,10 +274,12 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     maxLengthEnforced: true,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(fontSize: 14),
-                      labelText: '${AppLocalizations.of(context).translate('description')}',
+                      labelText:
+                          '${AppLocalizations.of(context).translate('description')}',
                       labelStyle:
                           TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText: '${AppLocalizations.of(context).translate('product_description')}',
+                      hintText:
+                          '${AppLocalizations.of(context).translate('product_description')}',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
                     ),
@@ -269,10 +301,12 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     textAlign: TextAlign.start,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(fontSize: 14),
-                      labelText: '${AppLocalizations.of(context).translate('price')}',
+                      labelText:
+                          '${AppLocalizations.of(context).translate('price')}',
                       labelStyle:
                           TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText: '${AppLocalizations.of(context).translate('price')}',
+                      hintText:
+                          '${AppLocalizations.of(context).translate('price')}',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
                     ),
@@ -308,10 +342,12 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                           hintStyle: TextStyle(fontSize: 14),
-                          labelText: '${AppLocalizations.of(context).translate('category')}',
+                          labelText:
+                              '${AppLocalizations.of(context).translate('category')}',
                           labelStyle:
                               TextStyle(fontSize: 14, color: Colors.blueGrey),
-                          hintText: '${AppLocalizations.of(context).translate('product_category')}',
+                          hintText:
+                              '${AppLocalizations.of(context).translate('product_category')}',
                           border: new OutlineInputBorder(
                               borderSide: new BorderSide(color: Colors.teal)),
                           suffixIcon: Icon(Icons.arrow_drop_down)),
@@ -324,6 +360,35 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         ),
       ),
     );
+  }
+
+  getImageGallery() {
+    setState(() {
+      galleryList
+          .add(ProductGallery(imageName: '20201011143150417101.png', status: 0));
+
+      galleryList.add(
+        ProductGallery(imageName: '20201011132204813238.png', status: 0),
+      );
+
+      galleryList
+          .add(ProductGallery(imageName: '20201011132105609915.png', status: 0));
+
+      galleryList.add(ProductGallery(imageName: '', status: 0));
+    });
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    print('oldIndex: $oldIndex');
+    print('newIndex: $newIndex');
+  }
+
+  Widget imageGalleryList(ProductGallery imageGallery, int position) {
+    return FadeInImage(
+        key: Key(imageGallery.imageName),
+        fit: BoxFit.fill,
+        image: NetworkImage(Domain.imagePath + '${imageGallery.imageName}'),
+        placeholder: NetworkImage('${Domain.imagePath}no-image-found.png'));
   }
 
   Future getImage(isCamera) async {
@@ -405,14 +470,17 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         imageCode.toString());
 
     if (data['status'] == '1') {
-      _showSnackBar('${AppLocalizations.of(context).translate('product_uploaded')}');
+      _showSnackBar(
+          '${AppLocalizations.of(context).translate('product_uploaded')}');
       widget.refresh();
       await Future.delayed(Duration(milliseconds: 300));
       Navigator.of(context).pop();
     } else if (data['status'] == '4') {
-      _showSnackBar('${AppLocalizations.of(context).translate('exceed_limit')}');
+      _showSnackBar(
+          '${AppLocalizations.of(context).translate('exceed_limit')}');
     } else
-      _showSnackBar('${AppLocalizations.of(context).translate('something_went_wrong')}');
+      _showSnackBar(
+          '${AppLocalizations.of(context).translate('something_went_wrong')}');
   }
 
   updateProduct() async {
@@ -432,9 +500,11 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         imageCode.toString());
 
     if (data['status'] == '1') {
-      _showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
+      _showSnackBar(
+          '${AppLocalizations.of(context).translate('update_success')}');
     } else
-      _showSnackBar('${AppLocalizations.of(context).translate('something_went_wrong')}');
+      _showSnackBar(
+          '${AppLocalizations.of(context).translate('something_went_wrong')}');
   }
 
   _showSnackBar(message) {
@@ -449,11 +519,14 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("${AppLocalizations.of(context).translate('delete_request')}"),
-          content: Text("${AppLocalizations.of(context).translate('delete_message')} \n${widget.product.name}"),
+          title: Text(
+              "${AppLocalizations.of(context).translate('delete_request')}"),
+          content: Text(
+              "${AppLocalizations.of(context).translate('delete_message')} \n${widget.product.name}"),
           actions: <Widget>[
             FlatButton(
-              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -470,12 +543,14 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                 Map data = await Domain()
                     .deleteProduct(widget.product.productId.toString());
                 if (data['status'] == '1') {
-                  _showSnackBar('${AppLocalizations.of(context).translate('product_delete')}');
+                  _showSnackBar(
+                      '${AppLocalizations.of(context).translate('product_delete')}');
                   await Future.delayed(Duration(milliseconds: 300));
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 } else
-                  _showSnackBar('${AppLocalizations.of(context).translate('something_went_wrong')}');
+                  _showSnackBar(
+                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -489,14 +564,16 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Text("${AppLocalizations.of(context).translate('take_photo_from_where')}"),
+              title: Text(
+                  "${AppLocalizations.of(context).translate('take_photo_from_where')}"),
               content: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
                     height: 40,
                     child: RaisedButton.icon(
-                      label: Text('${AppLocalizations.of(context).translate('gallery')}',
+                      label: Text(
+                          '${AppLocalizations.of(context).translate('gallery')}',
                           style: TextStyle(color: Colors.white)),
                       color: Colors.orangeAccent,
                       icon: Icon(
