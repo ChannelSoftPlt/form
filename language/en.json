@@ -43,7 +43,7 @@
   "cancel": "Cancel",
   "confirm": "Confirm",
 
-  "delete_request": "No Remarks",
+  "delete_request": "Confirm to delete?",
   "delete_message": "Confirm to delete these item?",
 
   "edit_delivery_fee": "Edit Delivery Fee",
@@ -275,5 +275,8 @@
   "no_item_found_in_group_description": "No order is added into this group so far..!",
 
   "cancelled": "Cancelled",
-  "completed": "Completed"
+  "completed": "Completed",
+
+  "delete_image_gallery": "Confirm to remove this picture? \n*This picture will permanently removed from your product!",
+  "image_delete_success": "Picture Delete Success!"
 }

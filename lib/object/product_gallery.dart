@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 class ProductGallery {
   String imageName;
   ImageProvider imageProvider;
-  int status = 0;
+  int status;
 
   ProductGallery({this.imageName, this.imageProvider, this.status});
 

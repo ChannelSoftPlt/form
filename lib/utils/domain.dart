@@ -586,4 +586,17 @@ class Domain {
     });
     return jsonDecode(response.body);
   }
+
+  /*
+  * delete image gallery
+  * */
+  deleteImageGallery(imageGallery, imageName, productId) async {
+    var response = await http.post(Domain.product, body: {
+      'delete_gallery': '1',
+      'image_gallery': imageGallery,
+      'image_name': imageName,
+      'productId': productId,
+    });
+    return jsonDecode(response.body);
+  }
 }

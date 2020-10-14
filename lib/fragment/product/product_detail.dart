@@ -80,7 +80,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     }
   }
 
-  void getProductGallery(){
+  void getProductGallery() {
     //print(jsonDecode(widget.product.gallery)[0]);
     List responseJson = jsonDecode(widget.product.gallery);
     galleryList.addAll(responseJson
@@ -396,6 +396,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   }
 
   Widget imageGalleryList(ProductGallery imageGallery, int position) {
+    print('status: $imageGallery.status');
     return Stack(
       key: Key(imageGallery.imageName),
       children: <Widget>[
@@ -405,7 +406,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             onTap: () {
               if (position == galleryList.length - 1) pickMultipleImages();
             },
-            child: imageGallery.status == 0
+            child: imageGallery.status == null || imageGallery.status == 0
                 ? FadeInImage(
                     fit: BoxFit.fill,
                     image: NetworkImage(
@@ -417,26 +418,77 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   ),
           ),
         ),
-        if(position != galleryList.length - 1)
-        Positioned.fill(
-            child: InkWell(
-              onTap: () => deleteFromList(position),
-              child: Container(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                    alignment: Alignment.topRight,
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.grey,
-                      size: 20,
-                    )),
-              ),
-            )),
+        if (position != galleryList.length - 1)
+          Positioned.fill(
+              child: InkWell(
+            onTap: () {
+              if(imageGallery.status == 1 || imageGallery.status == 0) deleteFromList(position);
+                  else deleteImageGallery(imageGallery.imageName);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                    size: 20,
+                  )),
+            ),
+          )),
       ],
     );
   }
 
-  deleteFromList(position){
+  deleteImageGallery(deletedImageName) async {
+    print('gallery list: ${galleryList.toString()}');
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text(
+              "${AppLocalizations.of(context).translate('delete_request')}"),
+          content: Text(
+              "${AppLocalizations.of(context).translate('delete_image_gallery')}"),
+          actions: <Widget>[
+            FlatButton(
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                '${AppLocalizations.of(context).translate('confirm')}',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                /*
+              * delete product
+              * */
+                Map data = await Domain().deleteImageGallery(
+                    galleryList.toString(),
+                    deletedImageName,
+                    widget.product.productId.toString());
+                if (data['status'] == '1') {
+                  _showSnackBar(
+                      '${AppLocalizations.of(context).translate('image_delete_success')}');
+                  await Future.delayed(Duration(milliseconds: 300));
+                  Navigator.of(context).pop();
+                } else
+                  _showSnackBar(
+                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  deleteFromList(position) {
     setState(() {
       galleryList.removeAt(position);
     });
