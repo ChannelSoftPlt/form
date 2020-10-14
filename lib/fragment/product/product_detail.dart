@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:my/fragment/product/category/category_dialog.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/object/product.dart';
@@ -55,6 +57,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   String url = '';
 
   List<ProductGallery> galleryList = [];
+  List<Asset> selectedImages = [];
+  String error = 'No Error Detected';
 
   @override
   void initState() {
@@ -71,8 +75,20 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       category.text = widget.product.categoryName;
       available = widget.product.status == 0;
       getUrl();
-      getImageGallery();
+      getProductGallery();
+      setGalleryButton(true);
     }
+  }
+
+  void getProductGallery(){
+    //print(jsonDecode(widget.product.gallery)[0]);
+    List responseJson = jsonDecode(widget.product.gallery);
+    galleryList.addAll(responseJson
+        .map((jsonObject) => ProductGallery.fromJson(jsonObject))
+        .toList());
+
+    print('length:: ${galleryList.length}');
+    //print(ProductGallery.fromJson(jsonDecode(widget.product.gallery)));
   }
 
   leaveConfirmation() async {
@@ -362,33 +378,126 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     );
   }
 
-  getImageGallery() {
-    setState(() {
+  setGalleryButton(bool add) {
+    if (add)
       galleryList
-          .add(ProductGallery(imageName: '20201011143150417101.png', status: 0));
-
-      galleryList.add(
-        ProductGallery(imageName: '20201011132204813238.png', status: 0),
-      );
-
-      galleryList
-          .add(ProductGallery(imageName: '20201011132105609915.png', status: 0));
-
-      galleryList.add(ProductGallery(imageName: '', status: 0));
-    });
+          .add(ProductGallery(imageName: 'no-image-found.png', status: 0));
+    else
+      galleryList.removeLast();
   }
 
-  void _onReorder(int oldIndex, int newIndex) {
-    print('oldIndex: $oldIndex');
-    print('newIndex: $newIndex');
+  _onReorder(int oldIndex, int newIndex) {
+    if (oldIndex != galleryList.length - 1)
+      setState(() {
+        ProductGallery gallery = galleryList[oldIndex];
+        galleryList.removeAt(oldIndex);
+        galleryList.insert(newIndex, gallery);
+      });
   }
 
   Widget imageGalleryList(ProductGallery imageGallery, int position) {
-    return FadeInImage(
-        key: Key(imageGallery.imageName),
-        fit: BoxFit.fill,
-        image: NetworkImage(Domain.imagePath + '${imageGallery.imageName}'),
-        placeholder: NetworkImage('${Domain.imagePath}no-image-found.png'));
+    return Stack(
+      key: Key(imageGallery.imageName),
+      children: <Widget>[
+        Container(
+          margin: const EdgeInsets.all(5.0),
+          child: InkWell(
+            onTap: () {
+              if (position == galleryList.length - 1) pickMultipleImages();
+            },
+            child: imageGallery.status == 0
+                ? FadeInImage(
+                    fit: BoxFit.fill,
+                    image: NetworkImage(
+                        Domain.imagePath + '${imageGallery.imageName}'),
+                    placeholder:
+                        NetworkImage('${Domain.imagePath}no-image-found.png'))
+                : Image(
+                    image: imageGallery.imageProvider,
+                  ),
+          ),
+        ),
+        if(position != galleryList.length - 1)
+        Positioned.fill(
+            child: InkWell(
+              onTap: () => deleteFromList(position),
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                    alignment: Alignment.topRight,
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.grey,
+                      size: 20,
+                    )),
+              ),
+            )),
+      ],
+    );
+  }
+
+  deleteFromList(position){
+    setState(() {
+      galleryList.removeAt(position);
+    });
+  }
+
+  Future<void> pickMultipleImages() async {
+    List<Asset> resultList = List<Asset>();
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 3,
+        enableCamera: true,
+        selectedAssets: selectedImages,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#abcdef",
+          actionBarTitle: "Example App",
+          allViewTitle: "All Photos",
+          useDetailsView: false,
+          selectCircleStrokeColor: "#000000",
+        ),
+      );
+    } on Exception catch (e) {
+      error = e.toString();
+    }
+
+    if (!mounted) return;
+
+    error = error;
+    selectedImages = resultList;
+
+    //remove button first
+    setGalleryButton(false);
+    for (Asset asset in resultList) {
+      await compressGalleryImage(asset);
+    }
+    //add button
+    setGalleryButton(true);
+  }
+
+  compressGalleryImage(Asset image) async {
+    ByteData data = await image.getByteData();
+
+    final dir = await path_provider.getTemporaryDirectory();
+
+    File file = createFile("${dir.absolute.path}/test.png");
+    file.writeAsBytesSync(data.buffer.asUint8List());
+
+    compressedFileSource = await compressFile(file);
+    ImageProvider provider = MemoryImage(compressedFileSource);
+
+    /*
+    * image file
+    * */
+    setState(() {
+      print(ProductGallery.getImageName());
+      galleryList.add(ProductGallery(
+          imageProvider: provider,
+          status: 1,
+          imageName: ProductGallery.getImageName()));
+    });
   }
 
   Future getImage(isCamera) async {

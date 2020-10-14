@@ -74,6 +74,8 @@ dependencies:
   connectivity: ^0.4.9
   #image picker
   image_picker: ^0.6.7+4
+  #multiple image picker
+  multi_image_picker: ^4.7.14
   #image compressor
   flutter_image_compress: ^0.7.0
   #device language
