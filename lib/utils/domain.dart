@@ -595,7 +595,7 @@ class Domain {
       'delete_gallery': '1',
       'image_gallery': imageGallery,
       'image_name': imageName,
-      'productId': productId,
+      'product_id': productId,
     });
     return jsonDecode(response.body);
   }

@@ -17,4 +17,8 @@ class ProductGallery {
     DateFormat formatter = DateFormat('ymdHms');
     return ('${formatter.format(now)}.png');
   }
+
+  Map toJson() => {
+        'image': imageName,
+      };
 }

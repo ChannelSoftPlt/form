@@ -81,14 +81,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   }
 
   void getProductGallery() {
-    //print(jsonDecode(widget.product.gallery)[0]);
     List responseJson = jsonDecode(widget.product.gallery);
     galleryList.addAll(responseJson
         .map((jsonObject) => ProductGallery.fromJson(jsonObject))
         .toList());
-
-    print('length:: ${galleryList.length}');
-    //print(ProductGallery.fromJson(jsonDecode(widget.product.gallery)));
   }
 
   leaveConfirmation() async {
@@ -396,7 +392,6 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   }
 
   Widget imageGalleryList(ProductGallery imageGallery, int position) {
-    print('status: $imageGallery.status');
     return Stack(
       key: Key(imageGallery.imageName),
       children: <Widget>[
@@ -422,8 +417,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
           Positioned.fill(
               child: InkWell(
             onTap: () {
-              if(imageGallery.status == 1 || imageGallery.status == 0) deleteFromList(position);
-                  else deleteImageGallery(imageGallery.imageName);
+              if (imageGallery.status == 1 || imageGallery.status == 0)
+                deleteFromList(position);
+              else
+                deleteImageGallery(imageGallery.imageName, position);
             },
             child: Container(
               padding: const EdgeInsets.all(8.0),
@@ -440,8 +437,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     );
   }
 
-  deleteImageGallery(deletedImageName) async {
-    print('gallery list: ${galleryList.toString()}');
+  //delete gallery from cloud
+  deleteImageGallery(deletedImageName, position) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -466,17 +463,29 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
               ),
               onPressed: () async {
                 /*
-              * delete product
+              * delete item from local list first
+              * */
+                galleryList.removeAt(position);
+                galleryList.removeAt(galleryList.length - 1);
+                /*
+              * proceed item delete from cloud
               * */
                 Map data = await Domain().deleteImageGallery(
-                    galleryList.toString(),
+                    jsonEncode(galleryList),
                     deletedImageName,
                     widget.product.productId.toString());
+
+                print(data);
+                //delete success
                 if (data['status'] == '1') {
                   _showSnackBar(
                       '${AppLocalizations.of(context).translate('image_delete_success')}');
                   await Future.delayed(Duration(milliseconds: 300));
                   Navigator.of(context).pop();
+                  //delete from local
+                  setState(() {
+                    setGalleryButton(true);
+                  });
                 } else
                   _showSnackBar(
                       '${AppLocalizations.of(context).translate('something_went_wrong')}');
