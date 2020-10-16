@@ -439,6 +439,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
 
   //delete gallery from cloud
   deleteImageGallery(deletedImageName, position) async {
+    print(jsonEncode(galleryList));
     showDialog(
       context: context,
       builder: (BuildContext context) {
