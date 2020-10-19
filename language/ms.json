@@ -93,6 +93,7 @@
   "no_category_found": "Tiada Kategori Dijumpai!",
   "category_name": "Nama Kategori",
   "create_new": "Cipta Baru",
+  "update_category_sequence": "Urutan Dikemas kini!",
 
   "no_product_found": "Tiada Produk Dijumpai!",
   "no_item_upload": "Argh...masih tiada barang telah dimuat naik.",
@@ -278,5 +279,10 @@
   "no_item_found_in_group_description": "Tidak ada pesanan yang ditambahkan ke dalam kumpulan ini setakat ini ..!",
 
   "cancelled": "Cancelled",
-  "completed": "Completed"
+  "completed": "Completed",
+
+  "delete_image_gallery": "Sahkan untuk padam gambar ini?\n* Gambar ini akan padam dari produk anda secara kekal!",
+  "delete_product_image": "Adakah anda pasti mahu mengganti gambar baru?\n* Gambar ini akan dipadamkan dari produk anda!",
+  "image_delete_success": "Gambar Padam Berjaya!",
+  "reach_gallery_limit": "Galeri gambar tidak lebih daripada"
 }

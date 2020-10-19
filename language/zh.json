@@ -45,7 +45,7 @@
   "cancel": "取消",
   "confirm": "确定",
 
-  "delete_request": "没有备注",
+  "delete_request": "确认删除？",
   "delete_message": "确定要删除产品?",
 
   "edit_delivery_fee": "编辑寄货费用",
@@ -93,6 +93,7 @@
   "no_category_found": "找不到类别!",
   "category_name": "类别名字",
   "create_new": "创建新的",
+  "update_category_sequence": "序列已更新!",
 
   "no_product_found": "找不到产品!",
   "no_item_upload": "呃...尚无产品被上传.",
@@ -278,5 +279,10 @@
   "no_item_found_in_group_description": "啊...目前没有任何订单在统计里哦。。",
 
   "cancelled": "已取消",
-  "completed": "已完成"
+  "completed": "已完成",
+
+  "delete_image_gallery": "确认删除此图片？\n*此图片将从您的产品中删除！",
+  "delete_product_image": "您确定要替换新图片吗？\n*此图片将从您的产品中删除!",
+  "image_delete_success": "图片删除成功！",
+  "reach_gallery_limit": "图片库不能超过"
 }

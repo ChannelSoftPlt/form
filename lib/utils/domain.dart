@@ -9,7 +9,7 @@ import 'package:my/utils/sharePreference.dart';
 import 'package:http/http.dart' as http;
 
 class Domain {
-//  static var domain = 'https://www.emenu.com.my/';
+  // static var domain = 'https://www.emenu.com.my/';
 
   static var domain = 'https://www.petkeeper.com.my/form/';
 
@@ -190,6 +190,17 @@ class Domain {
   }
 
   /*
+  * update category sequence
+  * */
+  updateCategorySequence(sequence) async {
+    var response = await http.post(Domain.category, body: {
+      'update_sequence': '1',
+      'sequence': sequence,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * read product
   * */
   launchCheck() async {
@@ -198,6 +209,19 @@ class Domain {
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * read product
+  * */
+  readGalleryLimit() async {
+    var response = await http.post(Domain.product, body: {
+      'read_gallery_limit': '1',
+      'merchant_id':
+      Merchant.fromJson(await SharePreferences().read("merchant"))
+          .merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -366,8 +390,8 @@ class Domain {
   /*
   * create product
   * */
-  updateProduct(Product product, extension, imageCode) async {
-    print('product id: ${product.productId.toString()}');
+  updateProduct(Product product, extension, imageCode, imageGalleryName,
+      imageGalleryFile) async {
     var response = await http.post(Domain.product, body: {
       'update': '1',
       'product_id': product.productId.toString(),
@@ -379,6 +403,8 @@ class Domain {
       'image_name': product.image,
       'image_extension': extension,
       'image_code': imageCode,
+      'image_gallery_name': imageGalleryName,
+      'image_gallery_file': imageGalleryFile,
     });
     return jsonDecode(response.body);
   }
@@ -524,7 +550,19 @@ class Domain {
   /*
   * create product
   * */
-  createProduct(Product product, extension, imageCode) async {
+  createProduct(Product product, extension, imageCode, imageGalleryName,
+      imageGalleryFile) async {
+    print('status: ${product.status.toString()}');
+    print('description: ${product.description.toString()}');
+    print('name: ${product.name.toString()}');
+    print('price: ${product.price.toString()}');
+    print('category_id: ${product.categoryId.toString()}');
+    print('image_name: ${product.image}');
+    print('image_extension: $extension');
+    print('image_code: $imageCode');
+    print(
+        'form_id: ${Merchant.fromJson(await SharePreferences().read("merchant")).formId}');
+
     var response = await http.post(Domain.product, body: {
       'create': '1',
       'status': product.status.toString(),
@@ -535,6 +573,8 @@ class Domain {
       'image_name': product.image,
       'image_extension': extension,
       'image_code': imageCode,
+      'image_gallery_name': imageGalleryName,
+      'image_gallery_file': imageGalleryFile,
       'form_id':
           Merchant.fromJson(await SharePreferences().read("merchant")).formId,
     });
@@ -593,8 +633,22 @@ class Domain {
   deleteImageGallery(imageGallery, imageName, productId) async {
     var response = await http.post(Domain.product, body: {
       'delete_gallery': '1',
-      'image_gallery': imageGallery,
-      'image_name': imageName,
+      'image_gallery_name': imageGallery,
+      'deleted_image_name': imageName,
+      'product_id': productId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * delete product image
+  * */
+  deleteProductImage(imageName, productId) async {
+    print('image name: $imageName');
+    print('product id: $productId');
+    var response = await http.post(Domain.product, body: {
+      'delete_image': '1',
+      'deleted_image_name': imageName,
       'product_id': productId,
     });
     return jsonDecode(response.body);

@@ -90,6 +90,7 @@ class Order {
   }
 
   static double checkDouble(num value) {
+    print(value);
     return value is double ? value : value.toDouble();
   }
 

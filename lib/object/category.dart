@@ -1,8 +1,9 @@
 class Category {
   String name;
   int categoryId;
+  int sequence;
 
-  Category({this.categoryId, this.name});
+  Category({this.categoryId, this.name, this.sequence});
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
@@ -22,4 +23,6 @@ class Category {
 
   @override
   String toString() => name;
+
+  Map toJson() => {'category_id': categoryId, 'sequence': sequence};
 }

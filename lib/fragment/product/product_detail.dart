@@ -11,9 +11,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:my/fragment/product/category/category_dialog.dart';
+import 'package:my/object/imageGallery/image.dart';
+import 'package:my/object/imageGallery/product_gallery.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/object/product.dart';
-import 'package:my/object/product_gallery.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
@@ -59,6 +60,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   List<ProductGallery> galleryList = [];
   List<Asset> selectedImages = [];
   String error = 'No Error Detected';
+  int galleryLimit = 0;
 
   @override
   void initState() {
@@ -76,15 +78,9 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       available = widget.product.status == 0;
       getUrl();
       getProductGallery();
-      setGalleryButton(true);
     }
-  }
-
-  void getProductGallery() {
-    List responseJson = jsonDecode(widget.product.gallery);
-    galleryList.addAll(responseJson
-        .map((jsonObject) => ProductGallery.fromJson(jsonObject))
-        .toList());
+    getGalleryLimit();
+    setGalleryButton(true);
   }
 
   leaveConfirmation() async {
@@ -222,7 +218,13 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   * */
                 InkWell(
                   child: _imageViewWidget(),
-                  onTap: () => _showSelectionDialog(context),
+                  onTap: () {
+                    if (imageName == 'no-image-found.png' ||
+                        imageName == 'test.png')
+                      _showSelectionDialog(context);
+                    else
+                      deleteProductImage();
+                  },
                 ),
                 SizedBox(
                   height: 10,
@@ -282,7 +284,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     textAlign: TextAlign.start,
                     minLines: 3,
                     maxLines: 5,
-                    maxLength: 100,
+                    maxLength: 200,
                     maxLengthEnforced: true,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(fontSize: 14),
@@ -374,21 +376,45 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     );
   }
 
+/*
+*
+*
+* ------------------------------------------product gallery purpose--------------------------------------------------
+*
+*
+* */
+  getProductGallery() {
+    if (widget.product.gallery != '') {
+      List responseJson = jsonDecode(widget.product.gallery);
+      galleryList.addAll(responseJson
+          .map((jsonObject) => ProductGallery.fromJson(jsonObject))
+          .toList());
+    }
+  }
+
   setGalleryButton(bool add) {
-    if (add)
-      galleryList
-          .add(ProductGallery(imageName: 'no-image-found.png', status: 0));
-    else
-      galleryList.removeLast();
+    setState(() {
+      if (add)
+        galleryList
+            .add(ProductGallery(imageName: 'add-gallery-icon.png', status: 0));
+      else
+        galleryList.removeLast();
+    });
   }
 
   _onReorder(int oldIndex, int newIndex) {
-    if (oldIndex != galleryList.length - 1)
+    if (oldIndex != galleryList.length - 1 && newIndex != galleryList.length) {
       setState(() {
+        if (newIndex > galleryList.length) newIndex = galleryList.length;
+        if (oldIndex < newIndex) newIndex--;
+
         ProductGallery gallery = galleryList[oldIndex];
         galleryList.removeAt(oldIndex);
         galleryList.insert(newIndex, gallery);
       });
+    }
+    print('slot: ${countGalleryLimit()}');
+    print('slot: ${galleryLimit - countGalleryLimit()}');
   }
 
   Widget imageGalleryList(ProductGallery imageGallery, int position) {
@@ -396,28 +422,26 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       key: Key(imageGallery.imageName),
       children: <Widget>[
         Container(
+          color: Colors.grey[200],
           margin: const EdgeInsets.all(5.0),
           child: InkWell(
-            onTap: () {
-              if (position == galleryList.length - 1) pickMultipleImages();
-            },
-            child: imageGallery.status == null || imageGallery.status == 0
-                ? FadeInImage(
-                    fit: BoxFit.fill,
-                    image: NetworkImage(
-                        Domain.imagePath + '${imageGallery.imageName}'),
-                    placeholder:
-                        NetworkImage('${Domain.imagePath}no-image-found.png'))
-                : Image(
-                    image: imageGallery.imageProvider,
-                  ),
-          ),
+              onTap: () {
+                if (position == galleryList.length - 1) {
+                  if (galleryLimit - countGalleryLimit() > 0)
+                    pickMultipleImages();
+                  else
+                    _showSnackBar(
+                        '${AppLocalizations.of(context).translate('reach_gallery_limit')} $galleryLimit!');
+                }
+              },
+              child: getImageView(imageGallery, position)),
         ),
         if (position != galleryList.length - 1)
           Positioned.fill(
               child: InkWell(
             onTap: () {
-              if (imageGallery.status == 1 || imageGallery.status == 0)
+              print('selected status: ${imageGallery.status}');
+              if (imageGallery.status == 1)
                 deleteFromList(position);
               else
                 deleteImageGallery(imageGallery.imageName, position);
@@ -437,9 +461,126 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     );
   }
 
+  Widget getImageView(ProductGallery imageGallery, position) {
+    if (imageGallery.status == null || imageGallery.status == 0) {
+      if (position != galleryList.length - 1) {
+        return FadeInImage(
+            fit: BoxFit.contain,
+            width: 120,
+            image: NetworkImage(Domain.imagePath + '${imageGallery.imageName}'),
+            placeholder: NetworkImage('${Domain.imagePath}no-image-found.png'));
+      } else
+        return Container(
+          padding: const EdgeInsets.all(20.0),
+          width: 120,
+          child: Image.asset('drawable/add-gallery-icon.png',
+              width: 120, fit: BoxFit.contain),
+        );
+    } else
+      return Image(
+        fit: BoxFit.contain,
+        width: 120,
+        image: imageGallery.imageProvider,
+      );
+  }
+
+  Future<void> pickMultipleImages() async {
+    List<Asset> resultList = List<Asset>();
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: galleryLimit - countGalleryLimit(),
+        enableCamera: true,
+        selectedAssets: selectedImages,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#2F4F4F",
+          actionBarTitleColor: '#FF9800',
+          actionBarTitle: "Select Images",
+          allViewTitle: "All Photos",
+          useDetailsView: false,
+          selectCircleStrokeColor: "#FF9800",
+        ),
+      );
+    } on Exception catch (e) {}
+
+    if (!mounted) return;
+    if (resultList.length <= 0) return;
+    setState(() async {
+      error = error;
+      selectedImages = resultList;
+      deleteTempImageGallery();
+
+      for (Asset asset in resultList) {
+        //image provider for local display purpose
+        ImageProvider provider = await compressGalleryImage(asset);
+        String imageCode = base64.encode(compressedFileSource);
+
+        galleryList.add(ProductGallery(
+            imageProvider: provider,
+            imageCode: imageCode,
+            imageAsset: asset,
+            status: 1,
+            imageName: ProductGallery.getImageName()));
+      }
+      setGalleryButton(true);
+    });
+  }
+
+  int countGalleryLimit() {
+    int availableSlot = 0;
+    for (int i = 0; i < galleryList.length - 1; i++) {
+      if (galleryList[i].status == null || galleryList[i].status == 0)
+        availableSlot++;
+    }
+    return availableSlot;
+  }
+
+  getImageGalleryName() {
+    List<GalleryImage> imageGallery = [];
+    for (int i = 0; i < galleryList.length - 1; i++) {
+      imageGallery.add(GalleryImage(imageName: galleryList[i].imageName));
+    }
+    return jsonEncode(imageGallery);
+  }
+
+  getImageGalleryFile() {
+    List<ProductGallery> tempList = [];
+    for (int i = 0; i < galleryList.length - 1; i++) {
+      if (galleryList[i].status == 1)
+        tempList.add(ProductGallery(
+            imageName: galleryList[i].imageName,
+            imageCode: galleryList[i].imageCode));
+    }
+    return jsonEncode(tempList);
+  }
+
+  //delete the image that haven't upload when user want to add more image
+  deleteTempImageGallery() {
+    setGalleryButton(false);
+    galleryList.removeWhere((imageGallery) => imageGallery.status == 1);
+  }
+
+  updateGalleryStatusAfterUpload() {
+    for (int i = 0; i < galleryList.length; i++) {
+      galleryList[i].status = 0;
+    }
+  }
+
+  Future<ImageProvider> compressGalleryImage(Asset image) async {
+    ByteData data = await image.getByteData();
+
+    final dir = await path_provider.getTemporaryDirectory();
+
+    File file = createFile("${dir.absolute.path}/test.png");
+    file.writeAsBytesSync(data.buffer.asUint8List());
+
+    compressedFileSource = await compressFile(file);
+    ImageProvider provider = MemoryImage(compressedFileSource);
+    return provider;
+  }
+
   //delete gallery from cloud
   deleteImageGallery(deletedImageName, position) async {
-    print(jsonEncode(galleryList));
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -467,26 +608,21 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
               * delete item from local list first
               * */
                 galleryList.removeAt(position);
-                galleryList.removeAt(galleryList.length - 1);
                 /*
               * proceed item delete from cloud
               * */
                 Map data = await Domain().deleteImageGallery(
-                    jsonEncode(galleryList),
+                    getImageGalleryName(),
                     deletedImageName,
                     widget.product.productId.toString());
 
-                print(data);
                 //delete success
                 if (data['status'] == '1') {
                   _showSnackBar(
                       '${AppLocalizations.of(context).translate('image_delete_success')}');
-                  await Future.delayed(Duration(milliseconds: 300));
+                  await Future.delayed(Duration(milliseconds: 250));
                   Navigator.of(context).pop();
-                  //delete from local
-                  setState(() {
-                    setGalleryButton(true);
-                  });
+                  setState(() {});
                 } else
                   _showSnackBar(
                       '${AppLocalizations.of(context).translate('something_went_wrong')}');
@@ -500,67 +636,21 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
 
   deleteFromList(position) {
     setState(() {
+      for (int j = 0; j < selectedImages.length; j++) {
+        if (galleryList[position].imageAsset == selectedImages[j])
+          selectedImages.removeAt(j);
+      }
       galleryList.removeAt(position);
     });
   }
 
-  Future<void> pickMultipleImages() async {
-    List<Asset> resultList = List<Asset>();
-
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 3,
-        enableCamera: true,
-        selectedAssets: selectedImages,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-        materialOptions: MaterialOptions(
-          actionBarColor: "#abcdef",
-          actionBarTitle: "Example App",
-          allViewTitle: "All Photos",
-          useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
-        ),
-      );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
-
-    if (!mounted) return;
-
-    error = error;
-    selectedImages = resultList;
-
-    //remove button first
-    setGalleryButton(false);
-    for (Asset asset in resultList) {
-      await compressGalleryImage(asset);
-    }
-    //add button
-    setGalleryButton(true);
-  }
-
-  compressGalleryImage(Asset image) async {
-    ByteData data = await image.getByteData();
-
-    final dir = await path_provider.getTemporaryDirectory();
-
-    File file = createFile("${dir.absolute.path}/test.png");
-    file.writeAsBytesSync(data.buffer.asUint8List());
-
-    compressedFileSource = await compressFile(file);
-    ImageProvider provider = MemoryImage(compressedFileSource);
-
-    /*
-    * image file
-    * */
-    setState(() {
-      print(ProductGallery.getImageName());
-      galleryList.add(ProductGallery(
-          imageProvider: provider,
-          status: 1,
-          imageName: ProductGallery.getImageName()));
-    });
-  }
+/*
+*
+*
+* -----------------------------------product image purpose-----------------------------------------
+*
+*
+* */
 
   Future getImage(isCamera) async {
     final pickedFile = await picker.getImage(
@@ -605,14 +695,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   }
 
   Future<Uint8List> compressFile(File file) async {
-    print("compressFile");
-
     final result = await FlutterImageCompress.compressWithFile(
       file.absolute.path,
       quality: countQuality(file.lengthSync()),
     );
-    print('before: ${file.lengthSync()}');
-    print('after: ${result.length}');
     return result;
   }
 
@@ -630,15 +716,18 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     * create product
     * */
     Map data = await Domain().createProduct(
-        new Product(
-            name: name.text,
-            status: available ? 0 : 1,
-            description: description.text,
-            image: imageName,
-            price: price.text,
-            categoryId: categoryId),
-        extension,
-        imageCode.toString());
+      new Product(
+          name: name.text,
+          status: available ? 0 : 1,
+          description: description.text,
+          image: imageName,
+          price: price.text,
+          categoryId: categoryId),
+      extension,
+      imageCode.toString(),
+      getImageGalleryName(),
+      getImageGalleryFile(),
+    );
 
     if (data['status'] == '1') {
       _showSnackBar(
@@ -668,9 +757,18 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             price: price.text,
             categoryId: categoryId),
         extension,
-        imageCode.toString());
+        imageCode.toString(),
+        getImageGalleryName(),
+        getImageGalleryFile());
 
     if (data['status'] == '1') {
+      //for easy delete image purpose
+      imageName = data['image_name'];
+      //avoid double upload same image
+      imageCode = '-1';
+      //set all gallery status into 0 (mean uploaded)
+      updateGalleryStatusAfterUpload();
+
       _showSnackBar(
           '${AppLocalizations.of(context).translate('update_success')}');
     } else
@@ -719,6 +817,62 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   await Future.delayed(Duration(milliseconds: 300));
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
+                } else
+                  _showSnackBar(
+                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //delete gallery from cloud
+  deleteProductImage() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text(
+              "${AppLocalizations.of(context).translate('delete_request')}"),
+          content: Text(
+              "${AppLocalizations.of(context).translate('delete_product_image')}"),
+          actions: <Widget>[
+            FlatButton(
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                '${AppLocalizations.of(context).translate('confirm')}',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                /*
+              * proceed item delete from cloud
+              * */
+                Map data = await Domain().deleteProductImage(
+                    imageName, widget.product.productId.toString());
+
+                //delete success
+                if (data['status'] == '1') {
+                  _showSnackBar(
+                      '${AppLocalizations.of(context).translate('image_delete_success')}');
+                  await Future.delayed(Duration(milliseconds: 250));
+                  Navigator.of(context).pop();
+                  /*
+                  * after delete image open back the image selection dialog
+                  * */
+                  setState(() {
+                    imageName = 'no-image-found.png';
+                    _image = null;
+                    _showSelectionDialog(context);
+                  });
                 } else
                   _showSnackBar(
                       '${AppLocalizations.of(context).translate('something_went_wrong')}');
@@ -792,7 +946,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                       fit: BoxFit.fill,
                       image: NetworkImage(Domain.imagePath +
                           (widget.product != null
-                              ? widget.product.image
+                              ? imageName
                               : 'no-image-found.png')),
                       placeholder: NetworkImage(
                           '${Domain.imagePath}no-image-found.png')));
@@ -822,7 +976,6 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         // return alert dialog object
         return CategoryDialog(
           onSelect: (categoryName, categoryId) {
-            print('category: $categoryId');
             category.text = categoryName;
             //widget.product.categoryId = categoryId;
             this.categoryId = categoryId;
@@ -835,5 +988,12 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
 
   getUrl() async {
     this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+  }
+
+  getGalleryLimit() async {
+    Map data = await Domain().readGalleryLimit();
+    if (data['status'] == '1') {
+      galleryLimit = data['gallery_limit'][0]['gallery_limit'];
+    }
   }
 }

@@ -42,6 +42,7 @@ class _OrderFragmentState extends State<OrderFragment> {
                 Map data = object.data;
                 if (data['status'] == '1') {
                   List responseJson = data['order'];
+                  print(data['order']);
                   return OrderList(
                       orderStatus: widget.orderStatus,
                       startDate: widget.startDate,

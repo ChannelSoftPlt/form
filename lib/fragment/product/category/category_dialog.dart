@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:my/object/category.dart';
@@ -135,7 +136,7 @@ class _GroupingDialogState extends State<CategoryDialog> {
           title: Text(
               "${AppLocalizations.of(context).translate('delete_request')}"),
           content: Text(
-              "${AppLocalizations.of(context).translate('confirm_to_delete')} \n${categoryName.text}\n\n*${AppLocalizations.of(context).translate('category_will_remove_product')}"),
+              "${AppLocalizations.of(context).translate('confirm_to_delete')} \n${categoryName.text}\n*${AppLocalizations.of(context).translate('category_will_remove_product')}"),
           actions: <Widget>[
             FlatButton(
               child:
@@ -235,14 +236,12 @@ class _GroupingDialogState extends State<CategoryDialog> {
             if (object.connectionState == ConnectionState.done) {
               Map data = object.data;
               if (data['status'] == '1') {
+                category.clear();
                 List jsonProduct = data['category'];
-                print(jsonProduct);
 
                 category.addAll(jsonProduct
                     .map((jsonObject) => Category.fromJson(jsonObject))
                     .toList());
-
-                print(category.length);
 
                 return customListView();
               } else {
@@ -285,41 +284,64 @@ class _GroupingDialogState extends State<CategoryDialog> {
   Widget customListView() {
     return Container(
         width: double.maxFinite,
-        child: ListView.builder(
-            itemCount: category.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  ListTile(
-                      onTap: () => widget.onSelect(
-                          category[index].name, category[index].categoryId),
-                      title: Text(
-                        category[index].name,
-                        style: TextStyle(
-                            color: Color.fromRGBO(89, 100, 109, 1),
-                            fontSize: 16),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          setState(() {
-                            action = 'update';
-                            actionStream.add('create');
-                            categoryName.text = category[index].name;
-                            selectedId = category[index].categoryId;
-                          });
-                        },
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                    child: Divider(
-                      color: Colors.teal.shade100,
-                      thickness: 1.0,
-                    ),
-                  ),
-                ],
-              );
-            }));
+        child: ReorderableListView(
+          children: category
+              .asMap()
+              .map((index, category) =>
+                  MapEntry(index, categoryListItem(category, index)))
+              .values
+              .toList(),
+          onReorder: _onReorder,
+        ));
+  }
+
+  Widget categoryListItem(Category category, int position) {
+    return Card(
+      key: Key(category.name),
+      elevation: 5,
+      child: ListTile(
+          leading: Icon(Icons.unfold_more),
+          onTap: () => widget.onSelect(category.name, category.categoryId),
+          title: Text(
+            category.name,
+            style:
+                TextStyle(color: Color.fromRGBO(89, 100, 109, 1), fontSize: 16),
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              setState(() {
+                action = 'update';
+                actionStream.add('create');
+                categoryName.text = category.name;
+                selectedId = category.categoryId;
+              });
+            },
+          )),
+    );
+  }
+
+  _onReorder(int oldIndex, int newIndex) async {
+    if (newIndex > category.length) newIndex = category.length;
+    if (oldIndex < newIndex) newIndex--;
+
+    Category categoryObject = category[oldIndex];
+    category.removeAt(oldIndex);
+    category.insert(newIndex, categoryObject);
+
+    await updateCategorySequence();
+    setState(() {});
+  }
+
+  updateCategorySequence() async {
+    for (int i = 0; i < category.length; i++) {
+      category[i].sequence = i + 1;
+    }
+    Map data = await Domain().updateCategorySequence(jsonEncode(category));
+    if (data['status'] == '1') {
+      _showToast(
+          '${AppLocalizations.of(context).translate('update_category_sequence')}');
+    }
   }
 
   _reset() {
