@@ -384,30 +384,30 @@ class _OrderDetailState extends State<OrderDetail> {
                           'RM ${Order().convertToInt(order.deliveryFee).toStringAsFixed(2)}'),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('${AppLocalizations.of(context).translate('tax')}'),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: () => showEditShippingTaxDialog(context, 'tax'),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Text('${AppLocalizations.of(context).translate('edit')}',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 14,
-                                decoration: TextDecoration.underline,
-                              )),
-                        ),
-                      ),
-                      Text(
-                          'RM ${Order().convertToInt(order.tax).toStringAsFixed(2)}'),
-                    ],
-                  ),
+//                  SizedBox(
+//                    height: 10,
+//                  ),
+//                  Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                    children: <Widget>[
+//                      Text('${AppLocalizations.of(context).translate('tax')}'),
+//                      Spacer(),
+//                      GestureDetector(
+//                        onTap: () => showEditShippingTaxDialog(context, 'tax'),
+//                        child: Padding(
+//                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+//                          child: Text('${AppLocalizations.of(context).translate('edit')}',
+//                              style: TextStyle(
+//                                color: Colors.blue,
+//                                fontSize: 14,
+//                                decoration: TextDecoration.underline,
+//                              )),
+//                        ),
+//                      ),
+//                      Text(
+//                          'RM ${Order().convertToInt(order.tax).toStringAsFixed(2)}'),
+//                    ],
+//                  ),
                   SizedBox(
                     height: 15,
                   ),
@@ -689,9 +689,12 @@ class _OrderDetailState extends State<OrderDetail> {
       icon: Image.asset('drawable/whatsapp.png'),
       offset: Offset(0, 10),
       itemBuilder: (context) => [
-        _buildMenuItem('message', '${AppLocalizations.of(context).translate('send_message')}', true),
-        _buildMenuItem('confirm', '${AppLocalizations.of(context).translate('confirm_order')}', true),
-        _buildMenuItem('receipt', '${AppLocalizations.of(context).translate('send_receipt')}', true),
+        _buildMenuItem('message',
+            '${AppLocalizations.of(context).translate('send_message')}', true),
+        _buildMenuItem('confirm',
+            '${AppLocalizations.of(context).translate('confirm_order')}', true),
+        _buildMenuItem('receipt',
+            '${AppLocalizations.of(context).translate('send_receipt')}', true),
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -725,10 +728,18 @@ class _OrderDetailState extends State<OrderDetail> {
       ),
       offset: Offset(0, 10),
       itemBuilder: (context) => [
-        _buildMenuItem('group', '${AppLocalizations.of(context).translate('assign_group')}', true),
-        _buildMenuItem('status', '${AppLocalizations.of(context).translate('change_status')}', order.status != '1'),
-        _buildMenuItem('driver', '${AppLocalizations.of(context).translate('assign_driver')}', order.status != '1'),
-        _buildMenuItem('delete', '${AppLocalizations.of(context).translate('delete_order')}', true)
+        _buildMenuItem('group',
+            '${AppLocalizations.of(context).translate('assign_group')}', true),
+        _buildMenuItem(
+            'status',
+            '${AppLocalizations.of(context).translate('change_status')}',
+            order.status != '1'),
+        _buildMenuItem(
+            'driver',
+            '${AppLocalizations.of(context).translate('assign_driver')}',
+            order.status != '1'),
+        _buildMenuItem('delete',
+            '${AppLocalizations.of(context).translate('delete_order')}', true)
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -799,12 +810,14 @@ class _OrderDetailState extends State<OrderDetail> {
       Map data = await Domain()
           .updateDeliveryDate(selectedDate, selectedTime, order.id.toString());
       if (data['status'] == '1') {
-        showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
+        showSnackBar(
+            '${AppLocalizations.of(context).translate('update_success')}');
         setState(() {
           orderItems.clear();
         });
       } else {
-        showSnackBar("${AppLocalizations.of(context).translate('something_went_wrong')}");
+        showSnackBar(
+            "${AppLocalizations.of(context).translate('something_went_wrong')}");
       }
     });
   }
@@ -819,11 +832,14 @@ class _OrderDetailState extends State<OrderDetail> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("${AppLocalizations.of(context).translate('delete_request')}"),
-          content: Text('${AppLocalizations.of(context).translate('delete_message')}'),
+          title: Text(
+              "${AppLocalizations.of(context).translate('delete_request')}"),
+          content: Text(
+              '${AppLocalizations.of(context).translate('delete_message')}'),
           actions: <Widget>[
             FlatButton(
-              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -840,7 +856,8 @@ class _OrderDetailState extends State<OrderDetail> {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 } else
-                  CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -866,12 +883,14 @@ class _OrderDetailState extends State<OrderDetail> {
             print(data);
 
             if (data['status'] == '1') {
-              showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
+              showSnackBar(
+                  '${AppLocalizations.of(context).translate('update_success')}');
               setState(() {
                 orderItems.clear();
               });
             } else {
-              CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(context).translate('something_went_wrong')}');
             }
           },
         );
@@ -894,12 +913,14 @@ class _OrderDetailState extends State<OrderDetail> {
                 .setDriver(driverName, order.id.toString(), driverId);
 
             if (data['status'] == '1') {
-              showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
+              showSnackBar(
+                  '${AppLocalizations.of(context).translate('update_success')}');
               setState(() {
                 orderItems.clear();
               });
             } else {
-              CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(context).translate('something_went_wrong')}');
             }
           },
         );
@@ -925,13 +946,15 @@ class _OrderDetailState extends State<OrderDetail> {
                   await Domain().updateStatus(value, order.id.toString());
 
               if (data['status'] == '1') {
-                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
+                showSnackBar(
+                    '${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {
                   orderItems.clear();
                   order.status = value;
                 });
               } else
-                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -954,12 +977,14 @@ class _OrderDetailState extends State<OrderDetail> {
 
               Map data = await Domain().updateOrderItem(orderItem);
               if (data['status'] == '1') {
-                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
+                showSnackBar(
+                    '${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {
                   orderItems.clear();
                 });
               } else
-                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -994,12 +1019,14 @@ class _OrderDetailState extends State<OrderDetail> {
                     .deleteOrderItem(orderItem.orderProductId.toString());
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
-                  CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('delete_success')}');
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(context).translate('delete_success')}');
                   setState(() {
                     orderItems.clear();
                   });
                 } else
-                  CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -1027,12 +1054,14 @@ class _OrderDetailState extends State<OrderDetail> {
               Map data = await Domain().updateShippingFeeAndTax(order);
               print(data);
               if (data['status'] == '1') {
-                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
+                showSnackBar(
+                    '${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {
                   orderItems.clear();
                 });
               } else
-                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -1058,12 +1087,14 @@ class _OrderDetailState extends State<OrderDetail> {
 
               print(data);
               if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('add_success')}');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('add_success')}');
                 setState(() {
                   orderItems.clear();
                 });
               } else
-                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -1087,12 +1118,14 @@ class _OrderDetailState extends State<OrderDetail> {
               Map data = await Domain().updateAddress(order);
 
               if (data['status'] == '1') {
-                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
+                showSnackBar(
+                    '${AppLocalizations.of(context).translate('update_success')}');
                 setState(() {
                   orderItems.clear();
                 });
               } else
-                CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
             });
       },
     );
@@ -1157,7 +1190,8 @@ class _OrderDetailState extends State<OrderDetail> {
         },
       );
     } catch (e) {
-      showSnackBar('${AppLocalizations.of(context).translate('invalid_address')}');
+      showSnackBar(
+          '${AppLocalizations.of(context).translate('invalid_address')}');
     }
   }
 
