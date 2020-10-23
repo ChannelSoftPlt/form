@@ -281,7 +281,5 @@
   "delete_image_gallery": "Confirm to remove this picture? \n*This picture will permanently removed from your product!",
   "delete_product_image": "Are you sure that you want to replace a new picture?\n*This picture will be deleted from your product!",
   "image_delete_success": "Picture Delete Successfully!",
-  "reach_gallery_limit": "Image gallery cannot more than",
-
-
+  "reach_gallery_limit": "Image gallery cannot more than"
 }
