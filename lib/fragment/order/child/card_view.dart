@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:my/fragment/order/detail/order_detail.dart';
@@ -9,8 +10,10 @@ import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/statusControl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:my/utils/paymentStatus.dart';
 
 import 'dialog/grouping_dialog.dart';
+import 'package:my/shareWidget/payment_status_dialog.dart';
 
 class CardView extends StatefulWidget {
   final Order orders;
@@ -123,16 +126,42 @@ class _CardViewState extends State<CardView> {
                     ),
                   ),
                   Spacer(),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
-                    decoration: BoxDecoration(
-                        color: StatusControl()
-                            .setStatusColor(widget.orders.status)),
-                    child: Text(
-                      StatusControl().setStatus(widget.orders.status, context),
-                      style: TextStyle(fontSize: 12, color: Colors.white),
-                    ),
-                  ),
+                  Row(
+                    children: [
+                      Visibility(
+                        visible: widget.orders.paymentStatus != '0',
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+                          decoration: BoxDecoration(
+                              color: PaymentStatus()
+                                  .setStatusColor(widget.orders.paymentStatus)),
+                          child: Text(
+                            PaymentStatus().setStatus(
+                                widget.orders.paymentStatus, context),
+                            style: TextStyle(fontSize: 12, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+                        decoration: BoxDecoration(
+                            color: StatusControl()
+                                .setStatusColor(widget.orders.status)),
+                        child: Text(
+                          StatusControl()
+                              .setStatus(widget.orders.status, context),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: widget.orders.status == '1'
+                                  ? Colors.black54
+                                  : Colors.white),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ],
@@ -166,6 +195,12 @@ class _CardViewState extends State<CardView> {
           child: Text(
               '${AppLocalizations.of(context).translate('update_status')}'),
         ),
+        if (widget.orders.paymentStatus != '0')
+          PopupMenuItem(
+            value: 'payment_status',
+            child: Text(
+                '${AppLocalizations.of(context).translate('change_payment_status')}'),
+          ),
         PopupMenuItem(
           value: 'delete',
           child: Text('${AppLocalizations.of(context).translate('delete')}'),
@@ -195,10 +230,42 @@ class _CardViewState extends State<CardView> {
             else
               _showDialog(context);
             break;
+          case 'payment_status':
+            showPaymentStatusDialog(context);
+            break;
           case 'delete':
             showDeleteOrderDialog(context);
             break;
         }
+      },
+    );
+  }
+
+  /*
+  * update payment status dialog
+  * */
+  showPaymentStatusDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return PaymentStatusDialog(
+            paymentStatus: widget.orders.paymentStatus,
+            onClick: (value) async {
+              await Future.delayed(Duration(milliseconds: 500));
+              Navigator.pop(mainContext);
+              Map data = await Domain()
+                  .updatePaymentStatus(value, widget.orders.id.toString());
+
+              if (data['status'] == '1') {
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
+                widget.refresh();
+              } else
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+            });
       },
     );
   }
@@ -217,11 +284,11 @@ class _CardViewState extends State<CardView> {
                 '1', groupName, widget.orders.id.toString(), orderGroupId);
             if (data['status'] == '1') {
               CustomSnackBar.show(mainContext,
-                  '${AppLocalizations.of(context).translate('update_success')}');
+                  '${AppLocalizations.of(mainContext).translate('update_success')}');
               widget.refresh();
             } else {
               CustomSnackBar.show(mainContext,
-                  '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                  '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }
           },
         );
@@ -266,7 +333,8 @@ class _CardViewState extends State<CardView> {
               '${AppLocalizations.of(context).translate('delete_message')}'),
           actions: <Widget>[
             FlatButton(
-              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -281,11 +349,12 @@ class _CardViewState extends State<CardView> {
                     await Domain().deleteOrder(widget.orders.id.toString());
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
-                  CustomSnackBar.show(mainContext, '${AppLocalizations.of(context).translate('delete_success')}');
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(mainContext).translate('delete_success')}');
                   widget.refresh();
                 } else
                   CustomSnackBar.show(mainContext,
-                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                      '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
               },
             ),
           ],
@@ -310,13 +379,14 @@ class _CardViewState extends State<CardView> {
 
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext,
-                    '${AppLocalizations.of(context).translate('update_success')}');
-                setState(() {
-                  widget.orders.status = value;
-                });
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
+                widget.refresh();
+                // setState(() {
+                //   widget.orders.status = value;
+                // });
               } else
                 CustomSnackBar.show(mainContext,
-                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             });
       },
     );

@@ -366,18 +366,35 @@ class Domain {
   /*
   * update payment
   * */
-  updatePayment(bankDetail, bankTransfer, cod) async {
+  updatePayment(bankDetail, bankTransfer, cod, fpayTransfer) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'bank_details': bankDetail,
       'cash_on_delivery': cod,
       'bank_transfer': bankTransfer,
+      'fpay_transfer': fpayTransfer,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
     });
     return jsonDecode(response.body);
   }
+
+   /*
+  * update payment
+  * */
+   updateFPayDetail(fpayUsername, fpayApiKey, fpaySecretKey) async {
+     var response = await http.post(Domain.profile, body: {
+       'update': '1',
+       'fpay_username': fpayUsername,
+       'fpay_api_key': fpayApiKey,
+       'fpay_secret_key': fpaySecretKey,
+       'merchant_id':
+       Merchant.fromJson(await SharePreferences().read("merchant"))
+           .merchantId,
+     });
+     return jsonDecode(response.body);
+   }
 
   /*
   * update order setting

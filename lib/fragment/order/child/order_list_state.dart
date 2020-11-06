@@ -307,11 +307,11 @@ class _OrderListState extends State<OrderList> {
 
             if (data['status'] == '1') {
               CustomSnackBar.show(mainContext,
-                  '${AppLocalizations.of(context).translate('update_success')}');
+                  '${AppLocalizations.of(mainContext).translate('update_success')}');
               _onRefresh();
             } else {
               CustomSnackBar.show(mainContext,
-                  '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                  '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }
           },
         );
@@ -335,11 +335,11 @@ class _OrderListState extends State<OrderList> {
 
             if (data['status'] == '1') {
               CustomSnackBar.show(mainContext,
-                  '${AppLocalizations.of(context).translate('update_success')}');
+                  '${AppLocalizations.of(mainContext).translate('update_success')}');
               _onRefresh();
             } else {
               CustomSnackBar.show(mainContext,
-                  '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                  '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }
           },
         );
@@ -363,11 +363,11 @@ class _OrderListState extends State<OrderList> {
 
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext,
-                    '${AppLocalizations.of(context).translate('update_success')}');
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
                 _onRefresh();
               } else
                 CustomSnackBar.show(mainContext,
-                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             });
       },
     );
@@ -405,11 +405,11 @@ class _OrderListState extends State<OrderList> {
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
                   CustomSnackBar.show(mainContext,
-                      '${AppLocalizations.of(context).translate('delete_success')}');
+                      '${AppLocalizations.of(mainContext).translate('delete_success')}');
                   _onRefresh();
                 } else
                   CustomSnackBar.show(mainContext,
-                      '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                      '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
               },
             ),
           ],

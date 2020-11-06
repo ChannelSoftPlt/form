@@ -169,6 +169,9 @@
   "payment_setting": "Payment Setting",
   "bank_transfer": "Manual Bank Transfer",
   "cash_on_delivery": "Cash On Delivery",
+  "bank_transfer_description": "Customers will have to bank in money to you via bank transfer manually",
+  "cash_on_delivery_description": "Customers will only make payment when order received",
+  "setup": "Setup",
   "update_payment": "Update Payment",
   "bank_transfer_hint": "Manual Bank Transfer require bank details!",
 
@@ -290,5 +293,11 @@
   "reach_gallery_limit": "Image gallery cannot more than",
 
   "payment_due": "Payment Due",
-  "days": "Days"
+  "api_key": "Api Key",
+  "days": "Days",
+
+  "payment_setting_description": "Setup your payment method for you E-Menu",
+  "setup_fpay": "Setup fpay",
+  "merchant_name": "Merchant Name",
+  "secret_key": "Secret Key"
 }

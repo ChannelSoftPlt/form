@@ -7,6 +7,7 @@ import 'package:flutter_html/html_parser.dart';
 import 'package:flutter_html/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my/fragment/setting/payment/edit_bank_detail.dart';
+import 'package:my/fragment/setting/payment/edit_payment_gateway.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
@@ -20,7 +21,7 @@ class EditPaymentMethod extends StatefulWidget {
 
 class _ResetPasswordState extends State<EditPaymentMethod> {
   var bankDetails = TextEditingController();
-  bool manualBankTransfer, cod;
+  bool manualBankTransfer, cod, fpay;
   StreamController refreshController;
 
   @override
@@ -65,6 +66,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                   bankDetails.text = merchant.bankDetail;
                   manualBankTransfer = merchant.bankTransfer != '1';
                   cod = merchant.cashOnDelivery != '1';
+                  fpay = merchant.fpayTransfer != '1';
 
                   return mainContent(context);
                 } else {
@@ -98,39 +100,114 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                             Row(
                               children: <Widget>[
                                 Icon(
-                                  Icons.payment,
+                                  Icons.date_range,
                                   color: Colors.grey,
                                 ),
-                                Text(
-                                  '${AppLocalizations.of(context).translate('payment_setting')}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromRGBO(89, 100, 109, 1),
-                                      fontSize: 16),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text:
+                                            '${AppLocalizations.of(context).translate('payment_setting')}',
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    89, 100, 109, 1),
+                                                fontWeight: FontWeight.bold)),
+                                        TextSpan(text: '\n'),
+                                        TextSpan(
+                                          text:
+                                          '${AppLocalizations.of(context).translate('payment_setting_description')}',
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ],
+                            ),
+                            SizedBox(
+                              height: 10,
                             ),
                             CheckboxListTile(
                               title: Text(
                                   '${AppLocalizations.of(context).translate('bank_transfer')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('bank_transfer_description')}',
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
                               value: manualBankTransfer,
                               onChanged: (newValue) {
                                 refreshController.add('');
                                 manualBankTransfer = newValue;
                               },
                               controlAffinity: ListTileControlAffinity
-                                  .leading, //  <-- leading Checkbox
+                                  .trailing, //  <-- leading Checkbox
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
                             ),
                             CheckboxListTile(
                               title: Text(
-                                  "${AppLocalizations.of(context).translate('cash_on_delivery')}"),
+                                  '${AppLocalizations.of(context).translate('cash_on_delivery')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('cash_on_delivery_description')}',
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
                               value: cod,
                               onChanged: (newValue) {
                                 refreshController.add('');
                                 cod = newValue;
                               },
                               controlAffinity: ListTileControlAffinity
-                                  .leading, //  <-- leading Checkbox
+                                  .trailing, //  <-- leading Checkbox
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: Text(
+                                    'Fpay Payment Gateway',
+                                    style: TextStyle(fontSize: 16),
+                                  )),
+                                  RaisedButton(
+                                    elevation: 5,
+                                    onPressed: () => showPaymentGatewayDialog(),
+                                    child: Text(
+                                      '${AppLocalizations.of(context).translate('setup')}',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    color: Colors.grey,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5)),
+                                  ),
+                                  Checkbox(
+                                    value: fpay,
+                                    onChanged: (newValue) {
+                                      refreshController.add('');
+                                      fpay = newValue;
+                                    },
+                                  )
+                                ],
+                              ),
                             ),
                             SizedBox(
                               height: 20,
@@ -269,6 +346,16 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
         });
   }
 
+  Future<void> showPaymentGatewayDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return PaymentGatewayDialog();
+      },
+    );
+  }
+
   updatePayment(context) async {
     if (manualBankTransfer && bankDetails.text.length <= 0) {
       return CustomSnackBar.show(context,
@@ -276,7 +363,10 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
     }
 
     Map data = await Domain().updatePayment(
-        bankDetails.text, (manualBankTransfer ? '0' : '1'), (cod ? '0' : '1'));
+        bankDetails.text,
+        (manualBankTransfer ? '0' : '1'),
+        (cod ? '0' : '1'),
+        (fpay ? '0' : '1'));
 
     if (data['status'] == '1') {
       CustomSnackBar.show(context,
