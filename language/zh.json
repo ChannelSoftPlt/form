@@ -4,6 +4,12 @@
   "new_order": "新订单",
   "processing": "处理中",
   "all_orders": "所有订单",
+
+  "change_payment_status": "更改付款状态",
+  "payment_pending": "等待付款",
+  "payment_success": "已付款",
+  "payment_failed": "付款失败",
+
   "selected_item": "已选产品",
   "self_collect": "自取",
   "view_detail": "详情",
@@ -284,5 +290,8 @@
   "delete_image_gallery": "确认删除此图片？\n*此图片将从您的产品中删除！",
   "delete_product_image": "您确定要替换新图片吗？\n*此图片将从您的产品中删除!",
   "image_delete_success": "图片删除成功！",
-  "reach_gallery_limit": "图片库不能超过"
+  "reach_gallery_limit": "图片库不能超过",
+
+  "payment_due": "付款截止日期",
+  "days": "天"
 }

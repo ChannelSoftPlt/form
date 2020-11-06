@@ -9,9 +9,9 @@ import 'package:my/utils/sharePreference.dart';
 import 'package:http/http.dart' as http;
 
 class Domain {
-  static var domain = 'https://www.emenu.com.my/';
+//  static var domain = 'https://www.emenu.com.my/';
 
-  // static var domain = 'https://www.petkeeper.com.my/form/';
+   static var domain = 'https://www.petkeeper.com.my/form/';
 
   static var registration = domain + 'registration/index.php';
   static var order = domain + 'mobile_api/order/index.php';
@@ -201,11 +201,24 @@ class Domain {
   }
 
   /*
-  * read product
+  * launch check
   * */
   launchCheck() async {
     var response = await http.post(Domain.registration, body: {
       'launch_check': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * check subscription days left
+  * */
+  expiredChecking() async {
+    var response = await http.post(Domain.registration, body: {
+      'subscription_check': '1',
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
@@ -220,8 +233,8 @@ class Domain {
     var response = await http.post(Domain.product, body: {
       'read_gallery_limit': '1',
       'merchant_id':
-      Merchant.fromJson(await SharePreferences().read("merchant"))
-          .merchantId,
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -237,6 +250,18 @@ class Domain {
     });
     return jsonDecode(response.body);
   }
+
+   /*
+  * update payment status
+  * */
+   updatePaymentStatus(paymentStatus, orderId) async {
+     var response = await http.post(Domain.order, body: {
+       'update_payment_status': '1',
+       'order_id': orderId,
+       'payment_status': paymentStatus
+     });
+     return jsonDecode(response.body);
+   }
 
   /*
   * update status

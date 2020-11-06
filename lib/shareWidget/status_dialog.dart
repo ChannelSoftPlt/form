@@ -22,7 +22,7 @@ class StatusDialog extends StatelessWidget {
                 orientation: GroupedButtonsOrientation.VERTICAL,
                 picked: status != '-1' ? StatusControl().setStatus(status, context) : null,
                 onSelected: (String selected) =>onClick(StatusControl().setStatusCode(selected, context)),
-                labels: StatusControl().statusList,
+                labels: StatusControl().getStatusList(context),
                 itemBuilder: (Radio cb, Text txt, int i){
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.start,

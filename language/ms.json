@@ -4,6 +4,12 @@
   "new_order": "Pesanan Baru",
   "processing": "Tengah Proses",
   "all_orders": "Semua Pesanan",
+
+  "change_payment_status": "Tukar Status Pembayaran",
+  "payment_pending": "Payment Pending",
+  "payment_success": "Payment Success",
+  "payment_failed": "Payment Failed",
+
   "selected_item": "Barang Terpilih",
   "self_collect": "Ambil Sendiri",
   "view_detail": "Lihat Perincian",
@@ -284,5 +290,8 @@
   "delete_image_gallery": "Sahkan untuk padam gambar ini?\n* Gambar ini akan padam dari produk anda secara kekal!",
   "delete_product_image": "Adakah anda pasti mahu mengganti gambar baru?\n* Gambar ini akan dipadamkan dari produk anda!",
   "image_delete_success": "Gambar Padam Berjaya!",
-  "reach_gallery_limit": "Galeri gambar tidak lebih daripada"
+  "reach_gallery_limit": "Galeri gambar tidak lebih daripada",
+
+  "payment_due": "Payment Due",
+  "days": "Hari"
 }

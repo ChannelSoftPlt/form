@@ -25,6 +25,7 @@ import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -200,7 +201,19 @@ class _ListState extends State<HomePage> {
             ),
           ),
           Visibility(
-            visible: currentIndex != 4 || currentIndex != 3,
+            visible: currentIndex == 4,
+            child: IconButton(
+              icon: Icon(
+                Icons.remove_red_eye,
+                color: Colors.orange,
+              ),
+              onPressed: () {
+                launch((url));
+              },
+            ),
+          ),
+          Visibility(
+            visible: currentIndex != 4,
             child: IconButton(
               icon: Icon(
                 Icons.search,
@@ -219,7 +232,6 @@ class _ListState extends State<HomePage> {
             ),
             onPressed: () {
               openShareDialog(context);
-//              Share.share('$url');
               // do something
             },
           )
@@ -344,7 +356,8 @@ class _ListState extends State<HomePage> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("${AppLocalizations.of(context).translate('share_link')}"),
+          title:
+              Text("${AppLocalizations.of(context).translate('share_link')}"),
           content: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
@@ -366,10 +379,12 @@ class _ListState extends State<HomePage> {
                     maxLengthEnforced: true,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.textsms),
-                      labelText: '${AppLocalizations.of(context).translate('content')}',
+                      labelText:
+                          '${AppLocalizations.of(context).translate('content')}',
                       labelStyle:
                           TextStyle(fontSize: 16, color: Colors.blueGrey),
-                      hintText: '${AppLocalizations.of(context).translate('write_share_content')}',
+                      hintText:
+                          '${AppLocalizations.of(context).translate('write_share_content')}',
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal)),
                     ),
@@ -380,7 +395,8 @@ class _ListState extends State<HomePage> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -419,7 +435,7 @@ class _ListState extends State<HomePage> {
       case 1:
         return 'group';
       case 2:
-        return 'user';
+        return 'customer';
       default:
         return 'product';
     }

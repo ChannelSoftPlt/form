@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:my/fragment/setting/edit_profile.dart';
 import 'package:my/fragment/setting/payment/edit_payment_method.dart';
 import 'package:my/fragment/setting/payment/language_setting.dart';
@@ -24,6 +25,10 @@ class _SettingFragmentState extends State<SettingFragment> {
   String _platformVersion = 'Default';
   bool isButtonPressed = false;
   String url = '';
+
+  String expiredDate = '-';
+  String dayLeft = '-';
+
   final key = new GlobalKey<ScaffoldState>();
 
   @override
@@ -32,6 +37,7 @@ class _SettingFragmentState extends State<SettingFragment> {
     super.initState();
     getVersionNumber();
     getUrl();
+    getExpiredDate();
   }
 
   @override
@@ -52,6 +58,36 @@ class _SettingFragmentState extends State<SettingFragment> {
                 ),
                 SizedBox(
                   height: 10,
+                ),
+                Container(
+                  width: double.infinity,
+                  child: Card(
+                    shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              flex: 3,
+                              child: Text(
+                                  '${AppLocalizations.of(context).translate('payment_due')} $expiredDate',
+                                  style: TextStyle(
+                                      color: Colors.black87, fontSize: 14))),
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                  '$dayLeft ${AppLocalizations.of(context).translate('days')}',
+                                  style: TextStyle(
+                                      color: Colors.orange,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)))
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 ListTile(
                     leading: Icon(
@@ -458,5 +494,35 @@ class _SettingFragmentState extends State<SettingFragment> {
         content: new Text(
             '${AppLocalizations.of(context).translate('something_went_wrong')}'),
       ));
+  }
+
+  getExpiredDate() async {
+    Map data = await Domain().expiredChecking();
+    if (data['status'] == '1') {
+      String expiredDate = data['expired_date'][0]['end_date'].toString();
+      this.expiredDate = setExpiredDate(expiredDate);
+      this.dayLeft = countDayLeft(expiredDate);
+      setState(() {});
+    }
+  }
+
+  String setExpiredDate(date) {
+    final dateFormat = DateFormat("dd/MM/yyyy");
+    try {
+      DateTime todayDate = DateTime.parse(date);
+      return dateFormat.format(todayDate);
+    } on Exception {
+      return '';
+    }
+  }
+
+  String countDayLeft(date) {
+    final currentDate = DateTime.now();
+    try {
+      DateTime expired = DateTime.parse(date);
+      return (expired.difference(currentDate).inDays + 1).toString();
+    } on Exception {
+      return '';
+    }
   }
 }

@@ -56,6 +56,8 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                 if (data['status'] == '1') {
                   List responseJson = data['profile'];
 
+                  print(responseJson);
+
                   Merchant merchant = responseJson
                       .map((jsonObject) => Merchant.fromJson(jsonObject))
                       .toList()[0];

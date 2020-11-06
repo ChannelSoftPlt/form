@@ -13,11 +13,13 @@ import 'package:my/fragment/order/child/dialog/grouping_dialog.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
+import 'package:my/shareWidget/payment_status_dialog.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 import 'package:my/shareWidget/status_dialog.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
+import 'package:my/utils/paymentStatus.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:my/utils/statusControl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -76,10 +78,10 @@ class _OrderDetailState extends State<OrderDetail> {
             if (object.hasData) {
               if (object.connectionState == ConnectionState.done) {
                 Map data = object.data;
-                print(data);
                 if (data['order_detail_status'] == '1') {
                   List orderDetail = data['order_detail'];
                   order = Order.fromJson(orderDetail[0]);
+                  print('order status: ${order.paymentStatus}');
                 }
 
                 if (data['order_item_status'] == '1') {
@@ -97,7 +99,6 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   Widget mainContent(context) {
-    print('${AppLocalizations.of(context).translate('edit')}');
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -169,16 +170,39 @@ class _OrderDetailState extends State<OrderDetail> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
-                            decoration: BoxDecoration(
-                                color: StatusControl()
-                                    .setStatusColor(order.status)),
-                            child: Text(
-                              StatusControl().setStatus(order.status, context),
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+                                decoration: BoxDecoration(
+                                    color: StatusControl()
+                                        .setStatusColor(order.status)),
+                                child: Text(
+                                  StatusControl()
+                                      .setStatus(order.status, context),
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.white),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Visibility(
+                                visible: order.paymentStatus != '0',
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+                                  decoration: BoxDecoration(
+                                      color: PaymentStatus()
+                                          .setStatusColor(order.paymentStatus)),
+                                  child: Text(
+                                    PaymentStatus().setStatus(
+                                        order.paymentStatus, context),
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           Visibility(
                               visible: order.orderGroupId != null,
@@ -206,7 +230,9 @@ class _OrderDetailState extends State<OrderDetail> {
                           )
                         ],
                       ),
-                      popUpMenu(context),
+                      Container(
+                          alignment: Alignment.topRight,
+                          child: popUpMenu(context)),
                     ],
                   ),
                 ],
@@ -735,6 +761,10 @@ class _OrderDetailState extends State<OrderDetail> {
             '${AppLocalizations.of(context).translate('change_status')}',
             order.status != '1'),
         _buildMenuItem(
+            'payment_status',
+            '${AppLocalizations.of(context).translate('change_payment_status')}',
+            order.paymentStatus != '0'),
+        _buildMenuItem(
             'driver',
             '${AppLocalizations.of(context).translate('assign_driver')}',
             order.status != '1'),
@@ -750,6 +780,9 @@ class _OrderDetailState extends State<OrderDetail> {
             break;
           case 'status':
             showStatusDialog(context);
+            break;
+          case 'payment_status':
+            showPaymentStatusDialog(context);
             break;
           case 'driver':
             showDriverDialog(context);
@@ -944,6 +977,38 @@ class _OrderDetailState extends State<OrderDetail> {
               Navigator.pop(mainContext);
               Map data =
                   await Domain().updateStatus(value, order.id.toString());
+
+              if (data['status'] == '1') {
+                showSnackBar(
+                    '${AppLocalizations.of(context).translate('update_success')}');
+                setState(() {
+                  orderItems.clear();
+                  order.status = value;
+                });
+              } else
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
+            });
+      },
+    );
+  }
+
+  /*
+  * update payment status dialog
+  * */
+  showPaymentStatusDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return PaymentStatusDialog(
+            paymentStatus: order.paymentStatus,
+            onClick: (value) async {
+              await Future.delayed(Duration(milliseconds: 500));
+              Navigator.pop(mainContext);
+              Map data =
+              await Domain().updatePaymentStatus(value, order.id.toString());
 
               if (data['status'] == '1') {
                 showSnackBar(

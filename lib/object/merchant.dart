@@ -48,6 +48,7 @@ class Merchant {
         whatsAppNumber = json['whatsapp_number'],
         bankDetail = json['bank_details'],
         cashOnDelivery = json['cash_on_delivery'],
+        bankTransfer = json['bank_transfer'],
         emailOption = json['email_option'].toString(),
         selfCollectOption = json['self_collect'].toString(),
         dateOption = json['delivery_date_option'].toString(),
