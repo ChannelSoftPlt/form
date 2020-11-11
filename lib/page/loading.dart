@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/progress_bar.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
+import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -15,6 +19,7 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
   final key = new GlobalKey<ScaffoldState>();
+  String status;
 
   @override
   void initState() {
@@ -67,19 +72,36 @@ class _LoadingPageState extends State<LoadingPage> {
 
   void launchChecking() async {
     Map data = await Domain().launchCheck();
-    print(data);
     if (data['status'] == '1') {
-      String merchantStatus = data['merchant_status'][0]['status'].toString();
-      if (merchantStatus == '1') {
-        Merchant merchant =
-            Merchant.fromJson(await SharePreferences().read('merchant'));
-        merchant.merchantId != null
-            ? Navigator.pushReplacementNamed(context, '/home')
-            : Navigator.pushReplacementNamed(context, '/login');
-      } else
-        openDisableDialog();
+      status = data['merchant_status'][0]['status'].toString();
+
+      String latestVersion = data['version'][0]['version'].toString();
+      String currentVersion = await getVersionNumber();
+      print('current: $currentVersion');
+      if (latestVersion != currentVersion) {
+        openUpdateDialog(data);
+        return;
+      }
+      checkMerchantStatus();
     } else
       openDisableDialog();
+  }
+
+  checkMerchantStatus() async {
+    String merchantStatus = status;
+    if (merchantStatus == '1') {
+      Merchant merchant =
+          Merchant.fromJson(await SharePreferences().read('merchant'));
+      merchant.merchantId != null
+          ? Navigator.pushReplacementNamed(context, '/home')
+          : Navigator.pushReplacementNamed(context, '/login');
+    } else
+      openDisableDialog();
+  }
+
+  getVersionNumber() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo.version;
   }
 
   /*
@@ -94,7 +116,7 @@ class _LoadingPageState extends State<LoadingPage> {
         // return alert dialog object
         return AlertDialog(
           title: Text(
-            "Something Went Wrong",
+            "${AppLocalizations.of(context).translate('something_went_wrong')}",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           content: Container(
@@ -107,7 +129,7 @@ class _LoadingPageState extends State<LoadingPage> {
               children: <Widget>[
                 Image.asset('drawable/error.png'),
                 Text(
-                  'Unable access into your account..please contact our administrator for future support!',
+                  '${AppLocalizations.of(context).translate('account_disable_description')}',
                   style: TextStyle(fontSize: 14),
                   textAlign: TextAlign.center,
                 )
@@ -129,6 +151,63 @@ class _LoadingPageState extends State<LoadingPage> {
               ),
               onPressed: () async {
                 launch(('https://www.emenu.com.my'));
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /*
+  * update available
+  * */
+  openUpdateDialog(data) {
+    // flutter defined function
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text(
+            "${AppLocalizations.of(context).translate('new_version')}",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            height: 40,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '${AppLocalizations.of(context).translate('new_version_description')}',
+                  style: TextStyle(fontSize: 15),
+                  textAlign: TextAlign.left,
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(AppLocalizations.of(context).translate('later')),
+              onPressed: () {
+                Navigator.of(context).pop();
+                checkMerchantStatus();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                AppLocalizations.of(context).translate('update_now'),
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                launch((Platform.isIOS
+                    ? data['version'][0]['appstore_url'].toString()
+                    : data['version'][0]['playstore_url'].toString()));
                 Navigator.of(context).pop();
               },
             ),

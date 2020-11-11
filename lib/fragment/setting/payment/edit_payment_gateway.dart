@@ -99,6 +99,7 @@ class _PaymentGatewayDialogState extends State<PaymentGatewayDialog> {
       CustomToast('${AppLocalizations.of(context).translate('update_success')}',
               context)
           .show();
+      Navigator.of(context).pop();
     } else
       CustomToast(
               '${AppLocalizations.of(context).translate('something_went_wrong')}',

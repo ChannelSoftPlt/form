@@ -212,7 +212,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           Visibility(
                               visible: order.orderGroupId != null,
                               child: Text(
-                                  '${AppLocalizations.of(context).translate('group')}: ${order.groupName}',
+                                  '${AppLocalizations.of(context).translate('group')}: ${getGroupName(order.groupName)}',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold))),
                           Visibility(
@@ -720,6 +720,14 @@ class _OrderDetailState extends State<OrderDetail> {
     );
   }
 
+  String getGroupName(groupName) {
+    try {
+      return groupName.split('\-')[1];
+    } catch (e) {
+      return groupName;
+    }
+  }
+
   /*
 *
 *
@@ -946,7 +954,12 @@ class _OrderDetailState extends State<OrderDetail> {
               setState(() {
                 orderItems.clear();
               });
-            } else {
+            }
+            else if(data['status'] == '3') {
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(mainContext).translate('group_existed')}');
+            }
+            else {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }

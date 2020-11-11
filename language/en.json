@@ -299,5 +299,14 @@
   "setup_fpay": "Setup fpay",
   "merchant_name": "Merchant Name",
   "secret_key": "Secret Key",
-  "api_key": "Api Key"
+  "api_key": "Api Key",
+
+  "new_version": "New Version Available",
+  "new_version_description": "There is a newer version available for download!",
+  "later": "Later",
+  "update_now": "Update Now",
+
+  "group_existed": "This group already existed!",
+
+  "account_disable_description": "Unable access into your account..please contact our administrator for future support!"
 }

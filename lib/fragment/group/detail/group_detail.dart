@@ -315,10 +315,14 @@ class _GroupDetailState extends State<GroupDetail> {
               Map data = await Domain().updateGroupName(orderGroup);
               print(data);
               if (data['status'] == '1') {
-                showSnackBar('${AppLocalizations.of(context).translate('update_success')}');
+                showSnackBar('${AppLocalizations.of(mainContext).translate('update_success')}');
                 setState(() {});
-              } else
-                showSnackBar('${AppLocalizations.of(context).translate('something_went_wrong')}');
+              }
+              else if(data['status'] == '3') {
+                showSnackBar('${AppLocalizations.of(mainContext).translate('group_existed')}');
+              }
+              else
+                showSnackBar('${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             });
       },
     );

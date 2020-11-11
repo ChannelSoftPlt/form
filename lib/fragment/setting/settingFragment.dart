@@ -521,7 +521,7 @@ class _SettingFragmentState extends State<SettingFragment> {
     final currentDate = DateTime.now();
     try {
       DateTime expired = DateTime.parse(date);
-      return (expired.difference(currentDate).inDays + 1).toString();
+      return (currentDate.difference(expired).inDays + 1).toString();
     } on Exception {
       return '';
     }

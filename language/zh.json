@@ -299,5 +299,14 @@
   "setup_fpay": "设定fpay",
   "merchant_name": "商户名称",
   "secret_key": "密钥",
-  "api_key": "API钥"
+  "api_key": "API钥",
+
+  "new_version": "新版本已上架",
+  "new_version_description": "新版本已经上架啦！马上更新至最新版本。",
+  "later": "稍后",
+  "update_now": "马上更新",
+
+  "group_existed": "这个统计名已经存在！",
+
+  "account_disable_description": "无法登录您的帐户。请向我们的管理员寻助."
 }

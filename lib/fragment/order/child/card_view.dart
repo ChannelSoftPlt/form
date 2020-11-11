@@ -102,7 +102,7 @@ class _CardViewState extends State<CardView> {
                   visible: widget.orders.orderGroupId != null,
                   child: Text(
                       widget.orders.groupName != null
-                          ? '${AppLocalizations.of(context).translate('group')}: ${widget.orders.groupName}'
+                          ? '${AppLocalizations.of(context).translate('group')}: ${getGroupName(widget.orders.groupName)}'
                           : '',
                       style: TextStyle(fontSize: 10, color: Colors.grey))),
               Visibility(
@@ -287,7 +287,12 @@ class _CardViewState extends State<CardView> {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('update_success')}');
               widget.refresh();
-            } else {
+            }
+            else if(data['status'] == '3') {
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(mainContext).translate('group_existed')}');
+            }
+            else {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }
@@ -391,5 +396,13 @@ class _CardViewState extends State<CardView> {
             });
       },
     );
+  }
+
+  String getGroupName(groupName) {
+    try {
+      return groupName.split('\-')[1];
+    } catch (e) {
+      return groupName;
+    }
   }
 }

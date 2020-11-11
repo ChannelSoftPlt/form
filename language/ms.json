@@ -299,5 +299,14 @@
   "setup_fpay": "Sediakan fpay",
   "merchant_name": "Nama Pedagang",
   "secret_key": "Kunci Rahsia",
-  "api_key": "Kunci Api"
+  "api_key": "Kunci Api",
+
+  "new_version": "Versi Baru Terdapat",
+  "new_version_description": "Terdapat versi yang lebih baru untuk dimuat turun!",
+  "later": "Kemudian",
+  "update_now": "Update Sekarang",
+
+  "group_existed": "Kumpulan ini sudah wujud!",
+
+  "account_disable_description": "Tidak dapat mengakses akaun anda..hubungi pentadbir kami untuk sokongan selanjutnya!"
 }

@@ -129,11 +129,16 @@ class _GroupGridViewState extends State<GroupGridView> {
               print(data);
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext,
-                    '${AppLocalizations.of(context).translate('update_success')}');
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
                 setState(() {});
-              } else
+              }
+              else if(data['status'] == '3') {
                 CustomSnackBar.show(mainContext,
-                    '${AppLocalizations.of(context).translate('something_went_wrong')}');
+                    '${AppLocalizations.of(mainContext).translate('group_existed')}');
+              }
+              else
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             });
       },
     );

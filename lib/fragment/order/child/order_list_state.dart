@@ -116,6 +116,7 @@ class _OrderListState extends State<OrderList> {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             '${AppLocalizations.of(context).translate('select_item')} ${selectedList.length}',
             style: TextStyle(fontSize: 14),
@@ -309,7 +310,12 @@ class _OrderListState extends State<OrderList> {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('update_success')}');
               _onRefresh();
-            } else {
+            }
+            else if(data['status'] == '3') {
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(mainContext).translate('group_existed')}');
+            }
+            else {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }
