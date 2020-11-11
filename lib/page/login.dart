@@ -69,7 +69,9 @@ class _LoginFormState extends State<LoginPage> {
                       child: Text(
                         '${AppLocalizations.of(context).translate('forgot_password')}',
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54),
                       ),
                     ),
                   ),
@@ -149,11 +151,14 @@ class _LoginFormState extends State<LoginPage> {
         storeGoogleApiKey(data['key']);
         //user information
         storeUser(data['user_detail']);
-        showSnackBar(context, '${AppLocalizations.of(context).translate('login_success')}');
+        showSnackBar(context,
+            '${AppLocalizations.of(context).translate('login_success')}');
       } else
-        showSnackBar(context, '${AppLocalizations.of(context).translate('invalid_email_password')}');
+        showSnackBar(context,
+            '${AppLocalizations.of(context).translate('invalid_email_password')}');
     } else {
-      showSnackBar(context, '${AppLocalizations.of(context).translate('all_field_required')}');
+      showSnackBar(context,
+          '${AppLocalizations.of(context).translate('all_field_required')}');
     }
   }
 
@@ -166,7 +171,7 @@ class _LoginFormState extends State<LoginPage> {
               merchantId: data['merchant_id'].toString(),
               formId: data['form_id'].toString(),
               name: data['name'],
-              url: 'https://www.emenu.com.my/${data['url']}',
+              url: getUrl(data['url']),
               email: data['email']));
       Navigator.pushReplacementNamed(context, '/home');
     } on Exception catch (e) {
@@ -174,10 +179,23 @@ class _LoginFormState extends State<LoginPage> {
     }
   }
 
-  storeGoogleApiKey(data) async{
+  String getUrl(url) {
+    try {
+      String headerUrl = url.substring(0, 4);
+      if (headerUrl == 'http')
+        return url;
+      else
+        return 'https://www.emenu.com.my/$url';
+    } on Exception catch (e) {
+      return 'https://www.emenu.com.my/$url';
+    }
+  }
+
+  storeGoogleApiKey(data) async {
     try {
       //google api key
-      await SharePreferences().save('google_api_key', data[0]['google_api_key']);
+      await SharePreferences()
+          .save('google_api_key', data[0]['google_api_key']);
     } on Exception catch (e) {
       print('Error!! $e');
     }
