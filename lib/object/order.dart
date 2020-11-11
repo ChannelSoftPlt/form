@@ -19,6 +19,7 @@ class Order {
       tax,
       merchantRemark,
       paymentMethod,
+      fpayReceiveAmount,
       userDeviceType,
       publicUrl,
       groupName,
@@ -53,6 +54,7 @@ class Order {
       this.deliveryTime,
       this.merchantRemark,
       this.paymentMethod,
+      this.fpayReceiveAmount,
       this.userDeviceType,
       this.orderGroupId,
       this.driverId,
@@ -85,6 +87,8 @@ class Order {
       driverName: json['driver_name'] as String,
       total: checkDouble(json['total_amount']),
       status: json['status'] as String,
+      paymentMethod: json['payment_method'] as String,
+      fpayReceiveAmount: json['received_amount'] as String,
       paymentStatus: json['payment_status'] as String,
       note: json['note'] as String,
       merchantRemark: json['remark'] as String,
@@ -123,7 +127,11 @@ class Order {
   }
 
   convertToInt(value) {
-    return double.parse(value ?? 0);
+    try {
+      return double.parse(value ?? 0);
+    } on Exception {
+      return 0;
+    }
   }
 
   double countTotal(Order order) {

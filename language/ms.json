@@ -293,5 +293,11 @@
   "reach_gallery_limit": "Galeri gambar tidak lebih daripada",
 
   "payment_due": "Payment Due",
-  "days": "Hari"
+  "days": "Hari",
+
+  "payment_setting_description": "Sediakan kaedah pembayaran untuk E-Menu anda",
+  "setup_fpay": "Sediakan fpay",
+  "merchant_name": "Nama Pedagang",
+  "secret_key": "Kunci Rahsia",
+  "api_key": "Kunci Api"
 }

@@ -498,6 +498,7 @@ class _SettingFragmentState extends State<SettingFragment> {
 
   getExpiredDate() async {
     Map data = await Domain().expiredChecking();
+    print('expired data: $data');
     if (data['status'] == '1') {
       String expiredDate = data['expired_date'][0]['end_date'].toString();
       this.expiredDate = setExpiredDate(expiredDate);

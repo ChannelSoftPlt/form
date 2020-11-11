@@ -11,6 +11,7 @@ class Merchant {
   String bankDetail;
   String cashOnDelivery;
   String bankTransfer;
+  String allowfPay;
   String fpayTransfer;
   String fpayUsername;
   String fpayApiKey;
@@ -35,6 +36,7 @@ class Merchant {
     this.bankDetail,
     this.cashOnDelivery,
     this.bankTransfer,
+    this.allowfPay,
     this.fpayTransfer,
     this.fpayUsername,
     this.fpayApiKey,
@@ -57,6 +59,7 @@ class Merchant {
         bankDetail = json['bank_details'],
         cashOnDelivery = json['cash_on_delivery'],
         bankTransfer = json['bank_transfer'],
+        allowfPay = json['allow_fpay_transfer'],
         fpayTransfer = json['fpay_transfer'],
         fpayUsername = json['fpay_username'],
         fpayApiKey = json['fpay_api_key'],

@@ -293,11 +293,11 @@
   "reach_gallery_limit": "Image gallery cannot more than",
 
   "payment_due": "Payment Due",
-  "api_key": "Api Key",
   "days": "Days",
 
   "payment_setting_description": "Setup your payment method for you E-Menu",
   "setup_fpay": "Setup fpay",
   "merchant_name": "Merchant Name",
-  "secret_key": "Secret Key"
+  "secret_key": "Secret Key",
+  "api_key": "Api Key"
 }

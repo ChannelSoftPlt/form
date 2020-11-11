@@ -21,7 +21,7 @@ class EditPaymentMethod extends StatefulWidget {
 
 class _ResetPasswordState extends State<EditPaymentMethod> {
   var bankDetails = TextEditingController();
-  bool manualBankTransfer, cod, fpay;
+  bool manualBankTransfer, cod, fpay, allowFpay;
   StreamController refreshController;
 
   @override
@@ -67,6 +67,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                   manualBankTransfer = merchant.bankTransfer != '1';
                   cod = merchant.cashOnDelivery != '1';
                   fpay = merchant.fpayTransfer != '1';
+                  allowFpay = merchant.allowfPay != '1';
 
                   return mainContent(context);
                 } else {
@@ -179,34 +180,37 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                 thickness: 1.0,
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
-                              child: Row(
-                                children: [
-                                  Expanded(
+                            Visibility(
+                              visible: allowFpay,
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: Text(
+                                      'Fpay Payment Gateway',
+                                      style: TextStyle(fontSize: 16),
+                                    )),
+                                    RaisedButton(
+                                      elevation: 5,
+                                      onPressed: () => showPaymentGatewayDialog(),
                                       child: Text(
-                                    'Fpay Payment Gateway',
-                                    style: TextStyle(fontSize: 16),
-                                  )),
-                                  RaisedButton(
-                                    elevation: 5,
-                                    onPressed: () => showPaymentGatewayDialog(),
-                                    child: Text(
-                                      '${AppLocalizations.of(context).translate('setup')}',
-                                      style: TextStyle(color: Colors.white),
+                                        '${AppLocalizations.of(context).translate('setup')}',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      color: Colors.grey,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(5)),
                                     ),
-                                    color: Colors.grey,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5)),
-                                  ),
-                                  Checkbox(
-                                    value: fpay,
-                                    onChanged: (newValue) {
-                                      refreshController.add('');
-                                      fpay = newValue;
-                                    },
-                                  )
-                                ],
+                                    Checkbox(
+                                      value: fpay,
+                                      onChanged: (newValue) {
+                                        refreshController.add('');
+                                        fpay = newValue;
+                                      },
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                             SizedBox(

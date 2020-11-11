@@ -40,9 +40,9 @@ class _OrderFragmentState extends State<OrderFragment> {
             if (object.hasData) {
               if (object.connectionState == ConnectionState.done) {
                 Map data = object.data;
+                print('order data: ${data['status']}');
                 if (data['status'] == '1') {
                   List responseJson = data['order'];
-                  print(data['order']);
                   return OrderList(
                       orderStatus: widget.orderStatus,
                       startDate: widget.startDate,

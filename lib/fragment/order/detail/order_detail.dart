@@ -452,6 +452,22 @@ class _OrderDetailState extends State<OrderDetail> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        '${AppLocalizations.of(context).translate('payment_method')}',
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      Text(
+                        getPaymentMethod(order.paymentMethod),
+                        style: TextStyle(fontSize: 11),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -738,6 +754,15 @@ class _OrderDetailState extends State<OrderDetail> {
         }
       },
     );
+  }
+
+  String getPaymentMethod(paymentMethod) {
+    if (paymentMethod == '0')
+      return AppLocalizations.of(context).translate('bank_transfer');
+    else if (paymentMethod == '1')
+      return AppLocalizations.of(context).translate('cash_on_delivery');
+    else
+      return 'Fpay Amount Received RM ${order.fpayReceiveAmount != '' ? order.fpayReceiveAmount : '-'}';
   }
 
 /*

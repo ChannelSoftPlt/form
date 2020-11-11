@@ -293,5 +293,11 @@
   "reach_gallery_limit": "图片库不能超过",
 
   "payment_due": "付款截止日期",
-  "days": "天"
+  "days": "天",
+
+  "payment_setting_description": "设定E-Menu的付款方式",
+  "setup_fpay": "设定fpay",
+  "merchant_name": "商户名称",
+  "secret_key": "密钥",
+  "api_key": "API钥"
 }
