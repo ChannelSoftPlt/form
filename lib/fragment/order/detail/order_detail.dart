@@ -589,7 +589,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     children: <Widget>[
                       Text(
-                        '+6${order.phone}',
+                        '+${Order.getPhoneNumber(order.phone)}',
                         style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                       Spacer(),
@@ -597,7 +597,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       IconButton(
                           icon: Icon(Icons.call),
                           color: Colors.greenAccent,
-                          onPressed: () => launch(('tel://+${order.phone}')))
+                          onPressed: () => launch(('tel://+${Order.getPhoneNumber(order.phone)}')))
                     ],
                   ),
                   Visibility(
@@ -954,12 +954,10 @@ class _OrderDetailState extends State<OrderDetail> {
               setState(() {
                 orderItems.clear();
               });
-            }
-            else if(data['status'] == '3') {
+            } else if (data['status'] == '3') {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('group_existed')}');
-            }
-            else {
+            } else {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }
@@ -1246,7 +1244,7 @@ class _OrderDetailState extends State<OrderDetail> {
       message = '${Domain.whatsAppLink}?id=${order.publicUrl}';
     }
 
-    Order().openWhatsApp('+6' + order.phone, message, context);
+    Order().openWhatsApp('+' + Order.getPhoneNumber(order.phone), message, context);
   }
 
   openMapsSheet(context) async {

@@ -140,6 +140,18 @@ class Order {
         convertToInt(order.tax);
   }
 
+  static getPhoneNumber(phone) {
+    try {
+      String firstTwoDigits = phone.substring(0, 2);
+      if (firstTwoDigits == '60' || firstTwoDigits == '65') {
+        return phone;
+      }
+      return '6$phone';
+    } catch (e) {
+      return '6$phone';
+    }
+  }
+
   openWhatsApp(phone, message, context) async {
     try {
       await launch(

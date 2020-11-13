@@ -97,7 +97,8 @@ class _CardViewState extends State<CardView> {
                   ),
                 ],
               ),
-              Text(widget.orders.phone, style: TextStyle(fontSize: 12)),
+              Text('+' + Order.getPhoneNumber(widget.orders.phone),
+                  style: TextStyle(fontSize: 12)),
               Visibility(
                   visible: widget.orders.orderGroupId != null,
                   child: Text(
@@ -216,14 +217,14 @@ class _CardViewState extends State<CardView> {
             break;
           case 'whatsapp':
             Order().openWhatsApp(
-                '+6' + widget.orders.phone,
+                '+' + Order.getPhoneNumber(widget.orders.phone),
                 '👋你好, *${widget.orders.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${Order().whatsAppOrderPrefix(widget.orders.orderID)}'
                 '\n\n\n*检查订单/Check Order*\n点击这里/Click here👇\n'
                 '${Domain.whatsAppLink}?id=${widget.orders.publicUrl}',
                 context);
             break;
           case 'call':
-            launch(('tel://+6${widget.orders.phone}'));
+            launch(('tel://+${Order.getPhoneNumber(widget.orders.phone)}'));
             break;
           case 'status':
             if (widget.orders.status == '1')
@@ -287,12 +288,10 @@ class _CardViewState extends State<CardView> {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('update_success')}');
               widget.refresh();
-            }
-            else if(data['status'] == '3') {
+            } else if (data['status'] == '3') {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('group_existed')}');
-            }
-            else {
+            } else {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }

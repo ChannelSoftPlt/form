@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my/object/order.dart';
 import 'package:my/object/user.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -37,7 +38,7 @@ class _UserListViewState extends State<UserListView> {
                 height: 5,
               ),
               Text(
-                widget.user.phone,
+                '+' + Order.getPhoneNumber(widget.user.phone),
                 style: TextStyle(color: Colors.black87, fontSize: 14),
                 textAlign: TextAlign.left,
               ),
@@ -52,8 +53,10 @@ class _UserListViewState extends State<UserListView> {
                   IconButton(
                     icon: Image.asset('drawable/whatsapp.png'),
                     color: Colors.green,
-                    onPressed: () => User()
-                        .openWhatsApp('+6${widget.user.phone}', '', context),
+                    onPressed: () => User().openWhatsApp(
+                        '+${Order.getPhoneNumber(widget.user.phone)}',
+                        '',
+                        context),
                   ),
                   Visibility(
                     visible: widget.user.email != '',
@@ -70,7 +73,8 @@ class _UserListViewState extends State<UserListView> {
                       Icons.call,
                       color: Colors.blue,
                     ),
-                    onPressed: () => launch(('tel://+${widget.user.phone}')),
+                    onPressed: () => launch(
+                        ('tel://+${Order.getPhoneNumber(widget.user.phone)}')),
                   ),
                 ],
               )
