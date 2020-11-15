@@ -308,5 +308,8 @@
 
   "group_existed": "这个统计名已经存在！",
 
-  "account_disable_description": "无法登录您的帐户。请向我们的管理员寻助."
+  "account_disable_description": "无法登录您的帐户。请向我们的管理员寻助.",
+
+  "remark": "备注",
+  "edit_note": "添加备注"
 }

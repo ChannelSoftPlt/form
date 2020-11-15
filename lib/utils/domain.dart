@@ -264,6 +264,18 @@ class Domain {
   }
 
   /*
+  * update remark
+  * */
+  updateCustomerNote(note, orderId) async {
+    var response = await http.post(Domain.orderItem, body: {
+      'update': '1',
+      'order_id': orderId,
+      'note': note
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * update status
   * */
   updateMultipleStatus(status, orderIds) async {
@@ -285,6 +297,7 @@ class Domain {
       'status': object.status,
       'price': object.price,
       'quantity': object.quantity,
+      'remark': object.remark,
       'order_product_id': object.orderProductId.toString(),
     });
     return jsonDecode(response.body);

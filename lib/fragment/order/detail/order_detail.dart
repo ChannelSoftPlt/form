@@ -8,6 +8,7 @@ import 'package:my/fragment/order/child/dialog/add_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_address_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_product_dialog.dart';
+import 'package:my/fragment/order/child/dialog/edit_customer_note_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
 import 'package:my/fragment/order/child/dialog/grouping_dialog.dart';
 import 'package:my/object/order.dart';
@@ -317,9 +318,31 @@ class _OrderDetailState extends State<OrderDetail> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${AppLocalizations.of(context).translate('special_remark')}',
-                    style: TextStyle(color: Colors.grey[600]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${AppLocalizations.of(context).translate('special_remark')}',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: RaisedButton.icon(
+                            onPressed: () => showCustomerNoteDialog(context),
+                            elevation: 5,
+                            color: Colors.red,
+                            icon: Icon(
+                              Icons.add,
+                              size: 14,
+                              color: Colors.white,
+                            ),
+                            label: Text(
+                              '${AppLocalizations.of(context).translate('edit_note')}',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 10),
+                            )),
+                      )
+                    ],
                   ),
                   SizedBox(
                     height: 10,
@@ -597,7 +620,8 @@ class _OrderDetailState extends State<OrderDetail> {
                       IconButton(
                           icon: Icon(Icons.call),
                           color: Colors.greenAccent,
-                          onPressed: () => launch(('tel://+${Order.getPhoneNumber(order.phone)}')))
+                          onPressed: () => launch(
+                              ('tel://+${Order.getPhoneNumber(order.phone)}')))
                     ],
                   ),
                   Visibility(
@@ -670,12 +694,17 @@ class _OrderDetailState extends State<OrderDetail> {
                     Visibility(
                       visible: orderItem.remark != null &&
                           orderItem.remark.length > 0,
-                      child: Text(
-                        '${AppLocalizations.of(context).translate('remark')}: ${orderItem.remark}',
-                        style: TextStyle(
-                            color: Colors.red[400],
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold),
+                      child: Container(
+                        width: 220,
+                        child: Text(
+                          '${AppLocalizations.of(context).translate('remark')}: ${orderItem.remark}',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              color: Colors.red[400],
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ],
@@ -998,6 +1027,36 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   /*
+  * update merchant note / remark
+  * */
+  showCustomerNoteDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return EditRemarkDialog(
+            order: order,
+            onClick: (note) async {
+              print('remark: $note');
+              
+              await Future.delayed(Duration(milliseconds: 500));
+              Navigator.pop(mainContext);
+              Map data = await Domain().updateCustomerNote(note, order.id.toString());
+              if (data['status'] == '1') {
+                showSnackBar(
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
+                setState(() {
+                });
+              } else
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+            });
+      },
+    );
+  }
+
+  /*
   * update status dialog
   * */
   showStatusDialog(mainContext) {
@@ -1244,7 +1303,8 @@ class _OrderDetailState extends State<OrderDetail> {
       message = '${Domain.whatsAppLink}?id=${order.publicUrl}';
     }
 
-    Order().openWhatsApp('+' + Order.getPhoneNumber(order.phone), message, context);
+    Order().openWhatsApp(
+        '+' + Order.getPhoneNumber(order.phone), message, context);
   }
 
   openMapsSheet(context) async {

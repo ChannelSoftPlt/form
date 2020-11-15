@@ -308,5 +308,8 @@
 
   "group_existed": "This group already existed!",
 
-  "account_disable_description": "Unable access into your account..please contact our administrator for future support!"
+  "account_disable_description": "Unable access into your account..please contact our administrator for future support!",
+
+  "remark": "Remark",
+  "edit_note": "Edit Note"
 }

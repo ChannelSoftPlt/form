@@ -18,6 +18,7 @@ class EditProductDialog extends StatefulWidget {
 class _EditProductDialogState extends State<EditProductDialog> {
   var price = TextEditingController();
   var quantity = TextEditingController();
+  var remark = TextEditingController();
   OrderItem object;
   bool available = true;
 
@@ -28,13 +29,15 @@ class _EditProductDialogState extends State<EditProductDialog> {
     object = widget.order;
     price.text = widget.order.price;
     quantity.text = widget.order.quantity;
+    remark.text = widget.order.remark;
     available = widget.order.status == '0';
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text('${AppLocalizations.of(context).translate('edit_order_product')}'),
+      title: new Text(
+          '${AppLocalizations.of(context).translate('edit_order_product')}'),
       actions: <Widget>[
         FlatButton(
           child: Text('${AppLocalizations.of(context).translate('cancel')}'),
@@ -55,10 +58,13 @@ class _EditProductDialogState extends State<EditProductDialog> {
               object.quantity = quantity.text;
               object.status = available ? '0' : '1';
               object.price = price.text;
+              object.remark = remark.text;
 
               widget.onClick(object);
             } on FormatException {
-              CustomToast('${AppLocalizations.of(context).translate('invalid_input')}', context,
+              CustomToast(
+                      '${AppLocalizations.of(context).translate('invalid_input')}',
+                      context,
                       gravity: Toast.BOTTOM)
                   .show();
             }
@@ -69,10 +75,6 @@ class _EditProductDialogState extends State<EditProductDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Image.network(
-              'https://petkeeper.com.my/demo1/wp-content/uploads/2017/11/h1-300x300.jpg',
-              height: 80,
-            ),
             Text(object.name, style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
               height: 7,
@@ -90,12 +92,14 @@ class _EditProductDialogState extends State<EditProductDialog> {
                     child: TextField(
                         keyboardType: TextInputType.number,
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d*\.?\d*")),
                         ],
                         controller: price,
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
-                          labelText: '${AppLocalizations.of(context).translate('price')}',
+                          labelText:
+                              '${AppLocalizations.of(context).translate('price')}',
                           labelStyle: TextStyle(
                               fontSize: 14,
                               color: Colors.blueGrey,
@@ -120,7 +124,8 @@ class _EditProductDialogState extends State<EditProductDialog> {
                         ],
                         controller: quantity,
                         decoration: InputDecoration(
-                          labelText: '${AppLocalizations.of(context).translate('quantity')}',
+                          labelText:
+                              '${AppLocalizations.of(context).translate('quantity')}',
                           labelStyle: TextStyle(
                               fontSize: 14,
                               color: Colors.blueGrey,
@@ -134,11 +139,46 @@ class _EditProductDialogState extends State<EditProductDialog> {
               ],
             ),
             SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: double.infinity,
+              child: Theme(
+                data: new ThemeData(
+                  primaryColor: Colors.orange,
+                ),
+                child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: remark,
+                    decoration: InputDecoration(
+                      labelText:
+                          '${AppLocalizations.of(context).translate('remark')}',
+                      labelStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.bold),
+                      hintText:
+                          '${AppLocalizations.of(context).translate('remark')}',
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                    )),
+              ),
+            ),
+            SizedBox(
               height: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Divider(
+                color: Colors.teal.shade100,
+                thickness: 1.0,
+              ),
             ),
             Row(
               children: <Widget>[
-                Text('${AppLocalizations.of(context).translate('product_available')}'),
+                Text(
+                    '${AppLocalizations.of(context).translate('product_available')}'),
                 Switch(
                   value: available,
                   onChanged: (value) {

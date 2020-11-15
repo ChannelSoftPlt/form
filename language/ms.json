@@ -308,5 +308,8 @@
 
   "group_existed": "Kumpulan ini sudah wujud!",
 
-  "account_disable_description": "Tidak dapat mengakses akaun anda..hubungi pentadbir kami untuk sokongan selanjutnya!"
+  "account_disable_description": "Tidak dapat mengakses akaun anda..hubungi pentadbir kami untuk sokongan selanjutnya!",
+
+  "remark": "Remark",
+  "edit_note": "Edit Note"
 }
