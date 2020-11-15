@@ -1047,6 +1047,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 showSnackBar(
                     '${AppLocalizations.of(mainContext).translate('update_success')}');
                 setState(() {
+                  orderItems.clear();
                 });
               } else
                 CustomSnackBar.show(mainContext,
