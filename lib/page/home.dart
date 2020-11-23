@@ -247,24 +247,23 @@ class _ListState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            title: Text('${AppLocalizations.of(context).translate('order')}'),
+            label: '${AppLocalizations.of(context).translate('order')}',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.folder),
-            title: Text('${AppLocalizations.of(context).translate('group')}'),
+            label: '${AppLocalizations.of(context).translate('group')}',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            title:
-                Text('${AppLocalizations.of(context).translate('customer')}'),
+            label: '${AppLocalizations.of(context).translate('customer')}',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.apps),
-            title: Text('${AppLocalizations.of(context).translate('product')}'),
+            label: '${AppLocalizations.of(context).translate('product')}',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            title: Text('${AppLocalizations.of(context).translate('setting')}'),
+            label: '${AppLocalizations.of(context).translate('setting')}',
           ),
         ],
         onTap: (index) {

@@ -233,6 +233,35 @@ class _SettingFragmentState extends State<SettingFragment> {
                 ),
                 ListTile(
                     onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderSetting(),
+                        ),
+                      );
+                    },
+                    leading: Icon(
+                      Icons.local_offer,
+                      size: 35,
+                      color: Colors.purpleAccent,
+                    ),
+                    title: Text(
+                      '${AppLocalizations.of(context).translate('discount_coupon')}',
+                      style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
+                    ),
+                    trailing: Icon(
+                      Icons.keyboard_arrow_right,
+                      size: 30,
+                    )),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  child: Divider(
+                    color: Colors.teal.shade100,
+                    thickness: 1.0,
+                  ),
+                ),
+                ListTile(
+                    onTap: () {
                       showLanguageDialog();
                     },
                     leading: Icon(

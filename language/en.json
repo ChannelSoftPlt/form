@@ -311,5 +311,7 @@
   "account_disable_description": "Unable access into your account..please contact our administrator for future support!",
 
   "remark": "Remark",
-  "edit_note": "Edit Note"
+  "edit_note": "Edit Note",
+
+  "discount_coupon": "Discount Coupon"
 }

@@ -9,9 +9,9 @@ import 'package:my/utils/sharePreference.dart';
 import 'package:http/http.dart' as http;
 
 class Domain {
-  static var domain = 'https://www.emenu.com.my/';
+//  static var domain = 'https://www.emenu.com.my/';
 
-  // static var domain = 'https://www.petkeeper.com.my/form/';
+   static var domain = 'https://www.petkeeper.com.my/form/';
 
   static var registration = domain + 'registration/index.php';
   static var order = domain + 'mobile_api/order/index.php';
@@ -22,6 +22,7 @@ class Domain {
   static var driver = domain + 'mobile_api/driver/index.php';
   static var profile = domain + 'profile/index.php';
   static var user = domain + 'mobile_api/user/index.php';
+  static var discount = domain + 'mobile_api/discount/index.php';
   static var notification = domain + 'mobile_api/notification/index.php';
   static var category = domain + 'mobile_api/category/index.php';
 
@@ -160,6 +161,22 @@ class Domain {
     });
     return jsonDecode(response.body);
   }
+
+  /*
+  * read discount coupon list
+  * */
+   fetchDiscount(currentPage, itemPerPage, query) async {
+     var response = await http.post(Domain.discount, body: {
+       'read': '1',
+       'merchant_id':
+       Merchant.fromJson(await SharePreferences().read("merchant"))
+           .merchantId,
+       'query': query,
+       'page': currentPage.toString(),
+       'itemPerPage': itemPerPage.toString()
+     });
+     return jsonDecode(response.body);
+   }
 
   fetchProductWithPagination(
       currentPage, itemPerPage, query, categoryName) async {
@@ -447,6 +464,7 @@ class Domain {
   * */
   updateProduct(Product product, extension, imageCode, imageGalleryName,
       imageGalleryFile) async {
+    print('category id: ${product.categoryId}');
     var response = await http.post(Domain.product, body: {
       'update': '1',
       'product_id': product.productId.toString(),

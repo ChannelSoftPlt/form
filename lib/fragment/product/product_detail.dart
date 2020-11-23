@@ -75,6 +75,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       price.text = widget.product.price;
       imageName = widget.product.image;
       category.text = widget.product.categoryName;
+      categoryId = widget.product.categoryId;
       available = widget.product.status == 0;
       getUrl();
       getProductGallery();
@@ -744,6 +745,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   }
 
   updateProduct() async {
+    print('category id: $categoryId');
     /*
     * update product
     * */
