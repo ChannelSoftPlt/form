@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:my/fragment/setting/discount/discount.dart';
 import 'package:my/fragment/setting/edit_profile.dart';
 import 'package:my/fragment/setting/payment/edit_payment_method.dart';
 import 'package:my/fragment/setting/payment/language_setting.dart';
@@ -236,7 +237,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => OrderSetting(),
+                          builder: (context) => DiscountPage(query: ''),
                         ),
                       );
                     },

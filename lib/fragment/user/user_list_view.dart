@@ -92,26 +92,4 @@ class _UserListViewState extends State<UserListView> {
         queryParameters: {'subject': ''});
   }
 
-  Widget popUpMenu(id, context) {
-    return new PopupMenuButton(
-      icon: Icon(
-        Icons.more_vert,
-        color: Colors.black87,
-      ),
-      offset: Offset(0, 10),
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          value: 'detail',
-          child:
-              Text("${AppLocalizations.of(context).translate('view_detail')}"),
-        ),
-        PopupMenuItem(
-          value: 'whatsapp',
-          child: Text("${AppLocalizations.of(context).translate('whatsapp')}"),
-        ),
-      ],
-      onCanceled: () {},
-      onSelected: (value) {},
-    );
-  }
 }

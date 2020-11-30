@@ -313,5 +313,39 @@
   "remark": "Remark",
   "edit_note": "Edit Note",
 
-  "discount_coupon": "Discount Coupon"
+  "discount_coupon": "Discount Coupon",
+  "no_coupon_found": "No Coupon Found",
+  "no_coupon_found_description": "Hurry up! Let's create discount coupon to increase your sales today!",
+  "update_coupon": "Update Coupon",
+  "create_coupon": "Create Coupon",
+  "coupon_general_setting": "General",
+  "coupon_general_setting_description": "Setup your coupon general setting here.",
+  "coupon_code": "Coupon Code",
+  "discount_type": "Discount Type",
+  "fix_cart_discount": "Fixed Cart Discount",
+  "percentage_discount": "Percentage Discount",
+  "discount_amount": "Discount Amount",
+  "discount_percentage": "Discount Percentage (%)",
+  "start_date": "Start Date",
+  "end_date": "End Date",
+  "select_date": "Select Date",
+
+  "usage_restriction": "Usage Restriction",
+  "usage_restriction_description": "Setup usage condition for your coupon.",
+  "when_can_use": "When to use",
+  "reach_certain_amount": "Reach Certain Amount",
+  "reach_certain_quantity": "Reach Certain Quantity",
+  "amount": "Amount",
+  "any_amount": "Any Amount",
+  "any_quantity": "Any Quantity",
+
+  "usage_limit": "Usage Limit",
+  "usage_limit_description": "Define the usage limit for your coupon.",
+  "usage_limit_per_coupon": "Usage limit per coupon",
+  "usage_limit_per_user": "Usage limit per user",
+  "unlimited_usage": "Unlimited usage",
+  "create_discount": "Create Discount",
+
+  "invalid_code": "Invalid Coupon Code",
+  "invalid_discount_amount": "Invalid Discount Amount"
 }

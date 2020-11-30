@@ -896,8 +896,7 @@ class _OrderDetailState extends State<OrderDetail> {
   showDatePicker(DateTime date) {
     DatePicker.showDateTimePicker(context,
         showTitleActions: true, currentTime: date, onChanged: (date) {
-      print('change $date in time zone ' +
-          date.timeZoneOffset.inHours.toString());
+      print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
     }, onConfirm: (date) async {
       String selectedDate = DateFormat("yyyy-MM-dd").format(date);
       String selectedTime = DateFormat("hh:mm").format(date);

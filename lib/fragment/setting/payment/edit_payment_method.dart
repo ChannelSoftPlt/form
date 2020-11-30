@@ -101,7 +101,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                             Row(
                               children: <Widget>[
                                 Icon(
-                                  Icons.date_range,
+                                  Icons.payment_outlined,
                                   color: Colors.grey,
                                 ),
                                 Padding(

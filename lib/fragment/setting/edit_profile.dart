@@ -98,7 +98,7 @@ class _ResetPasswordState extends State<EditProfile> {
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.home),
-                              labelText: '${AppLocalizations.of(context).translate('company')}',
+                              labelText: '${AppLocalizations.of(context).translate('')}',
                               labelStyle: TextStyle(
                                   fontSize: 16, color: Colors.blueGrey),
                               hintText: '${AppLocalizations.of(context).translate('company_hint')}',

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:my/object/discount.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_group.dart';
@@ -11,7 +12,7 @@ import 'package:http/http.dart' as http;
 class Domain {
 //  static var domain = 'https://www.emenu.com.my/';
 
-   static var domain = 'https://www.petkeeper.com.my/form/';
+  static var domain = 'https://www.petkeeper.com.my/form/';
 
   static var registration = domain + 'registration/index.php';
   static var order = domain + 'mobile_api/order/index.php';
@@ -22,7 +23,7 @@ class Domain {
   static var driver = domain + 'mobile_api/driver/index.php';
   static var profile = domain + 'profile/index.php';
   static var user = domain + 'mobile_api/user/index.php';
-  static var discount = domain + 'mobile_api/discount/index.php';
+  static var discount = domain + 'mobile_api/coupon/index.php';
   static var notification = domain + 'mobile_api/notification/index.php';
   static var category = domain + 'mobile_api/category/index.php';
 
@@ -165,18 +166,31 @@ class Domain {
   /*
   * read discount coupon list
   * */
-   fetchDiscount(currentPage, itemPerPage, query) async {
-     var response = await http.post(Domain.discount, body: {
-       'read': '1',
-       'merchant_id':
-       Merchant.fromJson(await SharePreferences().read("merchant"))
-           .merchantId,
-       'query': query,
-       'page': currentPage.toString(),
-       'itemPerPage': itemPerPage.toString()
-     });
-     return jsonDecode(response.body);
-   }
+  fetchDiscount(currentPage, itemPerPage, query) async {
+    var response = await http.post(Domain.discount, body: {
+      'read': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'form_id':
+          Merchant.fromJson(await SharePreferences().read("merchant")).formId,
+      'query': query,
+      'page': currentPage.toString(),
+      'itemPerPage': itemPerPage.toString()
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * read discount coupon details
+  * */
+  fetchDiscountDetail(id) async {
+    var response = await http.post(Domain.discount, body: {
+      'read': '1',
+      'id': id,
+    });
+    return jsonDecode(response.body);
+  }
 
   fetchProductWithPagination(
       currentPage, itemPerPage, query, categoryName) async {
@@ -284,11 +298,8 @@ class Domain {
   * update remark
   * */
   updateCustomerNote(note, orderId) async {
-    var response = await http.post(Domain.orderItem, body: {
-      'update': '1',
-      'order_id': orderId,
-      'note': note
-    });
+    var response = await http.post(Domain.orderItem,
+        body: {'update': '1', 'order_id': orderId, 'note': note});
     return jsonDecode(response.body);
   }
 
@@ -512,6 +523,26 @@ class Domain {
   }
 
   /*
+  * update coupon
+  * */
+  updateCoupon(Coupon coupon, status) async {
+    var response = await http.post(Domain.discount, body: {
+      'update': '1',
+      'id': coupon.couponId.toString(),
+      'end_date': coupon.endDate,
+      'start_date': coupon.startDate,
+      'status': status.toString(),
+      'discount_type': coupon.discountType,
+      'discount_condition': coupon.discountCondition,
+      'usage_limit_per_user': coupon.usageLimitPerUser,
+      'usage_limit': coupon.usageLimit,
+      'product_restriction': coupon.productRestriction,
+      'coupon_code': coupon.couponCode
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * add order item
   * */
   addOrderItem(Product object, orderId, quantity, remark) async {
@@ -628,17 +659,6 @@ class Domain {
   * */
   createProduct(Product product, extension, imageCode, imageGalleryName,
       imageGalleryFile) async {
-    print('status: ${product.status.toString()}');
-    print('description: ${product.description.toString()}');
-    print('name: ${product.name.toString()}');
-    print('price: ${product.price.toString()}');
-    print('category_id: ${product.categoryId.toString()}');
-    print('image_name: ${product.image}');
-    print('image_extension: $extension');
-    print('image_code: $imageCode');
-    print(
-        'form_id: ${Merchant.fromJson(await SharePreferences().read("merchant")).formId}');
-
     var response = await http.post(Domain.product, body: {
       'create': '1',
       'status': product.status.toString(),
@@ -651,6 +671,27 @@ class Domain {
       'image_code': imageCode,
       'image_gallery_name': imageGalleryName,
       'image_gallery_file': imageGalleryFile,
+      'form_id':
+          Merchant.fromJson(await SharePreferences().read("merchant")).formId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * create coupon
+  * */
+  createCoupon(Coupon coupon, status) async {
+    var response = await http.post(Domain.discount, body: {
+      'create': '1',
+      'end_date': coupon.endDate,
+      'start_date': coupon.startDate,
+      'status': status.toString(),
+      'discount_type': coupon.discountType,
+      'discount_condition': coupon.discountCondition,
+      'usage_limit_per_user': coupon.usageLimitPerUser,
+      'usage_limit': coupon.usageLimit,
+      'product_restriction': coupon.productRestriction,
+      'coupon_code': coupon.couponCode,
       'form_id':
           Merchant.fromJson(await SharePreferences().read("merchant")).formId,
     });
@@ -727,6 +768,15 @@ class Domain {
       'deleted_image_name': imageName,
       'product_id': productId,
     });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * delete coupon
+  * */
+  deleteCoupon(couponId) async {
+    var response = await http.post(Domain.discount,
+        body: {'delete': '1', 'id': couponId.toString()});
     return jsonDecode(response.body);
   }
 }
