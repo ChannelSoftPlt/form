@@ -285,7 +285,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     textAlign: TextAlign.start,
                     minLines: 3,
                     maxLines: 5,
-                    maxLength: 200,
+                    maxLength: 500,
                     maxLengthEnforced: true,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(fontSize: 14),

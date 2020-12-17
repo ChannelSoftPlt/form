@@ -7,6 +7,7 @@ import 'package:map_launcher/map_launcher.dart';
 import 'package:my/fragment/order/child/dialog/add_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_address_dialog.dart';
+import 'package:my/fragment/order/child/dialog/edit_discount_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_customer_note_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
@@ -39,6 +40,7 @@ class _OrderDetailState extends State<OrderDetail> {
   Order order = Order();
   List<OrderItem> orderItems = [];
   int updatePosition = -1;
+  int totalQuantity;
   final key = new GlobalKey<ScaffoldState>();
 
   @override
@@ -82,7 +84,6 @@ class _OrderDetailState extends State<OrderDetail> {
                 if (data['order_detail_status'] == '1') {
                   List orderDetail = data['order_detail'];
                   order = Order.fromJson(orderDetail[0]);
-                  print('order status: ${order.paymentStatus}');
                 }
 
                 if (data['order_item_status'] == '1') {
@@ -91,6 +92,14 @@ class _OrderDetailState extends State<OrderDetail> {
                       .map((jsonObject) => OrderItem.fromJson(jsonObject))
                       .toList());
                 }
+
+                //count total order item quantity
+                totalQuantity = 0;
+                for (int i = 0; i < orderItems.length; i++)
+                  totalQuantity += int.parse(orderItems[i].quantity);
+
+                print('total quantity: $totalQuantity');
+
                 return mainContent(context);
               }
             }
@@ -417,6 +426,33 @@ class _OrderDetailState extends State<OrderDetail> {
                       GestureDetector(
                         onTap: () =>
                             showEditShippingTaxDialog(context, 'delivery_fee'),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: Text(
+                            '${AppLocalizations.of(context).translate('edit')}',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 14,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text(
+                          'RM ${Order().convertToInt(order.deliveryFee).toStringAsFixed(2)}'),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                          '${AppLocalizations.of(context).translate('discount')}'),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () => showEditDiscountDialog(context),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: Text(
@@ -896,7 +932,8 @@ class _OrderDetailState extends State<OrderDetail> {
   showDatePicker(DateTime date) {
     DatePicker.showDateTimePicker(context,
         showTitleActions: true, currentTime: date, onChanged: (date) {
-      print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
+      print('change $date in time zone ' +
+          date.timeZoneOffset.inHours.toString());
     }, onConfirm: (date) async {
       String selectedDate = DateFormat("yyyy-MM-dd").format(date);
       String selectedTime = DateFormat("hh:mm").format(date);
@@ -1038,10 +1075,11 @@ class _OrderDetailState extends State<OrderDetail> {
             order: order,
             onClick: (note) async {
               print('remark: $note');
-              
+
               await Future.delayed(Duration(milliseconds: 500));
               Navigator.pop(mainContext);
-              Map data = await Domain().updateCustomerNote(note, order.id.toString());
+              Map data =
+                  await Domain().updateCustomerNote(note, order.id.toString());
               if (data['status'] == '1') {
                 showSnackBar(
                     '${AppLocalizations.of(mainContext).translate('update_success')}');
@@ -1196,7 +1234,7 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   /*
-  * edit product dialog
+  * edit shipping tax dialog
   * */
   showEditShippingTaxDialog(mainContext, String type) {
     // flutter defined function
@@ -1207,6 +1245,38 @@ class _OrderDetailState extends State<OrderDetail> {
         return EditShippingTaxDialog(
             order: order,
             type: type,
+            onClick: (order) async {
+              await Future.delayed(Duration(milliseconds: 300));
+              Navigator.pop(mainContext);
+
+              Map data = await Domain().updateShippingFeeAndTax(order);
+              print(data);
+              if (data['status'] == '1') {
+                showSnackBar(
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
+                setState(() {
+                  orderItems.clear();
+                });
+              } else
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+            });
+      },
+    );
+  }
+
+  /*
+  * edit discount dialog
+  * */
+  showEditDiscountDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return EditDiscountDialog(
+            order: order,
+            totalQuantity: totalQuantity,
             onClick: (order) async {
               await Future.delayed(Duration(milliseconds: 300));
               Navigator.pop(mainContext);

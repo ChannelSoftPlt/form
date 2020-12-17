@@ -192,6 +192,20 @@ class Domain {
     return jsonDecode(response.body);
   }
 
+  /*
+  * read discount coupon details
+  * */
+  fetchDiscountByCode(code, phone) async {
+    var response = await http.post(Domain.discount, body: {
+      'read': '1',
+      'coupon_code': code,
+      'phone': phone,
+      'form_id':
+          Merchant.fromJson(await SharePreferences().read("merchant")).formId,
+    });
+    return jsonDecode(response.body);
+  }
+
   fetchProductWithPagination(
       currentPage, itemPerPage, query, categoryName) async {
     var response = await http.post(Domain.product, body: {

@@ -26,7 +26,10 @@ class Order {
       driverName,
       deliveryFee,
       deliveryDate,
-      deliveryTime;
+      deliveryTime,
+      discountAmount,
+      couponId,
+      couponCode;
 
   int id, formId, orderGroupId, driverId, selfCollect;
   double total;

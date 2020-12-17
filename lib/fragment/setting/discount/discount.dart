@@ -2,19 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my/fragment/order/searchPage.dart';
 import 'package:my/object/discount.dart';
 import 'package:my/shareWidget/not_found.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
-
 import 'discount details/discount_detail.dart';
 import 'discount_list.dart';
 
 class DiscountPage extends StatefulWidget {
   final String query;
+  final bool showActionBar;
 
-  DiscountPage({this.query});
+  DiscountPage({this.query, this.showActionBar});
 
   @override
   _DiscountPageState createState() => _DiscountPageState();
@@ -26,7 +27,7 @@ class _DiscountPageState extends State<DiscountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        appBar: widget.showActionBar ? AppBar(
           brightness: Brightness.dark,
           title: Text(
             '${AppLocalizations.of(context).translate('discount_coupon')}',
@@ -45,7 +46,7 @@ class _DiscountPageState extends State<DiscountPage> {
                 color: Colors.orange,
               ),
               onPressed: () {
-                openDiscountDetail();
+                openSearchPage();
                 // do something
               },
             ),
@@ -60,7 +61,7 @@ class _DiscountPageState extends State<DiscountPage> {
               },
             ),
           ],
-        ),
+        ) : null,
         body: FutureBuilder(
             future: Domain()
                 .fetchDiscount(currentPage, itemPerPage, widget.query ?? ''),
@@ -91,7 +92,24 @@ class _DiscountPageState extends State<DiscountPage> {
           isUpdate: false,
         ),
       ),
-    ).then((val) => {setState(() {})});
+    ).then((val) => {onGoBack(val)});
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    if (value != null) {
+      setState(() {});
+    }
+  }
+
+  openSearchPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchPage(
+          type: 'discount_coupon',
+        ),
+      ),
+    );
   }
 
   Widget notFound() {

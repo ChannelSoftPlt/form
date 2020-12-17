@@ -41,7 +41,6 @@ class _CardViewState extends State<CardView> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.orders.toString());
     return Card(
       color: isSelected(),
       margin: EdgeInsets.all(10.0),
@@ -210,7 +209,6 @@ class _CardViewState extends State<CardView> {
       ],
       onCanceled: () {},
       onSelected: (value) {
-        print(value);
         switch (value) {
           case 'detail':
             openOrderDetail();

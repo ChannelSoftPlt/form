@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dotted_line/dotted_line.dart';
@@ -6,12 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my/fragment/setting/discount/discount%20details/discount_detail.dart';
 import 'package:my/object/discount.dart';
+import 'package:my/shareWidget/toast.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:share/share.dart';
 
 class DiscountListView extends StatefulWidget {
   final Coupon coupon;
+  final Function refresh;
 
-  DiscountListView({this.coupon});
+  DiscountListView({this.coupon, this.refresh});
 
   @override
   _DiscountListViewState createState() => _DiscountListViewState();
@@ -195,7 +199,12 @@ class _DiscountListViewState extends State<DiscountListView> {
           couponId: widget.coupon.couponId,
         ),
       ),
-    ).then((value) =>  setState(() {
-    }));
+    ).then((value) => onGoBack(value));
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    if (value != null) {
+      widget.refresh();
+    }
   }
 }

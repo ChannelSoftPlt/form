@@ -172,7 +172,6 @@ class _OrderListState extends State<OrderList> {
               orders: list[index],
               selectedList: selectedList,
               longPress: (orderId) {
-                print(orderId);
                 if (selectedList.contains(orderId)) {
                   selectedList.remove(orderId);
                 } else
@@ -211,7 +210,6 @@ class _OrderListState extends State<OrderList> {
       ],
       onCanceled: () {},
       onSelected: (value) {
-        print(value);
         switch (value) {
           case 'group':
             showGroupingDialog(context);

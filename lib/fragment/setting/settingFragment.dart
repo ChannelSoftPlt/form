@@ -237,7 +237,10 @@ class _SettingFragmentState extends State<SettingFragment> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DiscountPage(query: ''),
+                          builder: (context) => DiscountPage(
+                            query: '',
+                            showActionBar: true,
+                          ),
                         ),
                       );
                     },

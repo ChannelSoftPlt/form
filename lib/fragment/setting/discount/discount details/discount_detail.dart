@@ -437,6 +437,9 @@ class _DiscountDetailState extends State<DiscountDetail> {
               ),
               child: TextField(
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                ],
                 controller: conditionAmount,
                 textAlign: TextAlign.start,
                 style: TextStyle(fontSize: 14),
@@ -567,6 +570,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
   }
 
   createCoupon(context) async {
+    print(getDiscountCondition().toString());
     Coupon coupon = Coupon(
         couponCode: couponCode.text,
         startDate: startDate != null ? startDate.toString() : '',

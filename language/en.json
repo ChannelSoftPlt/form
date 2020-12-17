@@ -314,6 +314,7 @@
   "edit_note": "Edit Note",
 
   "discount_coupon": "Discount Coupon",
+  "code": "Code",
   "no_coupon_found": "No Coupon Found",
   "no_coupon_found_description": "Hurry up! Let's create discount coupon to increase your sales today!",
   "update_coupon": "Update Coupon",
@@ -347,5 +348,10 @@
   "create_discount": "Create Discount",
 
   "invalid_code": "Invalid Coupon Code",
-  "invalid_discount_amount": "Invalid Discount Amount"
+  "invalid_discount_amount": "Invalid Discount Amount",
+
+  "discount": "Discount",
+  "apply_discount": "Apply Discount",
+  "invalid_time": "This coupon is not valid at this time!",
+  "invalid_coupon": "Invalid Coupon!"
 }
