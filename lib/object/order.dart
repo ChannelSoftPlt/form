@@ -28,10 +28,10 @@ class Order {
       deliveryDate,
       deliveryTime,
       discountAmount,
-      couponId,
-      couponCode;
+      couponCode,
+      couponDiscount;
 
-  int id, formId, orderGroupId, driverId, selfCollect;
+  int id, formId, orderGroupId, driverId, selfCollect, couponUsageId;
   double total;
   final dateFormat = DateFormat("dd MMM hh:mm");
 
@@ -64,7 +64,11 @@ class Order {
       this.driverName,
       this.groupName,
       this.publicUrl,
-      this.selfCollect});
+      this.selfCollect,
+      this.discountAmount,
+      this.couponCode,
+      this.couponDiscount,
+      this.couponUsageId});
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
@@ -96,6 +100,10 @@ class Order {
       note: json['note'] as String,
       merchantRemark: json['remark'] as String,
       selfCollect: json['self_collect'] as int,
+      discountAmount: json['discount_amount'] as String,
+      couponCode: json['coupon_name'] as String,
+      couponDiscount: json['coupon_discount'] as String,
+      couponUsageId: json['coupon_usage_id'] as int,
     );
   }
 

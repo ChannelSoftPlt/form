@@ -712,6 +712,20 @@ class Domain {
     return jsonDecode(response.body);
   }
 
+  /*
+  * apply coupon
+  * */
+  applyCoupon(Coupon coupon, discount, orderId) async {
+    var response = await http.post(Domain.discount, body: {
+      'create': '1',
+      'coupon_id': coupon.couponId.toString(),
+      'coupon_name': coupon.couponCode,
+      'discount_amount': discount,
+      'order_id': orderId,
+    });
+    return jsonDecode(response.body);
+  }
+
   /*--------------------------------------------------------------------delete part-------------------------------------------------------------------------------*/
   /*
   * delete order item
@@ -791,6 +805,15 @@ class Domain {
   deleteCoupon(couponId) async {
     var response = await http.post(Domain.discount,
         body: {'delete': '1', 'id': couponId.toString()});
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * remove coupon
+  * */
+  removeCouponFromOrder(couponUsageId) async {
+    var response = await http.post(Domain.discount,
+        body: {'delete_coupon': '1', 'coupon_usage_id': couponUsageId.toString()});
     return jsonDecode(response.body);
   }
 }

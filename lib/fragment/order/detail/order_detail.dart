@@ -12,6 +12,7 @@ import 'package:my/fragment/order/child/dialog/edit_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_customer_note_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
 import 'package:my/fragment/order/child/dialog/grouping_dialog.dart';
+import 'package:my/object/discount.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
@@ -81,6 +82,7 @@ class _OrderDetailState extends State<OrderDetail> {
             if (object.hasData) {
               if (object.connectionState == ConnectionState.done) {
                 Map data = object.data;
+                print(data);
                 if (data['order_detail_status'] == '1') {
                   List orderDetail = data['order_detail'];
                   order = Order.fromJson(orderDetail[0]);
@@ -448,11 +450,45 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(
-                          '${AppLocalizations.of(context).translate('discount')}'),
+                      RichText(
+                        maxLines: 10,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text:
+                                  '${AppLocalizations.of(context).translate('coupon')} ',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: order.couponCode,
+                              style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
                       Spacer(),
+                      Visibility(
+                        visible: order.couponCode != null,
+                        child: GestureDetector(
+                          onTap: () => deleteCoupon(context),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Text(
+                              '${AppLocalizations.of(context).translate('remove')}',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 14,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       GestureDetector(
-                        onTap: () => showEditDiscountDialog(context),
+                        onTap: () => showEditCouponDialog(context),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: Text(
@@ -1234,6 +1270,51 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   /*
+  * edit product dialog
+  * */
+  deleteCoupon(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text("Delete Request"),
+          content: Text(
+              '${AppLocalizations.of(mainContext).translate('remove_coupon')}'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                Map data = await Domain().removeCouponFromOrder(order.couponUsageId);
+                if (data['status'] == '1') {
+                  Navigator.of(context).pop();
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(mainContext).translate('delete_success')}');
+                  setState(() {
+                    orderItems.clear();
+                  });
+                } else
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /*
   * edit shipping tax dialog
   * */
   showEditShippingTaxDialog(mainContext, String type) {
@@ -1268,7 +1349,7 @@ class _OrderDetailState extends State<OrderDetail> {
   /*
   * edit discount dialog
   * */
-  showEditDiscountDialog(mainContext) {
+  showEditCouponDialog(mainContext) {
     // flutter defined function
     showDialog(
       context: mainContext,
@@ -1277,15 +1358,15 @@ class _OrderDetailState extends State<OrderDetail> {
         return EditDiscountDialog(
             order: order,
             totalQuantity: totalQuantity,
-            onClick: (order) async {
+            applyCoupon: (Coupon coupon, discountAmount) async {
               await Future.delayed(Duration(milliseconds: 300));
               Navigator.pop(mainContext);
+              Map data =
+                  await Domain().applyCoupon(coupon, discountAmount, widget.id);
 
-              Map data = await Domain().updateShippingFeeAndTax(order);
-              print(data);
               if (data['status'] == '1') {
                 showSnackBar(
-                    '${AppLocalizations.of(mainContext).translate('update_success')}');
+                    '${AppLocalizations.of(mainContext).translate('apply_success')}');
                 setState(() {
                   orderItems.clear();
                 });

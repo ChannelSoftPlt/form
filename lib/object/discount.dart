@@ -9,7 +9,7 @@ class Coupon {
       productRestriction;
 
   var usageLimit, usageLimitPerUser;
-  int couponId, status, couponUsed;
+  int couponId, status, couponUsed, couponUsedByUser;
 
   Coupon(
       {this.couponCode,
@@ -22,7 +22,8 @@ class Coupon {
       this.productRestriction,
       this.usageLimit,
       this.status,
-      this.couponUsed});
+      this.couponUsed,
+      this.couponUsedByUser});
 
   factory Coupon.fromJson(Map<String, dynamic> json) {
     return Coupon(
@@ -36,6 +37,7 @@ class Coupon {
         usageLimitPerUser: json['usage_limit_per_user'],
         usageLimit: json['usage_limit'],
         couponUsed: json['coupon_used'] as int,
+        couponUsedByUser: json['user_coupon_used'] as int,
         status: json['status'] as int);
   }
 

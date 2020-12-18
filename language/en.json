@@ -351,7 +351,15 @@
   "invalid_discount_amount": "Invalid Discount Amount",
 
   "discount": "Discount",
-  "apply_discount": "Apply Discount",
+  "coupon": "Coupon",
+  "invalid_coupon": "Invalid Coupon",
+  "apply_coupon": "Apply Coupon",
   "invalid_time": "This coupon is not valid at this time!",
-  "invalid_coupon": "Invalid Coupon!"
+  "invalid_condition": "Not reach the requirement!",
+  "redemption_limit": "Redemption Limit!",
+
+  "apply_discount": "Apply Discount",
+  "apply_success": "Apply Successful",
+  "remove": "Remove",
+  "remove_coupon": "Confirm to remove this coupon?"
 }
