@@ -5,10 +5,12 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my/fragment/setting/discount/discount%20details/discount_detail.dart';
 import 'package:my/object/coupon.dart';
 import 'package:my/object/order.dart';
+import 'package:my/translation/AppLocalizations.dart';
 import 'package:share/share.dart';
+
+import 'discount details/discount_detail.dart';
 
 class DiscountListView extends StatefulWidget {
   final Coupon coupon;
@@ -42,7 +44,7 @@ class _DiscountListViewState extends State<DiscountListView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Coupon Code',
+                            '${AppLocalizations.of(context).translate('coupon_code')}: ',
                             style: TextStyle(
                                 color: Colors.black26,
                                 fontSize: 12,
@@ -68,7 +70,8 @@ class _DiscountListViewState extends State<DiscountListView> {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: 'Usage: ',
+                                      text:
+                                          '${AppLocalizations.of(context).translate('usage')}: ',
                                       style: TextStyle(
                                           color: Colors.black45,
                                           fontSize: 12,
@@ -127,7 +130,7 @@ class _DiscountListViewState extends State<DiscountListView> {
                       child: Column(
                         children: [
                           Text(
-                            'Discount',
+                            '${AppLocalizations.of(context).translate('discount')}',
                             style: GoogleFonts.aBeeZee(
                               textStyle: TextStyle(
                                   color: Colors.orangeAccent,
@@ -168,7 +171,7 @@ class _DiscountListViewState extends State<DiscountListView> {
       if (widget.coupon.usageLimit > 0) {
         return '${widget.coupon.couponUsed} / ${widget.coupon.usageLimit}';
       } else
-        return '${widget.coupon.couponUsed} / Unlimited';
+        return '${widget.coupon.couponUsed} / ${AppLocalizations.of(context).translate('unlimited')}';
     } on Exception {
       return '- / -';
     }

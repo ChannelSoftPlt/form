@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:my/fragment/setting/discount/discount.dart';
 import 'package:my/fragment/setting/edit_profile.dart';
 import 'package:my/fragment/setting/payment/edit_payment_method.dart';
 import 'package:my/fragment/setting/payment/language_setting.dart';
@@ -15,6 +14,7 @@ import 'package:my/utils/sharePreference.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'coupon/discount.dart';
 import 'order_setting.dart';
 
 class SettingFragment extends StatefulWidget {

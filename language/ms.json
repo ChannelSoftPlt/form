@@ -311,5 +311,62 @@
   "account_disable_description": "Tidak dapat mengakses akaun anda..hubungi pentadbir kami untuk sokongan selanjutnya!",
 
   "remark": "Remark",
-  "edit_note": "Edit Note"
+  "edit_note": "Edit Note",
+
+  "discount_coupon": "Kupon diskaun",
+  "code": "kod",
+  "no_coupon_found": "Tiada Kupon Dijumpai",
+  "no_coupon_found_description": "Cepat! Mari cipta kupon diskaun untuk meningkatkan jualan anda hari ini!",
+  "update_coupon": "Kemas kini Kupon",
+  "create_coupon": "Cipta Kupon",
+  "coupon_general_setting": "General",
+  "coupon_general_setting_description": "Sediakan tetapan umum kupon anda di sini.",
+  "coupon_code": "Coupon Code",
+  "discount_type": "Jenis Diskaun",
+  "max_discount_amount": "Max Jumlah Diskaun",
+  "fix_cart_discount": "Diskaun Troli Tetap",
+  "percentage_discount": "Potongan Peratusan",
+  "discount_amount": "Jumlah diskaun",
+  "discount_percentage": "Peratusan Diskaun (%)",
+  "start_date": "Tarikh mula",
+  "end_date": "Tarikh tamat",
+  "select_date": "Pilih Tarikh",
+
+  "usage_restriction": "Sekatan Penggunaan",
+  "usage_restriction_description": "Tetapkan syarat penggunaan untuk kupon anda.",
+  "when_can_use": "Bila boleh digunakan",
+  "reach_certain_amount": "Capai Jumlah Tertentu",
+  "reach_certain_quantity": "Capai Kuantiti Tertentu",
+  "amount": "Jumlah",
+  "any_amount": "Apa-apa jumlah",
+  "any_quantity": "Sebarang Kuantiti",
+
+  "usage_limit": "Had Penggunaan",
+  "usage_limit_description": "Tentukan had penggunaan kupon anda.",
+  "usage_limit_per_coupon": "Biarkan kosong jika tidak terhad",
+  "usage_limit_per_user": "Biarkan kosong jika tidak terhad",
+  "unlimited_usage": "Penggunaan tanpa had",
+  "create_discount": "Cipta Diskaun",
+
+  "invalid_code": "Kod Kupon Tidak Sah",
+  "invalid_discount_amount": "Amaun Diskaun Tidak Sah",
+
+  "coupon": "Kupon",
+  "invalid_coupon": "Kupon Tidak Sah",
+  "repeated_coupon": "Nama kupon ini sudah wujud!",
+  "apply_coupon": "Apply Kupon",
+  "invalid_time": "Kupon ini tidak sah pada masa ini!",
+  "invalid_condition": "Not reach the requirement!",
+  "redemption_limit": "Had Penebusan!",
+
+  "apply_discount": "Apply Diskaun",
+  "apply_success": "Apply Berjaya",
+  "remove": "Keluarkan",
+  "remove_coupon": "Sahkan untuk membuang kupon ini?",
+
+  "discount": "Diskaun",
+  "edit_discount": "Edit Diskaun",
+
+  "usage": "Usage",
+  "unlimited": "Tanpa had"
 }

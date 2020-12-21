@@ -551,7 +551,9 @@ class Domain {
       'usage_limit_per_user': coupon.usageLimitPerUser,
       'usage_limit': coupon.usageLimit,
       'product_restriction': coupon.productRestriction,
-      'coupon_code': coupon.couponCode
+      'coupon_code': coupon.couponCode,
+      'form_id':
+          Merchant.fromJson(await SharePreferences().read("merchant")).formId
     });
     return jsonDecode(response.body);
   }
@@ -824,8 +826,10 @@ class Domain {
   * remove coupon
   * */
   removeCouponFromOrder(couponUsageId) async {
-    var response = await http.post(Domain.discount,
-        body: {'delete_coupon': '1', 'coupon_usage_id': couponUsageId.toString()});
+    var response = await http.post(Domain.discount, body: {
+      'delete_coupon': '1',
+      'coupon_usage_id': couponUsageId.toString()
+    });
     return jsonDecode(response.body);
   }
 }

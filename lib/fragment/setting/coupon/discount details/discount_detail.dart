@@ -28,6 +28,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
   var couponCode = TextEditingController();
   var couponDescription = TextEditingController();
   var discountAmount = TextEditingController();
+  var maxDiscountAmount = TextEditingController();
   var conditionAmount = TextEditingController();
   var usageLimit = TextEditingController();
   var usageLimitUser = TextEditingController();
@@ -233,34 +234,77 @@ class _DiscountDetailState extends State<DiscountDetail> {
             SizedBox(
               height: 10,
             ),
-            Theme(
-              data: new ThemeData(
-                primaryColor: Colors.orange,
-              ),
-              child: TextField(
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
-                ],
-                controller: discountAmount,
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 14),
-                maxLines: 1,
-                decoration: InputDecoration(
-                  errorText: discountAmountValidate
-                      ? '${AppLocalizations.of(context).translate('invalid_discount_amount')}'
-                      : null,
-                  prefixIcon: Icon(Icons.monetization_on),
-                  labelText:
+            Row(children: [
+              Expanded(
+                child: Theme(
+                  data: new ThemeData(
+                    primaryColor: Colors.orange,
+                  ),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                    ],
+                    controller: discountAmount,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 14),
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      errorText: discountAmountValidate
+                          ? '${AppLocalizations.of(context).translate('invalid_discount_amount')}'
+                          : null,
+                      prefixIcon: Icon(Icons.monetization_on),
+                      labelText:
                       '${AppLocalizations.of(context).translate(discountType == 0 ? 'discount_amount' : 'discount_percentage')}',
-                  labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                  hintText: '20',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
+                      labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                      hintText: '20',
+                      hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Visibility(
+                visible: discountType == 1,
+                child: SizedBox(
+                  width: 5,
+                ),
+              ),
+              Visibility(
+                visible: discountType == 1,
+                child: Expanded(
+                  child: Theme(
+                    data: new ThemeData(
+                      primaryColor: Colors.orange,
+                    ),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                      ],
+                      controller: maxDiscountAmount,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 14),
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                        errorText: discountAmountValidate
+                            ? '${AppLocalizations.of(context).translate('invalid_discount_amount')}'
+                            : null,
+                        prefixIcon: Icon(Icons.monetization_on),
+                        labelText:
+                        '${AppLocalizations.of(context).translate('max_discount_amount')}',
+                        labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                        hintText: '20',
+                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                        border: new OutlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.teal)),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],),
             SizedBox(
               height: 15,
             ),
@@ -590,7 +634,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
       showSnackBar(context, 'create_success');
       await Future.delayed(Duration(milliseconds: 300));
       Navigator.pop(context, true);
-    } else
+    }
+    else if(data['status'] == '3'){
+      showSnackBar(context, 'repeated_coupon');
+    }
+    else
       showSnackBar(context, 'something_went_wrong');
   }
 
@@ -617,7 +665,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
       showSnackBar(context, 'update_success');
       await Future.delayed(Duration(milliseconds: 300));
       Navigator.pop(context, true);
-    } else
+    }
+    else if(data['status'] == '3'){
+      showSnackBar(context, 'repeated_coupon');
+    }
+    else
       showSnackBar(context, 'something_went_wrong');
   }
 

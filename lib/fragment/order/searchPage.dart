@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my/fragment/group/group.dart';
 import 'package:my/fragment/order/child/orderFragment.dart';
 import 'package:my/fragment/product/product.dart';
-import 'package:my/fragment/setting/discount/discount.dart';
+import 'package:my/fragment/setting/coupon/discount.dart';
 import 'package:my/fragment/user/user.dart';
 import 'package:my/object/order.dart';
 import 'package:my/shareWidget/not_found.dart';

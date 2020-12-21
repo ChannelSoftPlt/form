@@ -326,6 +326,7 @@
   "fix_cart_discount": "Fixed Cart Discount",
   "percentage_discount": "Percentage Discount",
   "discount_amount": "Discount Amount",
+  "max_discount_amount": "Max Discount Amount",
   "discount_percentage": "Discount Percentage (%)",
   "start_date": "Start Date",
   "end_date": "End Date",
@@ -352,6 +353,7 @@
 
   "coupon": "Coupon",
   "invalid_coupon": "Invalid Coupon",
+  "repeated_coupon": "This coupon name already existed!",
   "apply_coupon": "Apply Coupon",
   "invalid_time": "This coupon is not valid at this time!",
   "invalid_condition": "Not reach the requirement!",
@@ -363,5 +365,8 @@
   "remove_coupon": "Confirm to remove this coupon?",
 
   "discount": "Discount",
-  "edit_discount": "Edit Discount"
+  "edit_discount": "Edit Discount",
+
+  "usage": "Usage",
+  "unlimited": "Unlimited"
 }

@@ -311,5 +311,62 @@
   "account_disable_description": "无法登录您的帐户。请向我们的管理员寻助.",
 
   "remark": "备注",
-  "edit_note": "添加备注"
+  "edit_note": "添加备注",
+
+  "discount_coupon": "优惠券",
+  "code": "优惠卷号码",
+  "no_coupon_found": "找不到优惠券",
+  "no_coupon_found_description": "赶快创建折扣优惠券以增加您的销量！",
+  "update_coupon": "更新优惠券",
+  "create_coupon": "创建优惠券",
+  "coupon_general_setting": "常规设置",
+  "coupon_general_setting_description": "在此处调整优惠券的常规设置。",
+  "coupon_code": "优惠卷号码",
+  "discount_type": "优惠类型",
+  "fix_cart_discount": "固定金额折扣",
+  "percentage_discount": "折扣率",
+  "discount_amount": "折扣金额",
+  "max_discount_amount": "最高折扣金额",
+  "discount_percentage": "折扣率（％）",
+  "start_date": "开始日期",
+  "end_date": "结束日期",
+  "select_date": "选择日期",
+
+  "usage_restriction": "使用限制",
+  "usage_restriction_description": "设置优惠券的使用条件。",
+  "when_can_use": "何时使用",
+  "reach_certain_amount": "达到一定金额",
+  "reach_certain_quantity": "达到一定数量",
+  "amount": "金额",
+  "any_amount": "任何金额",
+  "any_quantity": "任何数量",
+
+  "usage_limit": "使用限制",
+  "usage_limit_description": "定义优惠券的使用限制。",
+  "usage_limit_per_coupon": "如果没有限制，请留空",
+  "usage_limit_per_user": "如果没有限制，请留空",
+  "unlimited_usage": "无限使用",
+  "create_discount": "创建折扣",
+
+  "invalid_code": "优惠券代码无效",
+  "invalid_discount_amount": "无效的折扣金额",
+
+  "coupon": "优惠券",
+  "invalid_coupon": "优惠券无效",
+  "repeated_coupon": "此优惠券名称已存在！",
+  "apply_coupon": "使用优惠券",
+  "invalid_time": "此优惠券目前无效！",
+  "invalid_condition": "未达不到要求！",
+  "redemption_limit": "兑换限制！",
+
+  "apply_discount": "使用折扣",
+  "apply_success": "使用成功",
+  "remove": "去掉",
+  "remove_coupon": "确认删除此优惠券？",
+
+  "discount": "折扣",
+  "edit_discount": "编辑折扣",
+
+  "usage": "使用量",
+  "unlimited": "没有限制"
 }

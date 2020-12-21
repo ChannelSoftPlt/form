@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:my/fragment/setting/discount/discount_list_view.dart';
+
 import 'package:my/object/coupon.dart';
 
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'discount_list_view.dart';
 
 class CouponList extends StatefulWidget {
   final List<Coupon> coupons;
