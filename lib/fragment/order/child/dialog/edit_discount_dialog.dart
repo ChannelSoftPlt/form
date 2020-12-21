@@ -1,60 +1,37 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:my/object/discount.dart';
 import 'package:my/object/order.dart';
 import 'package:my/shareWidget/toast.dart';
 import 'package:my/translation/AppLocalizations.dart';
-import 'package:my/utils/domain.dart';
+import 'package:toast/toast.dart';
 
 class EditDiscountDialog extends StatefulWidget {
-  final Function(Coupon coupon, String discountAmount) applyCoupon;
   final Order order;
-  final int totalQuantity;
+  final Function(Order) onClick;
 
-  EditDiscountDialog({this.applyCoupon, this.order, this.totalQuantity});
+  EditDiscountDialog({this.order, this.onClick});
 
   @override
   _EditDiscountDialogState createState() => _EditDiscountDialogState();
 }
 
 class _EditDiscountDialogState extends State<EditDiscountDialog> {
-  var couponCode = TextEditingController();
-
-  Coupon coupon;
-
-  //start and end date
-  var startDate, endDate;
-
-  //condition amount
-  int usageLimit, usageLimitPerUser;
-  int couponUsed, couponUsedByUser;
-
-  //0 = reach certain amount, 1 = reach certain quantity
-  int discountCondition = 0;
-  double conditionAmount;
-
-  //0 = fixed cart, 1 = percentage
-  int discountType = 0;
-
-  double discountAmount;
-
-  final selectedDateFormat = DateFormat("yyy-MM-dd hh:mm");
-
+  var discountAmount = TextEditingController();
+  Order object;
+  
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    couponCode.text = widget.order.couponCode;
+    object = widget.order;
+    discountAmount.text = widget.order.discountAmount;
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: new Text(
-          '${AppLocalizations.of(context).translate('apply_discount')}'),
+          '${AppLocalizations.of(context).translate('edit_discount')}'),
       actions: <Widget>[
         FlatButton(
           child: Text('${AppLocalizations.of(context).translate('cancel')}'),
@@ -64,11 +41,21 @@ class _EditDiscountDialogState extends State<EditDiscountDialog> {
         ),
         FlatButton(
           child: Text(
-            '${AppLocalizations.of(context).translate('apply')}',
+            '${AppLocalizations.of(context).translate('confirm')}',
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
-            applyCoupon(context);
+            try {
+              double.parse(discountAmount.text);
+              object.discountAmount = discountAmount.text;
+              widget.onClick(object);
+            } on FormatException {
+              CustomToast(
+                      '${AppLocalizations.of(context).translate('invalid_input')}',
+                      context,
+                      gravity: Toast.BOTTOM)
+                  .show();
+            }
           },
         ),
       ],
@@ -80,15 +67,19 @@ class _EditDiscountDialogState extends State<EditDiscountDialog> {
               primaryColor: Colors.orange,
             ),
             child: TextField(
-                keyboardType: TextInputType.text,
-                controller: couponCode,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                ],
+                controller: discountAmount,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   labelText:
-                      '${AppLocalizations.of(context).translate('coupon_code')}',
-                  labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                  hintStyle: TextStyle(fontSize: 14),
-                  hintText: '${AppLocalizations.of(context).translate('code')}',
+                      '${AppLocalizations.of(context).translate('discount_amount')}',
+                  labelStyle: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blueGrey),
+                  hintText: '0.00',
                   border: new OutlineInputBorder(
                       borderSide: new BorderSide(color: Colors.teal)),
                 )),
@@ -96,101 +87,5 @@ class _EditDiscountDialogState extends State<EditDiscountDialog> {
         ],
       ),
     );
-  }
-
-  Future applyCoupon(context) async {
-    Map data =
-        await Domain().fetchDiscountByCode(couponCode.text, widget.order.phone);
-    if (data['status'] == '1') {
-      try {
-        coupon = Coupon.fromJson(data['coupon'][0]);
-        var discountType = jsonDecode(coupon.discountType);
-        this.discountType = int.parse(discountType['type']);
-        this.discountAmount = double.parse(discountType['rate']);
-
-        startDate = coupon.startDate.isNotEmpty
-            ? DateTime.parse(coupon.startDate)
-            : null;
-        endDate =
-            coupon.endDate.isNotEmpty ? DateTime.parse(coupon.endDate) : null;
-
-        var discountCondition = jsonDecode(coupon.discountCondition);
-        this.discountCondition = int.parse(discountCondition['type']);
-        this.conditionAmount = double.parse(discountCondition['condition']);
-
-        usageLimit = coupon.usageLimit;
-        usageLimitPerUser = coupon.usageLimitPerUser;
-        couponUsed = coupon.couponUsed;
-        couponUsedByUser = coupon.couponUsedByUser;
-
-        applyDiscount();
-      } on Exception {
-        CustomToast(
-                '${AppLocalizations.of(context).translate('something_went_wrong')}',
-                context)
-            .show();
-      }
-    } else if (data['status'] == '2') {
-      CustomToast('${AppLocalizations.of(context).translate('invalid_coupon')}',
-              context)
-          .show();
-    } else {
-      CustomToast(
-              '${AppLocalizations.of(context).translate('something_went_wrong')}',
-              context)
-          .show();
-    }
-  }
-
-  applyDiscount() {
-    if (isValidCoupon()) {
-      var totalDiscountAmount = discountAmount;
-      if (discountType == 1) {
-        totalDiscountAmount = widget.order.total * discountAmount / 100;
-      }
-      widget.applyCoupon(coupon, totalDiscountAmount.toString());
-    }
-  }
-
-  isValidCoupon() {
-    /*
-    * date checking
-    * */
-    if (startDate != null && endDate != null) {
-      DateTime now = DateTime.now();
-      if (now.isBefore(startDate) || now.isAfter(endDate)) {
-        showToast('invalid_time');
-        return false;
-      }
-    }
-    /*
-    * discount condition
-    * */
-    var currentAmountOrQuantity =
-        (discountCondition == 0 ? widget.order.total : widget.totalQuantity);
-    if (currentAmountOrQuantity < conditionAmount) {
-      showToast('invalid_condition');
-      return false;
-    }
-    /*
-    * usage limit
-    * */
-    if (usageLimit != -1 && couponUsed >= usageLimit) {
-      showToast('redemption_limit');
-      return false;
-    }
-    /*
-    * usage limit by user
-    * */
-    if (usageLimitPerUser != -1 && couponUsedByUser >= usageLimitPerUser) {
-      showToast('redemption_limit');
-      return false;
-    }
-    return true;
-  }
-
-  showToast(message) {
-    CustomToast('${AppLocalizations.of(context).translate(message)}', context)
-        .show();
   }
 }

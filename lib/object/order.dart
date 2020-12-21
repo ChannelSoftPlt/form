@@ -100,15 +100,18 @@ class Order {
       note: json['note'] as String,
       merchantRemark: json['remark'] as String,
       selfCollect: json['self_collect'] as int,
-      discountAmount: json['discount_amount'] as String,
+      discountAmount: returnDefaultValue(json['discount_amount']),
       couponCode: json['coupon_name'] as String,
-      couponDiscount: json['coupon_discount'] as String,
+      couponDiscount: returnDefaultValue(json['coupon_discount']),
       couponUsageId: json['coupon_usage_id'] as int,
     );
   }
 
+  static String returnDefaultValue(value) {
+    return value ?? "0.00";
+  }
+
   static double checkDouble(num value) {
-    print(value);
     return value is double ? value : value.toDouble();
   }
 
@@ -148,7 +151,10 @@ class Order {
   double countTotal(Order order) {
     return convertToInt(order.deliveryFee) +
         order.total +
-        convertToInt(order.tax);
+        convertToInt(order.tax) -
+        convertToInt(order.couponDiscount) -
+        convertToInt(order.discountAmount)
+    ;
   }
 
   static getPhoneNumber(phone) {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:my/object/discount.dart';
+import 'package:my/object/coupon.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_group.dart';
@@ -552,6 +552,18 @@ class Domain {
       'usage_limit': coupon.usageLimit,
       'product_restriction': coupon.productRestriction,
       'coupon_code': coupon.couponCode
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * update order delivery and tax
+  * */
+  updateDiscount(Order object) async {
+    var response = await http.post(Domain.orderItem, body: {
+      'update': '1',
+      'discount_amount': object.discountAmount,
+      'order_id': object.id.toString(),
     });
     return jsonDecode(response.body);
   }

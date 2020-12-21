@@ -6,7 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:my/object/discount.dart';
+import 'package:my/object/coupon.dart';
+import 'package:my/object/order.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 import 'package:my/shareWidget/toast.dart';
 
@@ -558,11 +559,13 @@ class _DiscountDetailState extends State<DiscountDetail> {
       showSnackBar(context, 'invalid_code');
       return;
     }
+    //check discount amount
     if (discountAmount.text.isEmpty) {
       discountAmountValidate = true;
       showSnackBar(context, 'invalid_discount_amount');
       return;
     }
+
     if (!widget.isUpdate)
       createCoupon(context);
     else
@@ -576,8 +579,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
         startDate: startDate != null ? startDate.toString() : '',
         endDate: endDate != null ? endDate.toString() : '',
         status: 0,
-        usageLimit: usageLimit.text,
-        usageLimitPerUser: usageLimitUser.text,
+        usageLimit: usageChecking(usageLimit.text),
+        usageLimitPerUser: usageChecking(usageLimitUser.text),
         discountType: getDiscountType().toString(),
         discountCondition: getDiscountCondition().toString(),
         productRestriction: getProductRestriction().toString());
@@ -602,8 +605,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
             ? selectedDateFormat.format(endDate).toString()
             : '',
         status: 0,
-        usageLimit: usageLimit.text,
-        usageLimitPerUser: usageLimitUser.text,
+        usageLimit: usageChecking(usageLimit.text),
+        usageLimitPerUser: usageChecking(usageLimitUser.text),
         discountType: getDiscountType().toString(),
         discountCondition: getDiscountCondition().toString(),
         productRestriction: getProductRestriction().toString());
@@ -676,7 +679,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
 
         var discountType = jsonDecode(coupon.discountType);
         this.discountType = int.parse(discountType['type']);
-        this.discountAmount.text = discountType['rate'];
+        this.discountAmount.text =
+            Order().convertToInt(discountType['rate']).toStringAsFixed(2);
 
         startDate = coupon.startDate.isNotEmpty
             ? DateTime.parse(coupon.startDate)
@@ -685,11 +689,13 @@ class _DiscountDetailState extends State<DiscountDetail> {
             coupon.endDate.isNotEmpty ? DateTime.parse(coupon.endDate) : null;
 
         var discountCondition = jsonDecode(coupon.discountCondition);
-        this.discountCondition = int.parse(discountType['type']);
-        this.conditionAmount.text = discountCondition['condition'];
+        this.discountCondition = int.parse(discountCondition['type']);
+        this.conditionAmount.text = Order()
+            .convertToInt(discountCondition['condition'])
+            .toStringAsFixed(2);
 
-        usageLimit.text = coupon.usageLimit.toString();
-        usageLimitUser.text = coupon.usageLimitPerUser.toString();
+        usageLimit.text = setUsage(coupon.usageLimit.toString());
+        usageLimitUser.text = setUsage(coupon.usageLimitPerUser.toString());
       } on Exception {
         CustomToast(
                 '${AppLocalizations.of(context).translate('something_went_wrong')}',
@@ -715,7 +721,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
   Map<String, dynamic> getDiscountCondition() {
     return {
       jsonEncode('type'): jsonEncode(discountCondition.toString()),
-      jsonEncode('condition'): jsonEncode(conditionAmount.text),
+      jsonEncode('condition'):
+          jsonEncode(conditionAmount.text.isEmpty ? '0' : conditionAmount.text),
     };
   }
 
@@ -724,6 +731,14 @@ class _DiscountDetailState extends State<DiscountDetail> {
       jsonEncode('restriction'): jsonEncode('0'),
       jsonEncode('product_id'): jsonEncode(''),
     };
+  }
+
+  usageChecking(String value) {
+    return value.isEmpty || value == '-1' ? '-1' : value;
+  }
+
+  setUsage(String value) {
+    return value == '-1' ? '' : value;
   }
 
   showSnackBar(context, message) {

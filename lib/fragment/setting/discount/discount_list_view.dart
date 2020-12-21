@@ -6,9 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my/fragment/setting/discount/discount%20details/discount_detail.dart';
-import 'package:my/object/discount.dart';
-import 'package:my/shareWidget/toast.dart';
-import 'package:my/translation/AppLocalizations.dart';
+import 'package:my/object/coupon.dart';
+import 'package:my/object/order.dart';
 import 'package:share/share.dart';
 
 class DiscountListView extends StatefulWidget {
@@ -143,7 +142,7 @@ class _DiscountListViewState extends State<DiscountListView> {
                               textStyle: TextStyle(
                                   color: Colors.orangeAccent,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 32),
+                                  fontSize: 25),
                             ),
                             textAlign: TextAlign.right,
                           ),
@@ -179,12 +178,13 @@ class _DiscountListViewState extends State<DiscountListView> {
     try {
       var discountAmountObject = jsonDecode(widget.coupon.discountType);
       String discountAmountType = discountAmountObject['type'];
-      String discountAmount = discountAmountObject['rate'];
+      String discountAmount =
+          Order().convertToInt(discountAmountObject['rate']).toStringAsFixed(2);
 
       if (discountAmountType == '0')
-        return 'RM $discountAmount';
+        return 'RM$discountAmount';
       else
-        return '$discountAmount %';
+        return '$discountAmount%';
     } on Exception {
       return '--';
     }

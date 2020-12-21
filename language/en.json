@@ -342,15 +342,14 @@
 
   "usage_limit": "Usage Limit",
   "usage_limit_description": "Define the usage limit for your coupon.",
-  "usage_limit_per_coupon": "Usage limit per coupon",
-  "usage_limit_per_user": "Usage limit per user",
+  "usage_limit_per_coupon": "Leave blank if unlimited",
+  "usage_limit_per_user": "Leave blank if unlimited",
   "unlimited_usage": "Unlimited usage",
   "create_discount": "Create Discount",
 
   "invalid_code": "Invalid Coupon Code",
   "invalid_discount_amount": "Invalid Discount Amount",
 
-  "discount": "Discount",
   "coupon": "Coupon",
   "invalid_coupon": "Invalid Coupon",
   "apply_coupon": "Apply Coupon",
@@ -361,5 +360,8 @@
   "apply_discount": "Apply Discount",
   "apply_success": "Apply Successful",
   "remove": "Remove",
-  "remove_coupon": "Confirm to remove this coupon?"
+  "remove_coupon": "Confirm to remove this coupon?",
+
+  "discount": "Discount",
+  "edit_discount": "Edit Discount"
 }

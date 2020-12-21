@@ -7,12 +7,13 @@ import 'package:map_launcher/map_launcher.dart';
 import 'package:my/fragment/order/child/dialog/add_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_address_dialog.dart';
+import 'package:my/fragment/order/child/dialog/edit_coupon_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_discount_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_customer_note_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
 import 'package:my/fragment/order/child/dialog/grouping_dialog.dart';
-import 'package:my/object/discount.dart';
+import 'package:my/object/coupon.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
@@ -450,6 +451,35 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
+                      Text(
+                          '${AppLocalizations.of(context).translate('discount')}'),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () => showEditDiscountDialog(context),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
+                          child: Text(
+                            '${AppLocalizations.of(context).translate('edit')}',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 14,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        '-RM ${Order().convertToInt(order.discountAmount).toStringAsFixed(2)}',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
                       RichText(
                         maxLines: 10,
                         text: TextSpan(
@@ -475,7 +505,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         child: GestureDetector(
                           onTap: () => deleteCoupon(context),
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                             child: Text(
                               '${AppLocalizations.of(context).translate('remove')}',
                               style: TextStyle(
@@ -490,7 +520,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       GestureDetector(
                         onTap: () => showEditCouponDialog(context),
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
                           child: Text(
                             '${AppLocalizations.of(context).translate('edit')}',
                             style: TextStyle(
@@ -502,7 +532,9 @@ class _OrderDetailState extends State<OrderDetail> {
                         ),
                       ),
                       Text(
-                          'RM ${Order().convertToInt(order.deliveryFee).toStringAsFixed(2)}'),
+                        '-RM ${Order().convertToInt(order.couponDiscount).toStringAsFixed(2)}',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ],
                   ),
 //                  SizedBox(
@@ -1295,7 +1327,8 @@ class _OrderDetailState extends State<OrderDetail> {
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
-                Map data = await Domain().removeCouponFromOrder(order.couponUsageId);
+                Map data =
+                    await Domain().removeCouponFromOrder(order.couponUsageId);
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
                   CustomSnackBar.show(mainContext,
@@ -1349,13 +1382,43 @@ class _OrderDetailState extends State<OrderDetail> {
   /*
   * edit discount dialog
   * */
-  showEditCouponDialog(mainContext) {
+  showEditDiscountDialog(mainContext) {
     // flutter defined function
     showDialog(
       context: mainContext,
       builder: (BuildContext context) {
         // return alert dialog object
         return EditDiscountDialog(
+            order: order,
+            onClick: (order) async {
+              await Future.delayed(Duration(milliseconds: 300));
+              Navigator.pop(mainContext);
+
+              Map data = await Domain().updateDiscount(order);
+              if (data['status'] == '1') {
+                showSnackBar(
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
+                setState(() {
+                  orderItems.clear();
+                });
+              } else
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+            });
+      },
+    );
+  }
+
+  /*
+  * edit discount dialog
+  * */
+  showEditCouponDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return EditCouponDialog(
             order: order,
             totalQuantity: totalQuantity,
             applyCoupon: (Coupon coupon, discountAmount) async {

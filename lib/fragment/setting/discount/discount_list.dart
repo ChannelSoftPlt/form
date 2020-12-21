@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my/fragment/setting/discount/discount_list_view.dart';
-import 'package:my/object/discount.dart';
+import 'package:my/object/coupon.dart';
 
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
