@@ -13,6 +13,7 @@ import 'package:my/fragment/order/child/dialog/edit_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_customer_note_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
 import 'package:my/fragment/order/child/dialog/grouping_dialog.dart';
+import 'package:my/fragment/order/detail/proof_of_delivery.dart';
 import 'package:my/object/coupon.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_item.dart';
@@ -46,6 +47,7 @@ class _OrderDetailState extends State<OrderDetail> {
   int totalQuantity;
 
   bool discountEnable = false;
+  bool allowTakePhoto = false;
 
   final key = new GlobalKey<ScaffoldState>();
 
@@ -53,7 +55,7 @@ class _OrderDetailState extends State<OrderDetail> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    discountFeatureChecking();
+    preChecking();
   }
 
   @override
@@ -769,6 +771,22 @@ class _OrderDetailState extends State<OrderDetail> {
                   ),
                 ],
               ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          /*
+          * proof of delivery
+          * */
+          Visibility(
+            visible: allowTakePhoto,
+            child: ProofOfDelivery(
+              orders: order,
+              refresh: (message) {
+                showSnackBar(AppLocalizations.of(context).translate(message));
+                setState(() {});
+              },
             ),
           )
         ],
@@ -1581,7 +1599,7 @@ class _OrderDetailState extends State<OrderDetail> {
     }
   }
 
-  discountFeatureChecking() async {
+  preChecking() async {
     //check discount features
     var prefs = await SharedPreferences.getInstance();
     if (prefs.getString('allow_discount') == null ||
@@ -1589,6 +1607,14 @@ class _OrderDetailState extends State<OrderDetail> {
       discountEnable = false;
     } else
       discountEnable = true;
+
+    //check allow take photo
+    if (prefs.getString('allow_take_photo') == null ||
+        prefs.getString('allow_take_photo') == '1') {
+      allowTakePhoto = false;
+    } else
+      allowTakePhoto = true;
+
     setState(() {});
   }
 

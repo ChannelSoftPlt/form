@@ -368,5 +368,13 @@
   "edit_discount": "Edit Discount",
 
   "usage": "Usage",
-  "unlimited": "Unlimited"
+  "unlimited": "Unlimited",
+
+  "proof_of_delivery": "Proof Of Delivery",
+  "take_photo": "Take a photo when the goods is delivered successfully to customers.",
+  "remove_photo": "Remove Photo",
+  "upload_photo": "Upload Photo",
+  "upload_photo_request": "Upload Request",
+  "upload_photo_description": "Confirm to upload this picture?",
+  "upload_success": "Upload Successfully!"
 }

@@ -29,7 +29,8 @@ class Order {
       deliveryTime,
       discountAmount,
       couponCode,
-      couponDiscount;
+      couponDiscount,
+      proofPhoto;
 
   int id, formId, orderGroupId, driverId, selfCollect, couponUsageId;
   double total;
@@ -68,7 +69,8 @@ class Order {
       this.discountAmount,
       this.couponCode,
       this.couponDiscount,
-      this.couponUsageId});
+      this.couponUsageId,
+      this.proofPhoto});
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
@@ -104,6 +106,7 @@ class Order {
       couponCode: json['coupon_name'] as String,
       couponDiscount: returnDefaultValue(json['coupon_discount']),
       couponUsageId: json['coupon_usage_id'] as int,
+      proofPhoto: json['proof_photo'] as String,
     );
   }
 
@@ -153,8 +156,7 @@ class Order {
         order.total +
         convertToInt(order.tax) -
         convertToInt(order.couponDiscount) -
-        convertToInt(order.discountAmount)
-    ;
+        convertToInt(order.discountAmount);
   }
 
   static getPhoneNumber(phone) {

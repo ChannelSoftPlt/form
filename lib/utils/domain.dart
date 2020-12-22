@@ -29,6 +29,7 @@ class Domain {
 
   static var whatsAppLink = domain + 'order/view-order.php';
   static var imagePath = domain + 'product/image/';
+  static var proofImgPath = domain + 'order/proof_img/';
 
   fetchOrder(currentPage, itemPerPage, orderStatus, query, orderGroupId,
       driverId, startDate, endDate) async {
@@ -366,6 +367,18 @@ class Domain {
       'update': '1',
       'delivery_date': date,
       'delivery_time': time,
+      'order_id': orderId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * update order proof photo
+  * */
+  updateProofPhoto(orderId, imageCode) async {
+    var response = await http.post(Domain.order, body: {
+      'upload_proof_photo': '1',
+      'image_code': imageCode,
       'order_id': orderId,
     });
     return jsonDecode(response.body);
@@ -803,12 +816,22 @@ class Domain {
   * delete product image
   * */
   deleteProductImage(imageName, productId) async {
-    print('image name: $imageName');
-    print('product id: $productId');
     var response = await http.post(Domain.product, body: {
       'delete_image': '1',
       'deleted_image_name': imageName,
       'product_id': productId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * delete proof image
+  * */
+  deleteProofImage(imageName, orderId) async {
+    var response = await http.post(Domain.order, body: {
+      'delete_image': '1',
+      'deleted_image_name': imageName,
+      'order_id': orderId,
     });
     return jsonDecode(response.body);
   }
