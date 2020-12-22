@@ -12,6 +12,7 @@ import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'coupon/discount.dart';
@@ -30,6 +31,8 @@ class _SettingFragmentState extends State<SettingFragment> {
   String expiredDate = '-';
   String dayLeft = '-';
 
+  bool discountEnable = false;
+
   final key = new GlobalKey<ScaffoldState>();
 
   @override
@@ -38,7 +41,8 @@ class _SettingFragmentState extends State<SettingFragment> {
     super.initState();
     getVersionNumber();
     getUrl();
-    getExpiredDate();
+    discountFeatureChecking();
+    expiredChecking();
   }
 
   @override
@@ -232,36 +236,43 @@ class _SettingFragmentState extends State<SettingFragment> {
                     thickness: 1.0,
                   ),
                 ),
-                ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DiscountPage(
-                            query: '',
-                            showActionBar: true,
+                Visibility(
+                  visible: discountEnable,
+                  child: ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DiscountPage(
+                              query: '',
+                              showActionBar: true,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    leading: Icon(
-                      Icons.local_offer,
-                      size: 35,
-                      color: Colors.purpleAccent,
+                        );
+                      },
+                      leading: Icon(
+                        Icons.local_offer,
+                        size: 35,
+                        color: Colors.purpleAccent,
+                      ),
+                      title: Text(
+                        '${AppLocalizations.of(context).translate('discount_coupon')}',
+                        style:
+                            TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
+                      ),
+                      trailing: Icon(
+                        Icons.keyboard_arrow_right,
+                        size: 30,
+                      )),
+                ),
+                Visibility(
+                  visible: discountEnable,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                    child: Divider(
+                      color: Colors.teal.shade100,
+                      thickness: 1.0,
                     ),
-                    title: Text(
-                      '${AppLocalizations.of(context).translate('discount_coupon')}',
-                      style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
-                    ),
-                    trailing: Icon(
-                      Icons.keyboard_arrow_right,
-                      size: 30,
-                    )),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                  child: Divider(
-                    color: Colors.teal.shade100,
-                    thickness: 1.0,
                   ),
                 ),
                 ListTile(
@@ -529,15 +540,27 @@ class _SettingFragmentState extends State<SettingFragment> {
       ));
   }
 
-  getExpiredDate() async {
+  expiredChecking() async {
     Map data = await Domain().expiredChecking();
     print('expired data: $data');
     if (data['status'] == '1') {
+      //check expired date
       String expiredDate = data['expired_date'][0]['end_date'].toString();
       this.expiredDate = setExpiredDate(expiredDate);
       this.dayLeft = countDayLeft(expiredDate);
       setState(() {});
     }
+  }
+
+  discountFeatureChecking() async {
+    //check discount features
+    var prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('allow_discount') == null ||
+        prefs.getString('allow_discount') == '1') {
+      discountEnable = false;
+    } else
+      discountEnable = true;
+    setState(() {});
   }
 
   String setExpiredDate(date) {

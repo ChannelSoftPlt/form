@@ -26,6 +26,7 @@ import 'package:my/utils/domain.dart';
 import 'package:my/utils/paymentStatus.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:my/utils/statusControl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetail extends StatefulWidget {
@@ -43,12 +44,16 @@ class _OrderDetailState extends State<OrderDetail> {
   List<OrderItem> orderItems = [];
   int updatePosition = -1;
   int totalQuantity;
+
+  bool discountEnable = false;
+
   final key = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    discountFeatureChecking();
   }
 
   @override
@@ -474,68 +479,74 @@ class _OrderDetailState extends State<OrderDetail> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
+                  Visibility(
+                    visible: discountEnable,
+                    child: SizedBox(
+                      height: 10,
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      RichText(
-                        maxLines: 10,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text:
-                                  '${AppLocalizations.of(context).translate('coupon')} ',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            TextSpan(
-                              text: order.couponCode,
-                              style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                  Visibility(
+                    visible: discountEnable,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        RichText(
+                          maxLines: 10,
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                    '${AppLocalizations.of(context).translate('coupon')} ',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              TextSpan(
+                                text: order.couponCode,
+                                style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Spacer(),
-                      Visibility(
-                        visible: order.couponCode != null,
-                        child: GestureDetector(
-                          onTap: () => deleteCoupon(context),
+                        Spacer(),
+                        Visibility(
+                          visible: order.couponCode != null,
+                          child: GestureDetector(
+                            onTap: () => deleteCoupon(context),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                              child: Text(
+                                '${AppLocalizations.of(context).translate('remove')}',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 14,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => showEditCouponDialog(context),
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                            padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
                             child: Text(
-                              '${AppLocalizations.of(context).translate('remove')}',
+                              '${AppLocalizations.of(context).translate('edit')}',
                               style: TextStyle(
-                                color: Colors.red,
+                                color: Colors.blue,
                                 fontSize: 14,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () => showEditCouponDialog(context),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
-                          child: Text(
-                            '${AppLocalizations.of(context).translate('edit')}',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 14,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
+                        Text(
+                          '-RM ${Order().convertToInt(order.couponDiscount).toStringAsFixed(2)}',
+                          style: TextStyle(color: Colors.red),
                         ),
-                      ),
-                      Text(
-                        '-RM ${Order().convertToInt(order.couponDiscount).toStringAsFixed(2)}',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
 //                  SizedBox(
 //                    height: 10,
@@ -1568,6 +1579,17 @@ class _OrderDetailState extends State<OrderDetail> {
       showSnackBar(
           '${AppLocalizations.of(context).translate('invalid_address')}');
     }
+  }
+
+  discountFeatureChecking() async {
+    //check discount features
+    var prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('allow_discount') == null ||
+        prefs.getString('allow_discount') == '1') {
+      discountEnable = false;
+    } else
+      discountEnable = true;
+    setState(() {});
   }
 
   showSnackBar(message) {

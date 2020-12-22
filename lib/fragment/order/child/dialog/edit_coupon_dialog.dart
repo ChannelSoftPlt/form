@@ -40,6 +40,7 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
   int discountType = 0;
 
   double discountAmount;
+  double maxDiscountAmount;
 
   final selectedDateFormat = DateFormat("yyy-MM-dd hh:mm");
 
@@ -108,6 +109,7 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
         var discountType = jsonDecode(coupon.discountType);
         this.discountType = int.parse(discountType['type']);
         this.discountAmount = double.parse(discountType['rate']);
+        this.maxDiscountAmount = double.parse(discountType['max_rate']);
 
         startDate = coupon.startDate.isNotEmpty
             ? DateTime.parse(coupon.startDate)
@@ -126,8 +128,7 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
         couponUsedByUser = coupon.couponUsedByUser;
 
         applyDiscount();
-      } catch (haha) {
-        print(haha);
+      } on Exception {
         CustomToast(
             '${AppLocalizations.of(context).translate('something_went_wrong')}',
             context)
@@ -150,6 +151,12 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
       var totalDiscountAmount = discountAmount;
       if (discountType == 1) {
         totalDiscountAmount = widget.order.total * discountAmount / 100;
+        //check any maximum discount or not
+        if(maxDiscountAmount != -1){
+          //if exceed maximum discount
+          if(totalDiscountAmount > maxDiscountAmount)
+            totalDiscountAmount = maxDiscountAmount;
+        }
       }
       widget.applyCoupon(coupon, totalDiscountAmount.toString());
     }

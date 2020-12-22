@@ -75,6 +75,6 @@ class Merchant {
         'formId': formId,
         'name': name,
         'url': url,
-        'email': email,
+        'email': email
       };
 }

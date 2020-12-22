@@ -10,6 +10,7 @@ import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -65,19 +66,26 @@ class _LoadingPageState extends State<LoadingPage> {
         launchChecking();
       } else
         Navigator.pushReplacementNamed(context, '/login');
-    } on Exception catch (e) {
-      print('hahahaha $e');
+    } on Exception {
+      Navigator.pushReplacementNamed(context, '/login');
     }
   }
 
   void launchChecking() async {
+
     Map data = await Domain().launchCheck();
+    print(data);
     if (data['status'] == '1') {
       status = data['merchant_status'][0]['status'].toString();
 
       String latestVersion = data['version'][0]['version'].toString();
       String currentVersion = await getVersionNumber();
       print('current: $currentVersion');
+
+      var prefs = await SharedPreferences.getInstance();
+      await prefs.setString('allow_discount', data['discount_feature'][0]['allow_discount'].toString());
+      print(data['discount_feature'][0]['allow_discount'].toString());
+
       if (latestVersion != currentVersion) {
         openUpdateDialog(data);
         return;
