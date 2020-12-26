@@ -819,6 +819,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   await Future.delayed(Duration(milliseconds: 300));
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
+                  widget.refresh();
                 } else
                   _showSnackBar(
                       '${AppLocalizations.of(context).translate('something_went_wrong')}');

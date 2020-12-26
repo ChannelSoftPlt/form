@@ -371,10 +371,12 @@
   "unlimited": "Unlimited",
 
   "proof_of_delivery": "Proof Of Delivery",
-  "take_photo": "Take a photo when the goods is delivered successfully to customers.",
+  "take_photo": "Click the picture below to take photo.",
+  "taken_on": "This picture taken on",
   "remove_photo": "Remove Photo",
   "upload_photo": "Upload Photo",
   "upload_photo_request": "Upload Request",
-  "upload_photo_description": "Confirm to upload this picture?",
+  "upload_photo_description_1": "Confirm to upload this picture?\n",
+  "upload_photo_description_2": "*This order will update to status completed automatically.",
   "upload_success": "Upload Successfully!"
 }

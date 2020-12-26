@@ -11,8 +11,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class ProductList extends StatefulWidget {
   final List<Product> products;
   final String query, categoryName;
+  final Function(bool, Product) openProductDetail;
 
-  ProductList({this.products, this.query, this.categoryName});
+  ProductList({this.products, this.query, this.categoryName, this.openProductDetail});
 
   @override
   _ProductListState createState() => _ProductListState();
@@ -73,7 +74,10 @@ class _ProductListState extends State<ProductList> {
     return ListView.builder(
         itemCount: list.length,
         itemBuilder: (BuildContext context, int index) {
-          return ProductListView(product: list[index]);
+          return ProductListView(product: list[index],
+          openProductDetail: (bool isUpdate, Product product){
+            widget.openProductDetail(isUpdate, product);
+          });
         });
   }
 

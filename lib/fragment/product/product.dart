@@ -6,6 +6,7 @@ import 'package:my/shareWidget/not_found.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
   final String query, categoryName;
@@ -18,39 +19,78 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   final int itemPerPage = 8, currentPage = 1;
+  String maxProduct;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProductLimit();
+  }
+
+  getProductLimit() async {
+    //check discount features
+    var prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('product_limit') == null) {
+      maxProduct = 'Unknown';
+    } else
+      maxProduct = prefs.getString('product_limit');
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: FutureBuilder(
-            future: Domain().fetchProductWithPagination(currentPage,
-                itemPerPage, widget.query ?? '', widget.categoryName ?? ''),
-            builder: (context, object) {
-              if (object.hasData) {
-                print(object.data);
-                if (object.connectionState == ConnectionState.done) {
-                  Map data = object.data;
-                  if (data['status'] == '1') {
-                    List responseJson = data['product'];
-                    return ProductList(
-                      products: responseJson
-                          .map((jsonObject) => Product.fromJson(jsonObject))
-                          .toList(),
-                      query: widget.query ?? '',
-                      categoryName: widget.categoryName ?? '',
-                    );
-                  } else {
-                    return notFound();
-                  }
-                }
+    return FutureBuilder(
+        future: Domain().fetchProductWithPagination(currentPage, itemPerPage,
+            widget.query ?? '', widget.categoryName ?? ''),
+        builder: (context, object) {
+          if (object.hasData) {
+            if (object.connectionState == ConnectionState.done) {
+              Map data = object.data;
+              if (data['status'] == '1') {
+                int currentTotalProduct = data['product_total'];
+                List responseJson = data['product'];
+                return mainContent(currentTotalProduct, responseJson);
+              } else {
+                return notFound();
               }
-              return Center(child: CustomProgressBar());
-            }),
+            }
+          }
+          return Center(child: CustomProgressBar());
+        });
+  }
+
+  Widget mainContent(currentTotalProduct, List responseJson) {
+    return Scaffold(
+        appBar: widget.query.isEmpty
+            ? AppBar(
+                toolbarHeight: 30,
+                title: Container(
+                  alignment: Alignment.topRight,
+                  child: Text('$currentTotalProduct / $maxProduct Products',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.right),
+                ),
+              )
+            : null,
+        body: ProductList(
+          products: responseJson
+              .map((jsonObject) => Product.fromJson(jsonObject))
+              .toList(),
+          query: widget.query ?? '',
+          categoryName: widget.categoryName ?? '',
+          openProductDetail: (bool isUpdate, Product product) {
+            showProductDetail(context, isUpdate, product);
+          },
+        ),
         floatingActionButton: FloatingActionButton(
           elevation: 5,
           backgroundColor: Colors.orange[300],
           onPressed: () {
-            showProductDetail(context);
+            showProductDetail(context, false, null);
           },
           child: Icon(
             Icons.add,
@@ -59,13 +99,14 @@ class _ProductPageState extends State<ProductPage> {
         ));
   }
 
-  showProductDetail(mainContext) {
+  showProductDetail(mainContext, bool isUpdate, Product product) {
     // flutter defined function
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => ProductDetailDialog(
-                isUpdate: false,
+                product: product,
+                isUpdate: isUpdate,
                 refresh: () {
                   setState(() {});
                 },

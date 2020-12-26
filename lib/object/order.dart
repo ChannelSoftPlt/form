@@ -30,7 +30,8 @@ class Order {
       discountAmount,
       couponCode,
       couponDiscount,
-      proofPhoto;
+      proofPhoto,
+      proofPhotoDate;
 
   int id, formId, orderGroupId, driverId, selfCollect, couponUsageId;
   double total;
@@ -70,7 +71,8 @@ class Order {
       this.couponCode,
       this.couponDiscount,
       this.couponUsageId,
-      this.proofPhoto});
+      this.proofPhoto,
+      this.proofPhotoDate});
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
@@ -107,6 +109,7 @@ class Order {
       couponDiscount: returnDefaultValue(json['coupon_discount']),
       couponUsageId: json['coupon_usage_id'] as int,
       proofPhoto: json['proof_photo'] as String,
+      proofPhotoDate: json['proof_photo_date'] as String,
     );
   }
 

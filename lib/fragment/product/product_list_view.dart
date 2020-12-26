@@ -6,8 +6,9 @@ import 'package:my/utils/domain.dart';
 
 class ProductListView extends StatefulWidget {
   final Product product;
+  final Function(bool, Product) openProductDetail;
 
-  ProductListView({this.product});
+  ProductListView({this.product, this.openProductDetail});
 
   @override
   _ProductListViewState createState() => _ProductListViewState();
@@ -20,7 +21,7 @@ class _ProductListViewState extends State<ProductListView> {
       elevation: 5,
       margin: EdgeInsets.all(10.0),
       child: InkWell(
-        onTap: () => showProductDetail(context, true),
+        onTap: () => widget.openProductDetail(true, widget.product),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(

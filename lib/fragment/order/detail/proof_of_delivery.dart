@@ -44,7 +44,6 @@ class _ProofOfDeliveryState extends State<ProofOfDelivery> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.orders.proofPhoto);
     imageStateStream = StreamController();
     imageStateStream.add('display');
 
@@ -76,11 +75,7 @@ class _ProofOfDeliveryState extends State<ProofOfDelivery> {
             SizedBox(
               height: 10,
             ),
-            Text(
-              '${AppLocalizations.of(context).translate('take_photo')}',
-              style:
-                  TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
-            ),
+            getText(),
             SizedBox(
               height: 10,
             ),
@@ -90,8 +85,9 @@ class _ProofOfDeliveryState extends State<ProofOfDelivery> {
                 child: _imageViewWidget(),
                 onTap: () {
                   print('image name: $imageName');
-                  if (imageName == 'no-image-found.png' || imageName == 'test.png' || imageName == '')
-                    _showSelectionDialog(context);
+                  if (imageName == 'no-image-found.png' ||
+                      imageName == 'test.png' ||
+                      imageName == '') _showSelectionDialog(context);
                 },
               ),
             ),
@@ -111,7 +107,7 @@ class _ProofOfDeliveryState extends State<ProofOfDelivery> {
               ),
             ),
             Visibility(
-              visible: imageName != 'no-image-found.png' && imageName != 'test.png',
+              visible: widget.orders.proofPhotoDate != '',
               child: Container(
                 alignment: Alignment.center,
                 child: RaisedButton(
@@ -178,8 +174,23 @@ class _ProofOfDeliveryState extends State<ProofOfDelivery> {
         return AlertDialog(
           title: Text(
               "${AppLocalizations.of(context).translate('upload_photo_request')}"),
-          content: Text(
-              "${AppLocalizations.of(context).translate('upload_photo_description')}"),
+          content: RichText(
+            maxLines: 10,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text:
+                      '${AppLocalizations.of(context).translate('upload_photo_description_1')} ',
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text:
+                      '${AppLocalizations.of(context).translate('upload_photo_description_2')} ',
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
           actions: <Widget>[
             FlatButton(
               child:
@@ -318,6 +329,31 @@ class _ProofOfDeliveryState extends State<ProofOfDelivery> {
         );
       },
     );
+  }
+
+  Widget getText() {
+    if (widget.orders.proofPhotoDate == '')
+      return Text(AppLocalizations.of(context).translate('take_photo'),
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold));
+    else
+      return RichText(
+        textAlign: TextAlign.center,
+        maxLines: 10,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: '${AppLocalizations.of(context).translate('taken_on')}: ',
+              style: TextStyle(color: Colors.black87, fontSize: 14),
+            ),
+            TextSpan(
+              text: widget.orders.proofPhotoDate,
+              style: TextStyle(
+                  color: Colors.red, fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      );
+    //'${AppLocalizations.of(context).translate('taken_on')} ${widget.orders.proofPhotoDate}';
   }
 
   showToast(message) {

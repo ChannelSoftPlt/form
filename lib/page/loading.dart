@@ -82,6 +82,7 @@ class _LoadingPageState extends State<LoadingPage> {
       print('current: $currentVersion');
 
       var prefs = await SharedPreferences.getInstance();
+      print('product limit: ${data['user_preference'][0]['product_limit']}');
       await prefs.setString('allow_discount', data['user_preference'][0]['allow_discount'].toString());
       await prefs.setString('product_limit', data['user_preference'][0]['product_limit'].toString());
       await prefs.setString('allow_take_photo', data['user_preference'][0]['allow_take_photo'].toString());
