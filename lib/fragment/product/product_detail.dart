@@ -311,7 +311,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                     ],
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
                     controller: price,
                     textAlign: TextAlign.start,
                     decoration: InputDecoration(

@@ -67,7 +67,7 @@ class _EditDiscountDialogState extends State<EditDiscountDialog> {
               primaryColor: Colors.orange,
             ),
             child: TextField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                 ],

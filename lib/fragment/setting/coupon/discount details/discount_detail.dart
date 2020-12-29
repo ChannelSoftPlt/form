@@ -242,7 +242,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
                       primaryColor: Colors.orange,
                     ),
                     child: TextField(
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
                             RegExp(r"^\d*\.?\d*")),
@@ -282,7 +283,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
                         primaryColor: Colors.orange,
                       ),
                       child: TextField(
-                        keyboardType: TextInputType.number,
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                               RegExp(r"^\d*\.?\d*")),
@@ -488,7 +490,9 @@ class _DiscountDetailState extends State<DiscountDetail> {
                 primaryColor: Colors.orange,
               ),
               child: TextField(
-                keyboardType: TextInputType.number,
+                keyboardType: discountCondition == 0
+                    ? TextInputType.numberWithOptions(decimal: true)
+                    : TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                 ],
@@ -736,10 +740,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
         this.discountType = int.parse(discountType['type']);
         this.discountAmount.text =
             Order().convertToInt(discountType['rate']).toStringAsFixed(2);
-        this.maxDiscountAmount.text = discountType['max_rate'] != '-1' ?
-            Order()
-            .convertToInt(setUsage(discountType['max_rate']))
-            .toStringAsFixed(2) : '';
+        this.maxDiscountAmount.text = discountType['max_rate'] != '-1'
+            ? Order()
+                .convertToInt(setUsage(discountType['max_rate']))
+                .toStringAsFixed(2)
+            : '';
 
         startDate = coupon.startDate.isNotEmpty
             ? DateTime.parse(coupon.startDate)

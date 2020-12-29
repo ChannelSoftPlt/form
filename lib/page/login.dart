@@ -186,7 +186,7 @@ class _LoginFormState extends State<LoginPage> {
         return url;
       else
         return 'https://www.emenu.com.my/$url';
-    } on Exception catch (e) {
+    } catch(err) {
       return 'https://www.emenu.com.my/$url';
     }
   }
