@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:my/object/coupon.dart';
 import 'package:my/object/order.dart';
+import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 import 'package:my/shareWidget/toast.dart';
 
@@ -46,11 +48,17 @@ class _DiscountDetailState extends State<DiscountDetail> {
   bool couponCodeValidate = false;
   bool discountAmountValidate = false;
 
+  StreamController freshStream;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.isUpdate) fetchCouponDetail(context);
+    freshStream = StreamController();
+    if (widget.isUpdate) {
+      fetchCouponDetail(context);
+    } else
+      freshStream.add('display');
   }
 
   @override
@@ -86,7 +94,14 @@ class _DiscountDetailState extends State<DiscountDetail> {
         ),
         backgroundColor: Colors.white,
         body: Builder(builder: (BuildContext innerContext) {
-          return mainContent(innerContext);
+          return StreamBuilder(
+              stream: freshStream.stream,
+              builder: (context, object) {
+                if (object.hasData && object.data.toString().length >= 1) {
+                  return mainContent(innerContext);
+                }
+                return CustomProgressBar();
+              });
         }));
   }
 
@@ -501,7 +516,9 @@ class _DiscountDetailState extends State<DiscountDetail> {
                 style: TextStyle(fontSize: 14),
                 maxLines: 1,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.attach_money_outlined),
+                  prefixIcon: discountCondition == 0
+                      ? Icon(Icons.attach_money_outlined)
+                      : Icon(Icons.format_list_numbered),
                   labelText:
                       '${AppLocalizations.of(context).translate(discountCondition == 0 ? 'amount' : 'quantity')}',
                   labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
@@ -740,11 +757,12 @@ class _DiscountDetailState extends State<DiscountDetail> {
         this.discountType = int.parse(discountType['type']);
         this.discountAmount.text =
             Order().convertToInt(discountType['rate']).toStringAsFixed(2);
-        this.maxDiscountAmount.text = discountType['max_rate'] != '-1'
-            ? Order()
-                .convertToInt(setUsage(discountType['max_rate']))
-                .toStringAsFixed(2)
-            : '';
+        this.maxDiscountAmount.text =
+            discountType['max_rate'] != '-1' && discountType['max_rate'] != null
+                ? Order()
+                    .convertToInt(setUsage(discountType['max_rate']))
+                    .toStringAsFixed(2)
+                : '';
 
         startDate = coupon.startDate.isNotEmpty
             ? DateTime.parse(coupon.startDate)
@@ -772,7 +790,10 @@ class _DiscountDetailState extends State<DiscountDetail> {
               context)
           .show();
     }
-    setState(() {});
+
+    setState(() {
+      freshStream.add('display');
+    });
   }
 
   Map<String, dynamic> getDiscountType() {

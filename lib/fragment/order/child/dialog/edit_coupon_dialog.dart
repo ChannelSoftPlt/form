@@ -109,6 +109,7 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
         var discountType = jsonDecode(coupon.discountType);
         this.discountType = int.parse(discountType['type']);
         this.discountAmount = double.parse(discountType['rate']);
+        if(discountType == 1)
         this.maxDiscountAmount = double.parse(discountType['max_rate']);
 
         startDate = coupon.startDate.isNotEmpty
@@ -182,7 +183,6 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
         return false;
       }
     }
-
     /*
     * discount condition
     * */

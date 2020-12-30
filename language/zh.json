@@ -326,7 +326,7 @@
   "fix_cart_discount": "固定金额折扣",
   "percentage_discount": "折扣率",
   "discount_amount": "折扣金额",
-  "max_discount_amount": "最高折扣金额",
+  "max_discount_amount": "最高金额",
   "discount_percentage": "折扣率（％）",
   "start_date": "开始日期",
   "end_date": "结束日期",
@@ -368,5 +368,15 @@
   "edit_discount": "编辑折扣",
 
   "usage": "使用量",
-  "unlimited": "没有限制"
+  "unlimited": "没有限制",
+
+  "proof_of_delivery": "交货证明",
+  "take_photo": "点击下面的图片拍照。",
+  "taken_on": "这张照片上传时间",
+  "remove_photo": "删除照片",
+  "upload_photo": "上传图片",
+  "upload_photo_request": "上传要求",
+  "upload_photo_description_1": "确认上传此图片？",
+  "upload_photo_description_2": "*该订单将更新为自动完成的状态。",
+  "upload_success": "上传成功！"
 }

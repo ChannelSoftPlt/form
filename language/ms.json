@@ -323,9 +323,9 @@
   "coupon_general_setting_description": "Sediakan tetapan umum kupon anda di sini.",
   "coupon_code": "Coupon Code",
   "discount_type": "Jenis Diskaun",
-  "max_discount_amount": "Max Jumlah Diskaun",
+  "max_discount_amount": "Max Jumlah",
   "fix_cart_discount": "Diskaun Troli Tetap",
-  "percentage_discount": "Potongan Peratusan",
+  "percentage_discount": "Potongan (%)",
   "discount_amount": "Jumlah diskaun",
   "discount_percentage": "Peratusan Diskaun (%)",
   "start_date": "Tarikh mula",
@@ -368,5 +368,15 @@
   "edit_discount": "Edit Diskaun",
 
   "usage": "Usage",
-  "unlimited": "Tanpa had"
+  "unlimited": "Tanpa had",
+
+  "proof_of_delivery": "Bukti Penyampaian",
+  "take_photo": "Klik gambar di bawah untuk mengambil gambar.",
+  "taken_on": "Gambar ini diambil pada",
+  "remove_photo": "Remove Foto",
+  "upload_photo": "Upload Foto",
+  "upload_photo_request": "Upload Request",
+  "upload_photo_description_1": "Sahkan untuk memuat naik gambar ini?\n",
+  "upload_photo_description_2": "*Pesanan ini akan dikemas kini ke status selesai secara automatik.",
+  "upload_success": "Upload Berjaya!"
 }

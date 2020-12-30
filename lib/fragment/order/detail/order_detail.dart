@@ -108,8 +108,6 @@ class _OrderDetailState extends State<OrderDetail> {
                 for (int i = 0; i < orderItems.length; i++)
                   totalQuantity += int.parse(orderItems[i].quantity);
 
-                print('total quantity: $totalQuantity');
-
                 return mainContent(context);
               }
             }

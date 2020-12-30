@@ -168,7 +168,7 @@ class _DiscountListViewState extends State<DiscountListView> {
 
   getCouponUsage() {
     try {
-      if (widget.coupon.usageLimit > 0) {
+      if (widget.coupon.usageLimit >= 0) {
         return '${widget.coupon.couponUsed} / ${widget.coupon.usageLimit}';
       } else
         return '${widget.coupon.couponUsed} / ${AppLocalizations.of(context).translate('unlimited')}';
