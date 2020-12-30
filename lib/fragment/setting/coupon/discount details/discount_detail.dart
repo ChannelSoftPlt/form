@@ -94,6 +94,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
         ),
         backgroundColor: Colors.white,
         body: Builder(builder: (BuildContext innerContext) {
+
           return StreamBuilder(
               stream: freshStream.stream,
               builder: (context, object) {
