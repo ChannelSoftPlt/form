@@ -1600,8 +1600,7 @@ class _OrderDetailState extends State<OrderDetail> {
   preChecking() async {
     //check discount features
     var prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('allow_discount') == null ||
-        prefs.getString('allow_discount') == '1') {
+    if (prefs.getString('allow_discount') == null || prefs.getString('allow_discount') == '1') {
       discountEnable = false;
     } else
       discountEnable = true;

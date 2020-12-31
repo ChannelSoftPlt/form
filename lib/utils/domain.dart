@@ -10,9 +10,9 @@ import 'package:my/utils/sharePreference.dart';
 import 'package:http/http.dart' as http;
 
 class Domain {
-//  static var domain = 'https://www.emenu.com.my/';
+  static var domain = 'https://www.emenu.com.my/';
 
-  static var domain = 'https://www.petkeeper.com.my/form/';
+//  static var domain = 'https://www.petkeeper.com.my/form/';
 
   static var registration = domain + 'registration/index.php';
   static var order = domain + 'mobile_api/order/index.php';

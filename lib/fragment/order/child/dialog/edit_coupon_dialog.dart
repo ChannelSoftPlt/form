@@ -109,7 +109,7 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
         var discountType = jsonDecode(coupon.discountType);
         this.discountType = int.parse(discountType['type']);
         this.discountAmount = double.parse(discountType['rate']);
-        if(discountType == 1)
+        if(this.discountType == 1)
         this.maxDiscountAmount = double.parse(discountType['max_rate']);
 
         startDate = coupon.startDate.isNotEmpty
@@ -129,7 +129,8 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
         couponUsedByUser = coupon.couponUsedByUser;
 
         applyDiscount();
-      } on Exception {
+      } catch(e) {
+//        print(e);
         CustomToast(
             '${AppLocalizations.of(context).translate('something_went_wrong')}',
             context)
@@ -154,6 +155,7 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
         totalDiscountAmount = widget.order.total * discountAmount / 100;
         //check any maximum discount or not
         if(maxDiscountAmount != -1){
+          print('max $maxDiscountAmount');
           //if exceed maximum discount
           if(totalDiscountAmount > maxDiscountAmount)
             totalDiscountAmount = maxDiscountAmount;

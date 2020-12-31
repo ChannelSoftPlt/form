@@ -94,7 +94,6 @@ class _DiscountDetailState extends State<DiscountDetail> {
         ),
         backgroundColor: Colors.white,
         body: Builder(builder: (BuildContext innerContext) {
-
           return StreamBuilder(
               stream: freshStream.stream,
               builder: (context, object) {
@@ -779,7 +778,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
 
         usageLimit.text = setUsage(coupon.usageLimit.toString());
         usageLimitUser.text = setUsage(coupon.usageLimitPerUser.toString());
-      } on Exception {
+      } catch(e) {
         CustomToast(
                 '${AppLocalizations.of(context).translate('something_went_wrong')}',
                 context)

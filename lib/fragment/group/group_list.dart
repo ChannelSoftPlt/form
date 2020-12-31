@@ -22,7 +22,7 @@ class GroupList extends StatefulWidget {
 class _GroupListState extends State<GroupList> {
   List<OrderGroup> list = [];
   String query;
-  int itemPerPage = 8, currentPage = 1;
+  int itemPerPage = 20, currentPage = 1;
   bool itemFinish = false;
 
   RefreshController _refreshController =

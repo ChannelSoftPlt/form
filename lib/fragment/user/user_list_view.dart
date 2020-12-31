@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/user.dart';
-import 'package:my/translation/AppLocalizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserListView extends StatefulWidget {

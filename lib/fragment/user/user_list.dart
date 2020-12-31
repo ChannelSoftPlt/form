@@ -21,7 +21,7 @@ class UserList extends StatefulWidget {
 class _UserListState extends State<UserList> {
   List<User> list = [];
   String query;
-  int itemPerPage = 8, currentPage = 1;
+  int itemPerPage = 20, currentPage = 1;
   bool itemFinish = false;
 
   RefreshController _refreshController =

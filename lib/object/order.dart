@@ -141,7 +141,7 @@ class Order {
     try {
       DateTime todayDate = DateTime.parse(date);
       return dateFormat.format(todayDate).toString();
-    } on Exception {
+    } catch(e) {
       return '';
     }
   }
@@ -149,7 +149,7 @@ class Order {
   convertToInt(value) {
     try {
       return double.parse(value ?? 0);
-    } on Exception {
+    } catch(e) {
       return 0;
     }
   }
@@ -178,7 +178,7 @@ class Order {
     try {
       await launch(
           ('https://api.whatsapp.com/send?phone=$phone&text=$message'));
-    } on Exception {
+    } catch(e) {
       CustomSnackBar.show(context, 'WhatsApp Not Found!');
     }
   }

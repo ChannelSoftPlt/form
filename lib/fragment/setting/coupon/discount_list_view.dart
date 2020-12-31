@@ -161,7 +161,7 @@ class _DiscountListViewState extends State<DiscountListView> {
   getCouponShareContent() {
     try {
       return 'Use Coupon Code: ${widget.coupon.couponCode} to enjoy ${getDiscountAmount()} discount today!';
-    } on Exception {
+    } catch(e) {
       return 'Something Went Wrong';
     }
   }
@@ -172,7 +172,7 @@ class _DiscountListViewState extends State<DiscountListView> {
         return '${widget.coupon.couponUsed} / ${widget.coupon.usageLimit}';
       } else
         return '${widget.coupon.couponUsed} / ${AppLocalizations.of(context).translate('unlimited')}';
-    } on Exception {
+    } catch(e) {
       return '- / -';
     }
   }
@@ -188,7 +188,7 @@ class _DiscountListViewState extends State<DiscountListView> {
         return 'RM$discountAmount';
       else
         return '$discountAmount%';
-    } on Exception {
+    } catch(e) {
       return '--';
     }
   }

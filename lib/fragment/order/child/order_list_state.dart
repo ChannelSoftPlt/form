@@ -34,7 +34,7 @@ class OrderList extends StatefulWidget {
 class _OrderListState extends State<OrderList> {
   List<Order> list = [];
   String status;
-  int itemPerPage = 5, currentPage = 1;
+  int itemPerPage = 20, currentPage = 1;
   bool itemFinish = false;
 
   /*

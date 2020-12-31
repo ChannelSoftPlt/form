@@ -21,7 +21,7 @@ class OrderFragment extends StatefulWidget {
 }
 
 class _OrderFragmentState extends State<OrderFragment> {
-  final int itemPerPage = 5, currentPage = 1;
+  final int itemPerPage = 20, currentPage = 1;
 
   @override
   Widget build(BuildContext context) {

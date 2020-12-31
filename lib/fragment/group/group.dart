@@ -16,7 +16,7 @@ class GroupPage extends StatefulWidget {
 }
 
 class _GroupPageState extends State<GroupPage> {
-  final int itemPerPage = 8, currentPage = 1;
+  final int itemPerPage = 20, currentPage = 1;
 
   @override
   Widget build(BuildContext context) {

@@ -16,7 +16,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  final int itemPerPage = 8, currentPage = 1;
+  final int itemPerPage = 20, currentPage = 1;
 
   @override
   Widget build(BuildContext context) {
