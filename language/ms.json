@@ -378,5 +378,10 @@
   "upload_photo_request": "Upload Request",
   "upload_photo_description_1": "Sahkan untuk memuat naik gambar ini?\n",
   "upload_photo_description_2": "*Pesanan ini akan dikemas kini ke status selesai secara automatik.",
-  "upload_success": "Upload Berjaya!"
+  "upload_success": "Upload Berjaya!",
+
+  "date_time_setting": "Tetapan Tarikh & Masa",
+  "date_time_setting_description": "Sesuaikan tarikh dan masa anda untuk E-Menu anda.",
+  "min_order_day": "Hari Pra-pesanan",
+  "min_order_day_description": "Sediakan hari Pra-pesanan anda di sini. Tetapkan sebagai 0 jika tidak ada pra-pesanan sama sekali."
 }

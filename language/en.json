@@ -378,5 +378,15 @@
   "upload_photo_request": "Upload Request",
   "upload_photo_description_1": "Confirm to upload this picture?\n",
   "upload_photo_description_2": "*This order will update to status completed automatically.",
-  "upload_success": "Upload Successfully!"
+  "upload_success": "Upload Successfully!",
+
+  "date_time_setting": "Date & Time Setting",
+  "date_time_setting_description": "Customize your date and time for your E-Menu.",
+  "min_order_day": "Pre-order Days",
+  "min_order_day_description": "Setup your Pre-order days here. Please set as 0 if no pre-order at all.",
+
+  "export": "Export",
+  "export_data": "Export Data",
+  "customer": "Customer",
+  "export_type": "Export Type"
 }

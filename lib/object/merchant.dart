@@ -16,6 +16,7 @@ class Merchant {
   String fpayUsername;
   String fpayApiKey;
   String fpaySecretKey;
+  String minOrderDay;
 
   String selfCollectOption;
   String emailOption;
@@ -23,28 +24,30 @@ class Merchant {
   String timeOption;
   bool grouping = true;
 
-  Merchant({this.merchantId,
-    this.formId,
-    this.name,
-    this.email,
-    this.grouping,
-    this.companyName,
-    this.url,
-    this.address,
-    this.phone,
-    this.whatsAppNumber,
-    this.bankDetail,
-    this.cashOnDelivery,
-    this.bankTransfer,
-    this.allowfPay,
-    this.fpayTransfer,
-    this.fpayUsername,
-    this.fpayApiKey,
-    this.fpaySecretKey,
-    this.emailOption,
-    this.selfCollectOption,
-    this.dateOption,
-    this.timeOption});
+  Merchant(
+      {this.merchantId,
+      this.formId,
+      this.name,
+      this.email,
+      this.grouping,
+      this.companyName,
+      this.url,
+      this.address,
+      this.phone,
+      this.whatsAppNumber,
+      this.bankDetail,
+      this.cashOnDelivery,
+      this.bankTransfer,
+      this.allowfPay,
+      this.fpayTransfer,
+      this.fpayUsername,
+      this.fpayApiKey,
+      this.fpaySecretKey,
+      this.emailOption,
+      this.selfCollectOption,
+      this.dateOption,
+      this.timeOption,
+      this.minOrderDay});
 
   Merchant.fromJson(Map<String, dynamic> json)
       : merchantId = json['merchantId'],
@@ -67,10 +70,10 @@ class Merchant {
         emailOption = json['email_option'].toString(),
         selfCollectOption = json['self_collect'].toString(),
         dateOption = json['delivery_date_option'].toString(),
+        minOrderDay = json['order_min_day'].toString(),
         timeOption = json['delivery_time_option'].toString();
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'merchantId': merchantId,
         'formId': formId,
         'name': name,

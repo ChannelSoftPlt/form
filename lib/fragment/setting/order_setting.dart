@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/progress_bar.dart';
@@ -15,7 +16,7 @@ class OrderSetting extends StatefulWidget {
 }
 
 class _OrderSettingState extends State<OrderSetting> {
-  var bankDetails = TextEditingController();
+  var minOrderDays = TextEditingController();
   bool email, selfCollect, deliveryDate, deliveryTime;
   StreamController refreshController;
 
@@ -61,6 +62,8 @@ class _OrderSettingState extends State<OrderSetting> {
                   deliveryTime = merchant.timeOption != '1';
                   deliveryDate = merchant.dateOption != '1';
 
+                  print(responseJson);
+                  minOrderDays.text = merchant.minOrderDay ?? 0;
                   return mainContent(context);
                 } else {
                   return CustomProgressBar();
@@ -184,6 +187,39 @@ class _OrderSettingState extends State<OrderSetting> {
                                 thickness: 1.0,
                               ),
                             ),
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.date_range,
+                                  color: Colors.grey,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text:
+                                                '${AppLocalizations.of(context).translate('date_time_setting')}',
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    89, 100, 109, 1),
+                                                fontWeight: FontWeight.bold)),
+                                        TextSpan(text: '\n'),
+                                        TextSpan(
+                                          text:
+                                              '${AppLocalizations.of(context).translate('date_time_setting_description')}',
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             CheckboxListTile(
                               title: Text(
                                   "${AppLocalizations.of(context).translate('delivery_date')}"),
@@ -223,6 +259,47 @@ class _OrderSettingState extends State<OrderSetting> {
                               controlAffinity: ListTileControlAffinity
                                   .trailing, //  <-- leading Checkbox
                             ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('min_order_day')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('min_order_day_description')}',
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                              trailing: Container(
+                                  width: 50,
+                                  height: 50,
+                                  child: TextField(
+                                    controller: minOrderDays,
+                                    textAlign: TextAlign.center,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r"^\d*\.?\d*")),
+                                    ],
+                                    maxLength: 2,
+                                    decoration: InputDecoration(
+                                        counterText: '',
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.orangeAccent,
+                                              width: 1.0),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black45,
+                                              width: 1.0),
+                                        )),
+                                  )),
+                            ),
                             SizedBox(
                               height: 40,
                             ),
@@ -258,7 +335,8 @@ class _OrderSettingState extends State<OrderSetting> {
         email ? '0' : '1',
         selfCollect ? '0' : '1',
         deliveryDate ? '0' : '1',
-        deliveryTime ? '0' : '1');
+        deliveryTime ? '0' : '1',
+        minOrderDays.text.isEmpty ? '0' : minOrderDays.text);
 
     if (data['status'] == '1') {
       CustomSnackBar.show(context,

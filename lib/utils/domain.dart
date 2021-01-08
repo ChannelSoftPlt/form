@@ -468,13 +468,14 @@ class Domain {
   * update order setting
   * */
   updateOrderSetting(emailOption, selfCollectOption, deliveryDateOption,
-      deliveryTimeOption) async {
+      deliveryTimeOption, orderMinDay) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'self_collect': selfCollectOption,
       'delivery_date_option': deliveryDateOption,
       'delivery_time_option': deliveryTimeOption,
       'email_option': emailOption,
+      'order_min_day': orderMinDay,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,

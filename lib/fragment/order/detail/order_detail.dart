@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:geocoder/geocoder.dart';
@@ -1535,11 +1536,21 @@ class _OrderDetailState extends State<OrderDetail> {
   openWhatsApp(int messageType) async {
     print(Order().orderPrefix(widget.orderId));
     String message = '';
-    if (messageType == 0)
-      message =
-          '👋你好, *${order.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${Order().whatsAppOrderPrefix(widget.orderId)}'
-          '\n\n\n*检查订单/Check Order*\n点击这里/Click here👇\n'
-          '${Domain.whatsAppLink}?id=${order.publicUrl}';
+    if (messageType == 0) {
+      //for android
+      if (Platform.isAndroid) {
+        message =
+            '👋你好, *${order.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${Order().whatsAppOrderPrefix(widget.orderId)}'
+            '\n\n\n*检查订单/Check Order*\n点击这里/Click here👇\n'
+            '${Domain.whatsAppLink}?id=${order.publicUrl}';
+      }
+      //for ios
+      else {
+        message =
+            'Hi,%20*${order.name}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orderId)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${order.publicUrl}';
+      }
+    }
+    //send receipt
     else if (messageType == 2) {
       message = '${Domain.whatsAppLink}?id=${order.publicUrl}';
     }
@@ -1600,7 +1611,8 @@ class _OrderDetailState extends State<OrderDetail> {
   preChecking() async {
     //check discount features
     var prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('allow_discount') == null || prefs.getString('allow_discount') == '1') {
+    if (prefs.getString('allow_discount') == null ||
+        prefs.getString('allow_discount') == '1') {
       discountEnable = false;
     } else
       discountEnable = true;

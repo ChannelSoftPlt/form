@@ -141,7 +141,7 @@ class Order {
     try {
       DateTime todayDate = DateTime.parse(date);
       return dateFormat.format(todayDate).toString();
-    } catch(e) {
+    } catch (e) {
       return '';
     }
   }
@@ -149,7 +149,7 @@ class Order {
   convertToInt(value) {
     try {
       return double.parse(value ?? 0);
-    } catch(e) {
+    } catch (e) {
       return 0;
     }
   }
@@ -176,9 +176,15 @@ class Order {
 
   openWhatsApp(phone, message, context) async {
     try {
-      await launch(
-          ('https://api.whatsapp.com/send?phone=$phone&text=$message'));
-    } catch(e) {
+      var url = "https://api.whatsapp.com/send?phone=$phone&text=$message";
+      print(url);
+      if (await canLaunch(url)) {
+        await launch(url);
+      }
+      else{
+        print('Something Went Wrong!');
+      }
+    } catch (e) {
       CustomSnackBar.show(context, 'WhatsApp Not Found!');
     }
   }

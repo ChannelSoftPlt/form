@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:my/fragment/setting/edit_profile.dart';
+import 'package:my/fragment/setting/export_setting.dart';
 import 'package:my/fragment/setting/payment/edit_payment_method.dart';
 import 'package:my/fragment/setting/payment/language_setting.dart';
 import 'package:my/fragment/setting/reset_password.dart';
@@ -277,6 +278,30 @@ class _SettingFragmentState extends State<SettingFragment> {
                 ),
                 ListTile(
                     onTap: () {
+                      showExportDialog();
+                    },
+                    leading: Icon(
+                      Icons.insert_drive_file,
+                      size: 35,
+                      color: Colors.blueGrey,
+                    ),
+                    title: Text(
+                      '${AppLocalizations.of(context).translate('export_data')}',
+                      style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
+                    ),
+                    trailing: Icon(
+                      Icons.keyboard_arrow_right,
+                      size: 30,
+                    )),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  child: Divider(
+                    color: Colors.teal.shade100,
+                    thickness: 1.0,
+                  ),
+                ),
+                ListTile(
+                    onTap: () {
                       showLanguageDialog();
                     },
                     leading: Icon(
@@ -478,6 +503,16 @@ class _SettingFragmentState extends State<SettingFragment> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return LanguageDialog();
+      },
+    );
+  }
+
+  Future<void> showExportDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return ExportDialog();
       },
     );
   }

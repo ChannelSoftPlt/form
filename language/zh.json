@@ -378,5 +378,10 @@
   "upload_photo_request": "上传要求",
   "upload_photo_description_1": "确认上传此图片？",
   "upload_photo_description_2": "*该订单将更新为自动完成的状态。",
-  "upload_success": "上传成功！"
+  "upload_success": "上传成功！",
+
+  "date_time_setting": "日期和时间设置",
+  "date_time_setting_description": "自定义E-Menu的日期和时间。",
+  "min_order_day": "预购天数",
+  "min_order_day_description": "在这里设置您的预购天数。 如果不需要预购，则输入0。"
 }

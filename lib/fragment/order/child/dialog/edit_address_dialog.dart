@@ -80,6 +80,8 @@ class _EditAddressDialogState extends State<EditAddressDialog> {
                   keyboardType: TextInputType.multiline,
                   controller: address,
                   textAlign: TextAlign.center,
+                  minLines: 3,
+                  maxLines: 5,
                   decoration: InputDecoration(
                     labelText: '${AppLocalizations.of(context).translate('address')}',
                     labelStyle: TextStyle(
