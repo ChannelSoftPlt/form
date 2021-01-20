@@ -173,7 +173,7 @@ class _LoginFormState extends State<LoginPage> {
               name: data['name'],
               url: getUrl(data['url']),
               email: data['email']));
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/');
     } on Exception catch (e) {
       print('Error!! $e');
     }

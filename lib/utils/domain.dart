@@ -12,8 +12,7 @@ import 'package:http/http.dart' as http;
 class Domain {
   static var domain = 'https://www.emenu.com.my/';
 
-//  static var domain = 'https://www.petkeeper.com.my/form/';
-
+//  static var domain = 'https://www.lkmng.com/form/';
   static var registration = domain + 'registration/index.php';
   static var order = domain + 'mobile_api/order/index.php';
   static var product = domain + 'mobile_api/product/index.php';
@@ -26,6 +25,7 @@ class Domain {
   static var discount = domain + 'mobile_api/coupon/index.php';
   static var notification = domain + 'mobile_api/notification/index.php';
   static var category = domain + 'mobile_api/category/index.php';
+  static var export = domain + 'mobile_api/export/index.php';
 
   static var whatsAppLink = domain + 'order/view-order.php';
   static var imagePath = domain + 'product/image/';
@@ -231,6 +231,41 @@ class Domain {
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * export customer
+  * */
+  fetchExportCustomer($startDate, $endDate) async {
+    print('haha');
+    print($startDate);
+    print($endDate);
+    var response = await http.post(Domain.export, body: {
+      'export_customer': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'start_date': $startDate,
+      'end_date': $endDate
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * export product
+  * */
+  fetchExportProduct($startDate, $endDate) async {
+    print($startDate);
+    print($endDate);
+    var response = await http.post(Domain.export, body: {
+      'export_product': '1',
+      'merchant_id':
+      Merchant.fromJson(await SharePreferences().read("merchant"))
+          .merchantId,
+      'start_date': $startDate,
+      'end_date': $endDate
     });
     return jsonDecode(response.body);
   }
@@ -468,7 +503,7 @@ class Domain {
   * update order setting
   * */
   updateOrderSetting(emailOption, selfCollectOption, deliveryDateOption,
-      deliveryTimeOption, orderMinDay) async {
+      deliveryTimeOption, orderMinDay, workingDay) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'self_collect': selfCollectOption,
@@ -476,6 +511,7 @@ class Domain {
       'delivery_time_option': deliveryTimeOption,
       'email_option': emailOption,
       'order_min_day': orderMinDay,
+      'working_day': workingDay,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,

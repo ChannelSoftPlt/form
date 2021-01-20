@@ -145,7 +145,7 @@
   "update_profile": "更新资料",
 
 
-  "optional_fields": "可选的",
+  "optional_fields": "以下全是自定义设置",
   "field_will_show_in_emenu": "这些资料将显示在您的E-Menu",
   "email_required_hint": "顾客需要在订单内填写电子邮件地址.",
   "self_collect_enable_hint": "顾客能够选择自取作为寄货方式.",
@@ -383,5 +383,27 @@
   "date_time_setting": "日期和时间设置",
   "date_time_setting_description": "自定义E-Menu的日期和时间。",
   "min_order_day": "预购天数",
-  "min_order_day_description": "在这里设置您的预购天数。 如果不需要预购，则输入0。"
+  "min_order_day_description": "在这里设置您的预购天数。 如果不需要预购，则输入0。",
+
+  "export": "导出",
+  "export_data": "导出资料",
+  "export_type": "导出类型",
+  "no_date_found": "没有找到数据！",
+  "file_generated": "文件创建成功！",
+  "share_file": "分享文件",
+  "open_file": "打开文件",
+
+  "total_quantity": "总量：",
+  "total_amount": "总金额：",
+  "total_amount_error": "总金额失误！",
+
+  "working_day": "工作日",
+  "working_day_description": "请选择您E-Menu的工作日。 \n青色 = Active",
+  "day1": "星期日",
+  "day2": "星期一",
+  "day3": "星期二",
+  "day4": "星期三",
+  "day5": "星期四",
+  "day6": "星期五",
+  "day7": "星期六"
 }

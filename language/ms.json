@@ -383,5 +383,27 @@
   "date_time_setting": "Tetapan Tarikh & Masa",
   "date_time_setting_description": "Sesuaikan tarikh dan masa anda untuk E-Menu anda.",
   "min_order_day": "Hari Pra-pesanan",
-  "min_order_day_description": "Sediakan hari Pra-pesanan anda di sini. Tetapkan sebagai 0 jika tidak ada pra-pesanan sama sekali."
+  "min_order_day_description": "Sediakan hari Pra-pesanan anda di sini. Tetapkan sebagai 0 jika tidak ada pra-pesanan sama sekali.",
+
+  "export": "Eksport",
+  "export_data": "Eksport Data",
+  "export_type": "Jenis Eksport",
+  "no_date_found": "Tiada data dijumpai!",
+  "file_generated": "Fail Berjaya Dieksportkan!",
+  "share_file": "Kongsi Fail",
+  "open_file": "Buka fail",
+
+  "total_quantity": "Kuantiti keseluruhan:",
+  "total_amount": "Jumlah keseluruhan:",
+  "total_amount_error": "Jumlah Amount Error!",
+
+  "working_day": "Workings day",
+  "working_day_description": "Sila pilih hari bekerja untuk E-Menu anda.\n* Catatan Warna hijau = aktif",
+  "day1": "Ahad",
+  "day2": "Isnin",
+  "day3": "Selasa",
+  "day4": "Rabu",
+  "day5": "Khamis",
+  "day6": "Jumaat",
+  "day7": "Sabtu"
 }

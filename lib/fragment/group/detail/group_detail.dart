@@ -31,6 +31,9 @@ class _GroupDetailState extends State<GroupDetail> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
+  var totalAmount = 0.00;
+  var totalQuantity = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -133,24 +136,50 @@ class _GroupDetailState extends State<GroupDetail> {
   Widget headerLayout() {
     return Padding(
         padding: const EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              '${AppLocalizations.of(context).translate('date')} ${Order().formatDate(widget.orderGroup.date ?? '')}',
-              style: TextStyle(color: Colors.grey[600], fontSize: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  '${AppLocalizations.of(context).translate('date')}: ${Order().formatDate(widget.orderGroup.date ?? '')}',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                ),
+                Spacer(),
+                Text(
+                  '${AppLocalizations.of(context).translate('total_order')} ${widget.orderGroup.totalOrder.toString()}',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                ),
+              ],
             ),
-            Spacer(),
+            SizedBox(
+              height: 5,
+            ),
             Text(
-              '${AppLocalizations.of(context).translate('total_order')} ${widget.orderGroup.totalOrder.toString()}',
-              textAlign: TextAlign.end,
+              '${AppLocalizations.of(context).translate('total_quantity')} ${totalQuantity.toInt()}',
+              textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Colors.grey[600],
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 16),
             ),
             SizedBox(
-              height: 50,
+              height: 10,
+            ),
+            Text(
+              '${AppLocalizations.of(context).translate('total_amount')} RM ${totalAmount.toDouble()}',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
+            ),
+            SizedBox(
+              height: 40,
             ),
           ],
         ));
@@ -158,44 +187,57 @@ class _GroupDetailState extends State<GroupDetail> {
 
   Future fetchTotalOrder() async {
     Map data = await Domain().fetchGroupDetail(widget.orderGroup.orderGroupId);
+    if (data['status'] == '1') {
+      List responseJson = data['group_order_item'];
+      //add two blank object
+      totalList.add(new OrderItem());
+      totalList.add(new OrderItem());
 
-    setState(() {
-      if (data['status'] == '1') {
-        List responseJson = data['group_order_item'];
-        //add two blank object
-        totalList.add(new OrderItem());
-        totalList.add(new OrderItem());
-
-        for (int i = 0; i < responseJson.length; i++) {
-          bool isAdded = false;
-          for (int j = 0; j < totalList.length; j++) {
-            if (responseJson[i]['name'] == totalList[j].name &&
-                responseJson[i]['remark'] == totalList[j].remark &&
-                responseJson[i]['price'] == totalList[j].price) {
-              /*
+      for (int i = 0; i < responseJson.length; i++) {
+        bool isAdded = false;
+        for (int j = 0; j < totalList.length; j++) {
+          if (responseJson[i]['name'] == totalList[j].name &&
+              responseJson[i]['remark'] == totalList[j].remark &&
+              responseJson[i]['price'] == totalList[j].price) {
+            /*
               * existing record goes here
               * */
-              totalList[j].quantity = (int.parse(responseJson[i]['quantity']) +
-                      int.parse(totalList[j].quantity))
-                  .toString();
-              isAdded = true;
-              break;
-            }
-          }
-          /*
-          * new record goes here
-          * */
-          if (!isAdded) {
-            totalList.add(new OrderItem(
-                name: responseJson[i]['name'],
-                price: responseJson[i]['price'],
-                quantity: responseJson[i]['quantity'],
-                remark: responseJson[i]['remark']));
+            totalList[j].quantity = (int.parse(responseJson[i]['quantity']) +
+                    int.parse(totalList[j].quantity))
+                .toString();
+            isAdded = true;
+            break;
           }
         }
-        setState(() {});
+        /*
+          * new record goes here
+          * */
+        if (!isAdded) {
+          totalList.add(new OrderItem(
+              name: responseJson[i]['name'],
+              price: responseJson[i]['price'],
+              quantity: responseJson[i]['quantity'],
+              remark: responseJson[i]['remark']));
+        }
       }
-    });
+    }
+    if (totalList.length > 0) _countTotalAmount();
+    setState(() {});
+  }
+
+  _countTotalAmount() {
+    try {
+      totalQuantity = 0;
+      totalAmount = 0.00;
+      for (int i = 2; i < totalList.length; i++) {
+        totalQuantity += int.parse(totalList[i].quantity);
+        totalAmount +=
+            int.parse(totalList[i].quantity) * double.parse(totalList[i].price);
+      }
+    } catch ($e) {
+      showSnackBar(
+          '${AppLocalizations.of(context).translate('total_amount_error')}');
+    }
   }
 
   headerLabel() {
@@ -315,14 +357,15 @@ class _GroupDetailState extends State<GroupDetail> {
               Map data = await Domain().updateGroupName(orderGroup);
               print(data);
               if (data['status'] == '1') {
-                showSnackBar('${AppLocalizations.of(mainContext).translate('update_success')}');
+                showSnackBar(
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
                 setState(() {});
-              }
-              else if(data['status'] == '3') {
-                showSnackBar('${AppLocalizations.of(mainContext).translate('group_existed')}');
-              }
-              else
-                showSnackBar('${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+              } else if (data['status'] == '3') {
+                showSnackBar(
+                    '${AppLocalizations.of(mainContext).translate('group_existed')}');
+              } else
+                showSnackBar(
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             });
       },
     );
@@ -338,8 +381,10 @@ class _GroupDetailState extends State<GroupDetail> {
 
   Widget notFound() {
     return NotFound(
-        title: '${AppLocalizations.of(context).translate('no_item_found_in_group')}',
-        description: '${AppLocalizations.of(context).translate('no_item_found_in_group_description')}',
+        title:
+            '${AppLocalizations.of(context).translate('no_item_found_in_group')}',
+        description:
+            '${AppLocalizations.of(context).translate('no_item_found_in_group_description')}',
         showButton: false,
         button: '',
         drawable: 'drawable/folder.png');

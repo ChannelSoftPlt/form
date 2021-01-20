@@ -189,6 +189,7 @@ class _DiscountListViewState extends State<DiscountListView> {
       else
         return '$discountAmount%';
     } catch(e) {
+      print(e);
       return '--';
     }
   }

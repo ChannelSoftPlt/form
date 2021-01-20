@@ -17,6 +17,7 @@ class Merchant {
   String fpayApiKey;
   String fpaySecretKey;
   String minOrderDay;
+  String workingDay;
 
   String selfCollectOption;
   String emailOption;
@@ -47,7 +48,8 @@ class Merchant {
       this.selfCollectOption,
       this.dateOption,
       this.timeOption,
-      this.minOrderDay});
+      this.minOrderDay,
+      this.workingDay});
 
   Merchant.fromJson(Map<String, dynamic> json)
       : merchantId = json['merchantId'],
@@ -71,6 +73,7 @@ class Merchant {
         selfCollectOption = json['self_collect'].toString(),
         dateOption = json['delivery_date_option'].toString(),
         minOrderDay = json['order_min_day'].toString(),
+        workingDay = json['working_day'].toString(),
         timeOption = json['delivery_time_option'].toString();
 
   Map<String, dynamic> toJson() => {

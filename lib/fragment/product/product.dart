@@ -124,11 +124,11 @@ class _ProductPageState extends State<ProductPage> {
             : '${AppLocalizations.of(context).translate('no_item_upload')}',
         showButton: widget.query.length < 1,
         refresh: () {
-          setState(() {});
+          showProductDetail(context, false, null);
         },
         button: widget.query.length > 1
             ? ''
-            : '${AppLocalizations.of(context).translate('refresh')}',
+            : '${AppLocalizations.of(context).translate('add_product')}',
         drawable: widget.query.length > 1
             ? 'drawable/not_found.png'
             : 'drawable/folder.png');

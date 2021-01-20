@@ -258,7 +258,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     textAlign: TextAlign.start,
                     minLines: 1,
                     maxLengthEnforced: true,
-                    maxLength: 25,
+                    maxLength: 75,
                     style: TextStyle(fontSize: 14),
                     decoration: InputDecoration(
                       labelText:

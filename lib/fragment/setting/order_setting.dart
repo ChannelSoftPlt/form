@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my/object/merchant.dart';
@@ -18,6 +20,7 @@ class OrderSetting extends StatefulWidget {
 class _OrderSettingState extends State<OrderSetting> {
   var minOrderDays = TextEditingController();
   bool email, selfCollect, deliveryDate, deliveryTime;
+  List<int> workingDays = [];
   StreamController refreshController;
 
   @override
@@ -62,8 +65,12 @@ class _OrderSettingState extends State<OrderSetting> {
                   deliveryTime = merchant.timeOption != '1';
                   deliveryDate = merchant.dateOption != '1';
 
-                  print(responseJson);
                   minOrderDays.text = merchant.minOrderDay ?? 0;
+
+                  var workingDay = jsonDecode(merchant.workingDay);
+                  workingDays =
+                      workingDay != null ? List.from(workingDay) : null;
+                  print(workingDays.length);
                   return mainContent(context);
                 } else {
                   return CustomProgressBar();
@@ -300,6 +307,25 @@ class _OrderSettingState extends State<OrderSetting> {
                                         )),
                                   )),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('working_day')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('working_day_description')}',
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ),
+                            Column(
+                              children: [workingDayList()],
+                            ),
                             SizedBox(
                               height: 40,
                             ),
@@ -330,13 +356,45 @@ class _OrderSettingState extends State<OrderSetting> {
         });
   }
 
+  Widget workingDayList() {
+    return GridView.builder(
+        shrinkWrap: true,
+        itemCount: workingDays.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5,
+            childAspectRatio: 3),
+        itemBuilder: (BuildContext context, int i) {
+          return Card(
+            elevation: 2,
+            child: ListTile(
+              onTap: () {
+                workingDays[i] = workingDays[i] == 0 ? 1 : 0;
+                refreshController.add('');
+              },
+              tileColor:
+                  workingDays[i] == 0 ? Colors.lightGreen : Colors.white,
+              title: Text(
+                '${AppLocalizations.of(context).translate('day${i + 1}')}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: workingDays[i] == 0 ? Colors.white : Colors.black54),
+              ),
+            ),
+          );
+        });
+  }
+
   updatePayment(context) async {
+    print(workingDays.toString());
     Map data = await Domain().updateOrderSetting(
         email ? '0' : '1',
         selfCollect ? '0' : '1',
         deliveryDate ? '0' : '1',
         deliveryTime ? '0' : '1',
-        minOrderDays.text.isEmpty ? '0' : minOrderDays.text);
+        minOrderDays.text.isEmpty ? '0' : minOrderDays.text,
+        workingDays.toString());
 
     if (data['status'] == '1') {
       CustomSnackBar.show(context,

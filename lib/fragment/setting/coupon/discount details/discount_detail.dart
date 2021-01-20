@@ -764,12 +764,6 @@ class _DiscountDetailState extends State<DiscountDetail> {
                     .toStringAsFixed(2)
                 : '';
 
-        startDate = coupon.startDate.isNotEmpty
-            ? DateTime.parse(coupon.startDate)
-            : null;
-        endDate =
-            coupon.endDate.isNotEmpty ? DateTime.parse(coupon.endDate) : null;
-
         var discountCondition = jsonDecode(coupon.discountCondition);
         this.discountCondition = int.parse(discountCondition['type']);
         this.conditionAmount.text = Order()
@@ -778,7 +772,15 @@ class _DiscountDetailState extends State<DiscountDetail> {
 
         usageLimit.text = setUsage(coupon.usageLimit.toString());
         usageLimitUser.text = setUsage(coupon.usageLimitPerUser.toString());
+
+        startDate = coupon.startDate.isNotEmpty
+            ? DateTime.parse(coupon.startDate)
+            : null;
+        endDate =
+        coupon.endDate.isNotEmpty ? DateTime.parse(coupon.endDate) : null;
+
       } catch(e) {
+        print(e);
         CustomToast(
                 '${AppLocalizations.of(context).translate('something_went_wrong')}',
                 context)

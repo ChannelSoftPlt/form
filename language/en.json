@@ -199,7 +199,7 @@
   "no_customer_found_description": "Don\\'t worry, your customer are coming soon...",
 
 
-  "pull_up_load": "Pull up to load more!",
+  "pull_up_load": "Loading...",
   "load_failed": "Load Failed!",
   "release_to_load_more": "Release to load more!",
   "no_more_data": "No more data!",
@@ -387,6 +387,23 @@
 
   "export": "Export",
   "export_data": "Export Data",
-  "customer": "Customer",
-  "export_type": "Export Type"
+  "export_type": "Export Type",
+  "no_date_found": "No Data Found!",
+  "file_generated": "File Generated Successfully!",
+  "share_file": "Share File",
+  "open_file": "Open File",
+
+  "total_quantity": "Total Quantity:",
+  "total_amount": "Total Amount:",
+  "total_amount_error": "Total Amount Error!",
+
+  "working_day": "Workings day",
+  "working_day_description": "Please select the working days for your E-Menu. \n*Note Green color = active",
+  "day1": "Sunday",
+  "day2": "Monday",
+  "day3": "Tuesday",
+  "day4": "Wednesday",
+  "day5": "Thursday",
+  "day6": "Friday",
+  "day7": "Saturday"
 }
