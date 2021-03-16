@@ -181,7 +181,7 @@ class _ListState extends State<HomePage> {
         leading: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Image.asset(
-            'drawable/logo.jpg',
+            'drawable/new_logo.jpg',
             height: 50,
           ),
         ),

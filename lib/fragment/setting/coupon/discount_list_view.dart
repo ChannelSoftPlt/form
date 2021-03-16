@@ -23,6 +23,7 @@ class DiscountListView extends StatefulWidget {
 }
 
 class _DiscountListViewState extends State<DiscountListView> {
+  String discountType;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -145,9 +146,9 @@ class _DiscountListViewState extends State<DiscountListView> {
                               textStyle: TextStyle(
                                   color: Colors.orangeAccent,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 25),
+                                  fontSize: discountType == '2' ? 17 : 22),
                             ),
-                            textAlign: TextAlign.right,
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       )),
@@ -180,14 +181,15 @@ class _DiscountListViewState extends State<DiscountListView> {
   getDiscountAmount() {
     try {
       var discountAmountObject = jsonDecode(widget.coupon.discountType);
-      String discountAmountType = discountAmountObject['type'];
+      this.discountType = discountAmountObject['type'];
       String discountAmount =
           Order().convertToInt(discountAmountObject['rate']).toStringAsFixed(2);
 
-      if (discountAmountType == '0')
+      if (discountType == '0')
         return 'RM$discountAmount';
-      else
+      else if(discountType == '1')
         return '$discountAmount%';
+      else return AppLocalizations.of(context).translate('free_shipping');
     } catch(e) {
       print(e);
       return '--';

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:my/object/order.dart';
 import 'package:my/shareWidget/progress_bar.dart';
@@ -73,7 +75,9 @@ class _OrderFragmentState extends State<OrderFragment> {
         refresh: () {
           setState(() {});
         },
-        button: widget.query.length > 1 ? '' : '${AppLocalizations.of(context).translate('refresh')}',
+        button: widget.query.length > 1
+            ? ''
+            : '${AppLocalizations.of(context).translate('refresh')}',
         drawable: widget.query.length > 1
             ? 'drawable/not_found.png'
             : 'drawable/no_order.png');

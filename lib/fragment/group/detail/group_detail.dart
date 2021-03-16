@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my/fragment/group/detail/group_order_list.dart';
@@ -156,30 +157,66 @@ class _GroupDetailState extends State<GroupDetail> {
                 ),
               ],
             ),
+            Card(
+              elevation: 4,
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        alignment: Alignment.center,
+                        height: 70,
+                        child: Column(
+                          children: [
+                            Text(
+                              '${totalQuantity.toInt()}',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                            Text(
+                              '${AppLocalizations.of(context).translate('total_quantity')}',
+                              textAlign: TextAlign.end,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      )),
+                  Container(height: 50, child: VerticalDivider(color: Colors.grey)),
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        alignment: Alignment.center,
+                        height: 70,
+                        child: Column(
+                          children: [
+                            Text(
+                              'RM ${totalAmount.toDouble().toStringAsFixed(2)}',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                            Text(
+                              '${AppLocalizations.of(context).translate('total_amount')}',
+                              textAlign: TextAlign.end,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      )),
+                ],
+              ),
+            ),
             SizedBox(
-              height: 5,
-            ),
-            Text(
-              '${AppLocalizations.of(context).translate('total_quantity')} ${totalQuantity.toInt()}',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              '${AppLocalizations.of(context).translate('total_amount')} RM ${totalAmount.toDouble()}',
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
-            ),
-            SizedBox(
-              height: 40,
+              height: 30,
             ),
           ],
         ));

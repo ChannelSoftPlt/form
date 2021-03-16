@@ -117,8 +117,12 @@ class Order {
     return value ?? "0.00";
   }
 
-  static double checkDouble(num value) {
-    return value is double ? value : value.toDouble();
+  static double checkDouble(value) {
+    try {
+      return value is double ? value : double.parse(value);
+    } catch ($e) {
+      return 0.00;
+    }
   }
 
   String orderPrefix(orderID) {
@@ -155,6 +159,9 @@ class Order {
   }
 
   double countTotal(Order order) {
+    if (order.id == 8525) {
+      print('order total ${order.total}');
+    }
     return convertToInt(order.deliveryFee) +
         order.total +
         convertToInt(order.tax) -
@@ -180,8 +187,7 @@ class Order {
       print(url);
       if (await canLaunch(url)) {
         await launch(url);
-      }
-      else{
+      } else {
         print('Something Went Wrong!');
       }
     } catch (e) {

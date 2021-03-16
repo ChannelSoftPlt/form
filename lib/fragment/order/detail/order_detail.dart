@@ -10,6 +10,7 @@ import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_address_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_coupon_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_discount_dialog.dart';
+import 'package:my/fragment/order/child/dialog/edit_phone_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_customer_note_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
@@ -379,10 +380,10 @@ class _OrderDetailState extends State<OrderDetail> {
                         order.note != ''
                             ? order.note
                             : '${AppLocalizations.of(context).translate('no_remark')}',
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.start,
                         style: TextStyle(
                             color: order.note != ''
-                                ? Colors.red
+                                ? Colors.black
                                 : Colors.grey[600],
                             fontSize: 13),
                       ),
@@ -732,6 +733,10 @@ class _OrderDetailState extends State<OrderDetail> {
                         style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                       Spacer(),
+                      IconButton(
+                          icon: Icon(Icons.edit),
+                          color: Colors.grey,
+                          onPressed: () => showEditPhoneDialog(context)),
                       whatsAppMenu(context),
                       IconButton(
                           icon: Icon(Icons.call),
@@ -803,43 +808,46 @@ class _OrderDetailState extends State<OrderDetail> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      orderItem.name,
-                      style: TextStyle(
-                        fontSize: 16,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        orderItem.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.start,
                       ),
-                      textAlign: TextAlign.start,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Visibility(
-                      visible: orderItem.remark != null &&
-                          orderItem.remark.length > 0,
-                      child: Container(
-                        width: 220,
-                        child: Text(
-                          '${AppLocalizations.of(context).translate('remark')}: ${orderItem.remark}',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                              color: Colors.red[400],
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
+                        style: TextStyle(color: Colors.grey, fontSize: 14),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Visibility(
+                        visible: orderItem.remark != null &&
+                            orderItem.remark.length > 0,
+                        child: Container(
+                          width: double.infinity,
+                          child: Text(
+                            '${AppLocalizations.of(context).translate('remark')}: ${orderItem.remark}',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                color: Colors.red[400],
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 Column(
                   children: <Widget>[
@@ -1269,12 +1277,43 @@ class _OrderDetailState extends State<OrderDetail> {
               await Future.delayed(Duration(milliseconds: 300));
               Navigator.pop(mainContext);
 
-              Map data = await Domain().updateOrderItem(orderItem);
+              Map data = await Domain().updateOrderItem(orderItem, order.id);
               if (data['status'] == '1') {
                 showSnackBar(
                     '${AppLocalizations.of(mainContext).translate('update_success')}');
                 setState(() {
                   orderItems.clear();
+                });
+              } else
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+            });
+      },
+    );
+  }
+
+  /*
+  * update phone number
+  * */
+  showEditPhoneDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return EditPhoneDialog(
+            order: order,
+            onClick: (phone) async {
+              await Future.delayed(Duration(milliseconds: 500));
+              Navigator.pop(mainContext);
+              Map data = await Domain().updatePhone(phone, order.id.toString());
+
+              if (data['status'] == '1') {
+                showSnackBar(
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
+                setState(() {
+                  orderItems.clear();
+                  order.phone = phone;
                 });
               } else
                 CustomSnackBar.show(mainContext,
@@ -1309,8 +1348,8 @@ class _OrderDetailState extends State<OrderDetail> {
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
-                Map data = await Domain()
-                    .deleteOrderItem(orderItem.orderProductId.toString());
+                Map data = await Domain().deleteOrderItem(
+                    orderItem.orderProductId.toString(), order.id.toString());
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
                   CustomSnackBar.show(mainContext,
@@ -1487,7 +1526,6 @@ class _OrderDetailState extends State<OrderDetail> {
               Map data = await Domain()
                   .addOrderItem(product, order.id.toString(), quantity, remark);
 
-              print(data);
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext,
                     '${AppLocalizations.of(mainContext).translate('add_success')}');
@@ -1547,7 +1585,7 @@ class _OrderDetailState extends State<OrderDetail> {
       //for ios
       else {
         message =
-            'Hi,%20*${order.name}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orderId)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${order.publicUrl}';
+            'Hi,%20*${order.name.replaceAll(' ', '%20')}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orderId)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${order.publicUrl}';
       }
     }
     //send receipt

@@ -75,16 +75,15 @@ class _EditProductDialogState extends State<EditProductDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(object.name, style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(object.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             SizedBox(
-              height: 7,
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 50,
+                Expanded(
+                  flex: 1,
                   child: Theme(
                     data: new ThemeData(
                       primaryColor: Colors.orange,
@@ -110,9 +109,9 @@ class _EditProductDialogState extends State<EditProductDialog> {
                         )),
                   ),
                 ),
-                Container(
-                  width: 100,
-                  height: 50,
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
                   child: Theme(
                     data: new ThemeData(
                       primaryColor: Colors.orange,

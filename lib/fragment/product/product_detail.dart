@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:my/fragment/product/category/category_dialog.dart';
@@ -311,7 +312,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                     ],
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
                     controller: price,
                     textAlign: TextAlign.start,
                     decoration: InputDecoration(
@@ -657,8 +659,46 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     final pickedFile = await picker.getImage(
         source: isCamera ? ImageSource.camera : ImageSource.gallery);
     _image = File(pickedFile.path);
+    _cropImage(_image);
+  }
 
-    compressFileMethod();
+  Future<Null> _cropImage(File file) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: file.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ]
+            : [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
+                CropAspectRatioPreset.ratio16x9
+              ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: AppLocalizations.of(context).translate('crop_image'),
+            toolbarColor: Colors.white,
+            toolbarWidgetColor: Colors.orangeAccent,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: AppLocalizations.of(context).translate('crop_image'),
+        ));
+    if (croppedFile != null) {
+      /*
+      * image file
+      * */
+      _image = croppedFile;
+      compressFileMethod();
+    }
   }
 
   void compressFileMethod() async {

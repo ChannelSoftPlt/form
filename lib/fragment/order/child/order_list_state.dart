@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
@@ -10,6 +12,7 @@ import 'package:my/shareWidget/status_dialog.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
+import 'package:package_info/package_info.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'card_view.dart';
@@ -274,8 +277,15 @@ class _OrderListState extends State<OrderList> {
   }
 
   Future fetchOrder() async {
-    Map data = await Domain().fetchOrder(currentPage, itemPerPage, status,
-        widget.query, '', widget.driverId, widget.startDate, widget.endDate);
+    Map data = await Domain().fetchOrder(
+        currentPage,
+        itemPerPage,
+        status,
+        widget.query,
+        '',
+        widget.driverId,
+        widget.startDate,
+        widget.endDate);
 
     setState(() {
       if (data['status'] == '1') {
@@ -308,12 +318,10 @@ class _OrderListState extends State<OrderList> {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('update_success')}');
               _onRefresh();
-            }
-            else if(data['status'] == '3') {
+            } else if (data['status'] == '3') {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('group_existed')}');
-            }
-            else {
+            } else {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }

@@ -393,8 +393,8 @@
   "share_file": "Share File",
   "open_file": "Open File",
 
-  "total_quantity": "Total Quantity:",
-  "total_amount": "Total Amount:",
+  "total_quantity": "Total Quantity",
+  "total_amount": "Total Amount",
   "total_amount_error": "Total Amount Error!",
 
   "working_day": "Workings day",
@@ -405,5 +405,13 @@
   "day4": "Wednesday",
   "day5": "Thursday",
   "day6": "Friday",
-  "day7": "Saturday"
+  "day7": "Saturday",
+
+  "free_shipping": "Free Shipping",
+  "edit_phone": "Edit Phone",
+  "phone": "Phone No",
+  "crop_image": "Crop Image",
+  "qr_code": "QR Code",
+  "url": "E-Menu Link",
+  "marketing_tool": "Marketing & Sales Tools"
 }

@@ -393,8 +393,8 @@
   "share_file": "分享文件",
   "open_file": "打开文件",
 
-  "total_quantity": "总量：",
-  "total_amount": "总金额：",
+  "total_quantity": "总量",
+  "total_amount": "总金额",
   "total_amount_error": "总金额失误！",
 
   "working_day": "工作日",
@@ -405,5 +405,13 @@
   "day4": "星期三",
   "day5": "星期四",
   "day6": "星期五",
-  "day7": "星期六"
+  "day7": "星期六",
+
+  "free_shipping": "免邮费",
+  "edit_phone": "编辑电话",
+  "phone": "电话号码",
+  "crop_image": "裁剪图像",
+  "qr_code": "二维码",
+  "url": "E-Menu链接",
+  "marketing_tool": "营销与销售工具"
 }

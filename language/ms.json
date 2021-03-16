@@ -393,8 +393,8 @@
   "share_file": "Kongsi Fail",
   "open_file": "Buka fail",
 
-  "total_quantity": "Kuantiti keseluruhan:",
-  "total_amount": "Jumlah keseluruhan:",
+  "total_quantity": "Kuantiti keseluruhan",
+  "total_amount": "Jumlah keseluruhan",
   "total_amount_error": "Jumlah Amount Error!",
 
   "working_day": "Workings day",
@@ -405,5 +405,13 @@
   "day4": "Rabu",
   "day5": "Khamis",
   "day6": "Jumaat",
-  "day7": "Sabtu"
+  "day7": "Sabtu",
+
+  "free_shipping": "Free Shipping",
+  "edit_phone": "Edit Telefon",
+  "phone": "No telefon",
+  "crop_image": "Gambar Tanaman",
+  "qr_code": "Kod QR",
+  "url": "E-Menu Link",
+  "marketing_tool": "Alat Pemasaran & Jualan"
 }

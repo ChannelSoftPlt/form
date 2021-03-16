@@ -39,7 +39,9 @@ class _LoginFormState extends State<LoginPage> {
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  Image.asset('drawable/logo.png', height: 200),
+                  Image.asset('drawable/new_logo.jpg', height: 200),
+                  Text('E-Menu', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
+                  SizedBox(height: 20.0),
                   Theme(
                     child: customTextField(email, 'email', null),
                     data: Theme.of(context).copyWith(

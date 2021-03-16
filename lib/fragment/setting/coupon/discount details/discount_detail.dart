@@ -35,7 +35,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
   var usageLimit = TextEditingController();
   var usageLimitUser = TextEditingController();
 
-  //0 = fixed cart, 1 = percentage
+  //0 = fixed cart, 1 = percentage, 2 = free shipping
   int discountType = 0;
 
   //start and end date
@@ -235,11 +235,18 @@ class _DiscountDetailState extends State<DiscountDetail> {
                           child: Text(AppLocalizations.of(context)
                               .translate('percentage_discount')),
                           value: 1,
-                        )
+                        ),
+                        DropdownMenuItem(
+                          child: Text(AppLocalizations.of(context)
+                              .translate('free_shipping')),
+                          value: 2,
+                        ),
                       ],
                       onChanged: (value) {
                         setState(() {
+                          print('discount type: $value');
                           discountAmount.clear();
+                          maxDiscountAmount.clear();
                           discountType = value;
                         });
                       }),
@@ -249,50 +256,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
             SizedBox(
               height: 10,
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: Theme(
-                    data: new ThemeData(
-                      primaryColor: Colors.orange,
-                    ),
-                    child: TextField(
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r"^\d*\.?\d*")),
-                      ],
-                      controller: discountAmount,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 14),
-                      maxLines: 1,
-                      decoration: InputDecoration(
-                        errorText: discountAmountValidate
-                            ? '${AppLocalizations.of(context).translate('invalid_discount_amount')}'
-                            : null,
-                        prefixIcon: Icon(Icons.monetization_on),
-                        labelText:
-                            '${AppLocalizations.of(context).translate(discountType == 0 ? 'discount_amount' : 'discount_percentage')}',
-                        labelStyle:
-                            TextStyle(fontSize: 14, color: Colors.blueGrey),
-                        hintText: '20',
-                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                        border: new OutlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.teal)),
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: discountType == 1,
-                  child: SizedBox(
-                    width: 5,
-                  ),
-                ),
-                Visibility(
-                  visible: discountType == 1,
-                  child: Expanded(
+            Visibility(
+              visible: discountType != 2,
+              child: Row(
+                children: [
+                  Expanded(
                     child: Theme(
                       data: new ThemeData(
                         primaryColor: Colors.orange,
@@ -304,7 +272,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
                           FilteringTextInputFormatter.allow(
                               RegExp(r"^\d*\.?\d*")),
                         ],
-                        controller: maxDiscountAmount,
+                        controller: discountAmount,
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 14),
                         maxLines: 1,
@@ -314,7 +282,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
                               : null,
                           prefixIcon: Icon(Icons.monetization_on),
                           labelText:
-                              '${AppLocalizations.of(context).translate('max_discount_amount')}',
+                              '${AppLocalizations.of(context).translate(getDiscountLabel())}',
                           labelStyle:
                               TextStyle(fontSize: 14, color: Colors.blueGrey),
                           hintText: '20',
@@ -326,8 +294,51 @@ class _DiscountDetailState extends State<DiscountDetail> {
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Visibility(
+                    visible: discountType == 1,
+                    child: SizedBox(
+                      width: 5,
+                    ),
+                  ),
+                  Visibility(
+                    visible: discountType == 1,
+                    child: Expanded(
+                      child: Theme(
+                        data: new ThemeData(
+                          primaryColor: Colors.orange,
+                        ),
+                        child: TextField(
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r"^\d*\.?\d*")),
+                          ],
+                          controller: maxDiscountAmount,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 14),
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            errorText: discountAmountValidate
+                                ? '${AppLocalizations.of(context).translate('invalid_discount_amount')}'
+                                : null,
+                            prefixIcon: Icon(Icons.monetization_on),
+                            labelText:
+                                '${AppLocalizations.of(context).translate('max_discount_amount')}',
+                            labelStyle:
+                                TextStyle(fontSize: 14, color: Colors.blueGrey),
+                            hintText: '20',
+                            hintStyle:
+                                TextStyle(fontSize: 14, color: Colors.grey),
+                            border: new OutlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.teal)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 15,
@@ -625,12 +636,14 @@ class _DiscountDetailState extends State<DiscountDetail> {
   }
 
   checkingInput(context) {
-    print('discount type: ${getDiscountType()}');
     if (couponCode.text.isEmpty) {
       couponCodeValidate = true;
       showSnackBar(context, 'invalid_code');
       return;
     }
+
+    //if free shipping then discount amount = 0
+    if (discountType == 2) discountAmount.text = '0';
     //check discount amount
     if (discountAmount.text.isEmpty) {
       discountAmountValidate = true;
@@ -777,9 +790,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
             ? DateTime.parse(coupon.startDate)
             : null;
         endDate =
-        coupon.endDate.isNotEmpty ? DateTime.parse(coupon.endDate) : null;
-
-      } catch(e) {
+            coupon.endDate.isNotEmpty ? DateTime.parse(coupon.endDate) : null;
+      } catch (e) {
         print(e);
         CustomToast(
                 '${AppLocalizations.of(context).translate('something_went_wrong')}',
@@ -819,6 +831,15 @@ class _DiscountDetailState extends State<DiscountDetail> {
       jsonEncode('restriction'): jsonEncode('0'),
       jsonEncode('product_id'): jsonEncode(''),
     };
+  }
+
+  getDiscountLabel() {
+    if (discountType == 0)
+      return 'discount_amount';
+    else if (discountType == 0)
+      return 'discount_percentage';
+    else
+      return 'free_shipping';
   }
 
   usageChecking(String value) {

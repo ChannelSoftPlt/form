@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -151,6 +152,7 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
   applyDiscount() {
     if (isValidCoupon()) {
       var totalDiscountAmount = discountAmount;
+      //percentage discount
       if (discountType == 1) {
         totalDiscountAmount = widget.order.total * discountAmount / 100;
         //check any maximum discount or not
@@ -160,6 +162,10 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
           if(totalDiscountAmount > maxDiscountAmount)
             totalDiscountAmount = maxDiscountAmount;
         }
+      }
+      //free shipping
+      else if(discountType == 2){
+        totalDiscountAmount = double.parse(widget.order.deliveryFee);
       }
       widget.applyCoupon(coupon, totalDiscountAmount.toString());
     }

@@ -8,6 +8,7 @@ import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:http/http.dart' as http;
+import 'package:package_info/package_info.dart';
 
 class Domain {
   static var domain = 'https://www.emenu.com.my/';
@@ -33,6 +34,9 @@ class Domain {
 
   fetchOrder(currentPage, itemPerPage, orderStatus, query, orderGroupId,
       driverId, startDate, endDate) async {
+    //get version
+    PackageInfo package = await PackageInfo.fromPlatform();
+
     var response = await http.post(Domain.order, body: {
       'read': '1',
       'merchant_id':
@@ -45,7 +49,8 @@ class Domain {
       'order_group_id': orderGroupId.toString(),
       'order_status': orderStatus,
       'page': currentPage.toString(),
-      'itemPerPage': itemPerPage.toString()
+      'itemPerPage': itemPerPage.toString(),
+      'version': package.version
     });
     return jsonDecode(response.body);
   }
@@ -76,13 +81,17 @@ class Domain {
   * read order detail
   * */
   fetchOrderDetail(publicUrl, orderId) async {
+    //get version
+    PackageInfo package = await PackageInfo.fromPlatform();
+
     var response = await http.post(Domain.order, body: {
       'read_order_detail': '1',
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
       'public_url': publicUrl,
-      'order_id': orderId
+      'order_id': orderId,
+      'version': package.version
     });
     return jsonDecode(response.body);
   }
@@ -262,8 +271,8 @@ class Domain {
     var response = await http.post(Domain.export, body: {
       'export_product': '1',
       'merchant_id':
-      Merchant.fromJson(await SharePreferences().read("merchant"))
-          .merchantId,
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
       'start_date': $startDate,
       'end_date': $endDate
     });
@@ -333,6 +342,18 @@ class Domain {
   }
 
   /*
+  * update phone number
+  * */
+  updatePhone(phone, orderId) async {
+    var response = await http.post(Domain.order, body: {
+      'update_phone': '1',
+      'order_id': orderId,
+      'phone': phone
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * update payment status
   * */
   updatePaymentStatus(paymentStatus, orderId) async {
@@ -369,7 +390,7 @@ class Domain {
   /*
   * update order item
   * */
-  updateOrderItem(OrderItem object) async {
+  updateOrderItem(OrderItem object, orderId) async {
     var response = await http.post(Domain.orderItem, body: {
       'update': '1',
       'status': object.status,
@@ -377,6 +398,7 @@ class Domain {
       'quantity': object.quantity,
       'remark': object.remark,
       'order_product_id': object.orderProductId.toString(),
+      'order_id': orderId.toString(),
     });
     return jsonDecode(response.body);
   }
@@ -794,10 +816,13 @@ class Domain {
   /*
   * delete order item
   * */
-  deleteOrderItem(orderProductId) async {
+  deleteOrderItem(orderProductId, orderId) async {
+    print('product id $orderProductId');
+    print('order id $orderId');
     var response = await http.post(Domain.orderItem, body: {
       'delete': '1',
       'order_product_id': orderProductId,
+      'order_id': orderId,
     });
     return jsonDecode(response.body);
   }
@@ -829,6 +854,7 @@ class Domain {
   * delete product
   * */
   deleteProduct(productId) async {
+    print('product id: $productId');
     var response = await http.post(Domain.product, body: {
       'delete': '1',
       'product_id': productId,

@@ -1,32 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:my/object/order.dart';
+import 'package:my/shareWidget/toast.dart';
 import 'package:my/translation/AppLocalizations.dart';
 
-class EditRemarkDialog extends StatefulWidget {
+class EditPhoneDialog extends StatefulWidget {
   final Order order;
   final Function(String) onClick;
 
-  EditRemarkDialog({this.order, this.onClick});
+  EditPhoneDialog({this.order, this.onClick});
 
   @override
-  _EditRemarkDialogState createState() => _EditRemarkDialogState();
+  _EditPhoneDialogState createState() => _EditPhoneDialogState();
 }
 
-class _EditRemarkDialogState extends State<EditRemarkDialog> {
-  var note = TextEditingController();
+class _EditPhoneDialogState extends State<EditPhoneDialog> {
+  var phone = TextEditingController();
   Order object;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    note.text = widget.order.note;
+    object = widget.order;
+    phone.text = widget.order.phone;
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text('${AppLocalizations.of(context).translate('edit_note')}'),
+      title:
+          new Text('${AppLocalizations.of(context).translate('edit_phone')}'),
       actions: <Widget>[
         FlatButton(
           child: Text('${AppLocalizations.of(context).translate('cancel')}'),
@@ -40,7 +44,13 @@ class _EditRemarkDialogState extends State<EditRemarkDialog> {
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
-            widget.onClick(note.text);
+            if (phone.text.isNotEmpty)
+              widget.onClick(phone.text);
+            else
+              CustomToast(
+                      '${AppLocalizations.of(context).translate('invalid_input')}',
+                      context)
+                  .show();
           },
         ),
       ],
@@ -52,20 +62,20 @@ class _EditRemarkDialogState extends State<EditRemarkDialog> {
               primaryColor: Colors.orange,
             ),
             child: TextField(
-                minLines: 3,
-                maxLines: 10,
-                controller: note,
-                textAlign: TextAlign.left,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                ],
+                controller: phone,
+                textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   labelText:
-                      '${AppLocalizations.of(context).translate('remark')}',
-                  alignLabelWithHint: true,
+                      '${AppLocalizations.of(context).translate('phone')}',
                   labelStyle: TextStyle(
                       fontSize: 16,
                       color: Colors.blueGrey,
                       fontWeight: FontWeight.bold),
-                  hintText:
-                      '${AppLocalizations.of(context).translate('remark')}',
+                  hintText: '60143157322',
                   border: new OutlineInputBorder(
                       borderSide: new BorderSide(color: Colors.teal)),
                 )),
