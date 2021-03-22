@@ -12,6 +12,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:my/fragment/product/category/category_dialog.dart';
+import 'package:my/fragment/product/variant/variant_layout.dart';
 import 'package:my/object/imageGallery/image.dart';
 import 'package:my/object/imageGallery/product_gallery.dart';
 import 'package:my/object/merchant.dart';
@@ -157,7 +158,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
                 fontWeight: FontWeight.bold,
-                fontSize: 25),
+                fontSize: 20),
           ),
         ),
         actions: <Widget>[
@@ -215,165 +216,232 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                /*
-                  * product main picture
-                  * */
-                InkWell(
-                  child: _imageViewWidget(),
-                  onTap: () {
-                    if (imageName == 'no-image-found.png' ||
-                        imageName == 'test.png')
-                      _showSelectionDialog(context);
-                    else
-                      deleteProductImage();
-                  },
-                ),
+                imagePart(),
                 SizedBox(
                   height: 10,
                 ),
-                /*
-                  * product gallery
-                  * */
-                Container(
-                  height: 90,
-                  child: ReorderableListView(
-                    scrollDirection: Axis.horizontal,
-                    children: galleryList
-                        .asMap()
-                        .map((index, imageGallery) => MapEntry(
-                            index, imageGalleryList(imageGallery, index)))
-                        .values
-                        .toList(),
-                    onReorder: _onReorder,
-                  ),
-                ),
+                bottomPart(),
                 SizedBox(
                   height: 10,
                 ),
-                Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
-                  ),
-                  child: TextField(
-                    controller: name,
-                    textAlign: TextAlign.start,
-                    minLines: 1,
-                    maxLengthEnforced: true,
-                    maxLength: 75,
-                    style: TextStyle(fontSize: 14),
-                    decoration: InputDecoration(
-                      labelText:
-                          '${AppLocalizations.of(context).translate('name')}',
-                      labelStyle:
-                          TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText:
-                          '${AppLocalizations.of(context).translate('product_name')}',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
-                  ),
-                  child: TextField(
-                    keyboardType: TextInputType.multiline,
-                    controller: description,
-                    textAlign: TextAlign.start,
-                    minLines: 3,
-                    maxLines: 5,
-                    maxLength: 500,
-                    maxLengthEnforced: true,
-                    decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 14),
-                      labelText:
-                          '${AppLocalizations.of(context).translate('description')}',
-                      labelStyle:
-                          TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText:
-                          '${AppLocalizations.of(context).translate('product_description')}',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
-                  ),
-                  child: TextField(
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
-                    ],
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    controller: price,
-                    textAlign: TextAlign.start,
-                    decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 14),
-                      labelText:
-                          '${AppLocalizations.of(context).translate('price')}',
-                      labelStyle:
-                          TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText:
-                          '${AppLocalizations.of(context).translate('price')}',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                    ),
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Text('${AppLocalizations.of(context).translate('status')}'),
-                    Switch(
-                      value: available,
-                      onChanged: (value) {
-                        setState(() {
-                          available = value;
-                        });
-                      },
-                      activeTrackColor: Colors.orangeAccent,
-                      activeColor: Colors.deepOrangeAccent,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                InkWell(
-                  onTap: () => showCategoryDialog(context),
-                  child: Theme(
-                    data: new ThemeData(
-                      primaryColor: Colors.orange,
-                    ),
-                    child: TextField(
-                      enabled: false,
-                      controller: category,
-                      textAlign: TextAlign.start,
-                      decoration: InputDecoration(
-                          hintStyle: TextStyle(fontSize: 14),
-                          labelText:
-                              '${AppLocalizations.of(context).translate('category')}',
-                          labelStyle:
-                              TextStyle(fontSize: 14, color: Colors.blueGrey),
-                          hintText:
-                              '${AppLocalizations.of(context).translate('product_category')}',
-                          border: new OutlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.teal)),
-                          suffixIcon: Icon(Icons.arrow_drop_down)),
-                    ),
-                  ),
+                VariantLayout(
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget imagePart() {
+    return Card(
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: Text(
+                '${AppLocalizations.of(context).translate('product_image')}',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.black87),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              color: Colors.black26,
+              child: InkWell(
+                child: _imageViewWidget(),
+                onTap: () {
+                  if (imageName == 'no-image-found.png' ||
+                      imageName == 'test.png')
+                    _showSelectionDialog(context);
+                  else
+                    deleteProductImage();
+                },
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 10.0,
+              child: new Center(
+                child: new Container(
+                  margin:
+                      new EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
+                  height: 0.5,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: Text(
+                '${AppLocalizations.of(context).translate('product_gallery')}',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.black87),
+              ),
+            ),
+            Container(
+              height: 90,
+              child: ReorderableListView(
+                scrollDirection: Axis.horizontal,
+                children: galleryList
+                    .asMap()
+                    .map((index, imageGallery) =>
+                        MapEntry(index, imageGalleryList(imageGallery, index)))
+                    .values
+                    .toList(),
+                onReorder: _onReorder,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget bottomPart() {
+    return Card(
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    '${AppLocalizations.of(context).translate('product_detail')}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                ),
+                Text('${AppLocalizations.of(context).translate('status')}'),
+                Switch(
+                  value: available,
+                  onChanged: (value) {
+                    setState(() {
+                      available = value;
+                    });
+                  },
+                  activeTrackColor: Colors.orangeAccent,
+                  activeColor: Colors.deepOrangeAccent,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Theme(
+              data: new ThemeData(
+                primaryColor: Colors.orange,
+              ),
+              child: TextField(
+                controller: name,
+                textAlign: TextAlign.start,
+                minLines: 1,
+                maxLengthEnforced: true,
+                maxLength: 75,
+                style: TextStyle(fontSize: 14),
+                decoration: InputDecoration(
+                  labelText:
+                      '${AppLocalizations.of(context).translate('name')}',
+                  labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                  hintText:
+                      '${AppLocalizations.of(context).translate('product_name')}',
+                  border: new OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.teal)),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Theme(
+              data: new ThemeData(
+                primaryColor: Colors.orange,
+              ),
+              child: TextField(
+                keyboardType: TextInputType.multiline,
+                controller: description,
+                textAlign: TextAlign.start,
+                minLines: 3,
+                maxLines: 5,
+                maxLength: 500,
+                maxLengthEnforced: true,
+                decoration: InputDecoration(
+                  hintStyle: TextStyle(fontSize: 14),
+                  labelText:
+                      '${AppLocalizations.of(context).translate('description')}',
+                  labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                  hintText:
+                      '${AppLocalizations.of(context).translate('product_description')}',
+                  border: new OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.teal)),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Theme(
+              data: new ThemeData(
+                primaryColor: Colors.orange,
+              ),
+              child: TextField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                ],
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                controller: price,
+                textAlign: TextAlign.start,
+                decoration: InputDecoration(
+                  hintStyle: TextStyle(fontSize: 14),
+                  labelText:
+                      '${AppLocalizations.of(context).translate('price')}',
+                  labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                  hintText:
+                      '${AppLocalizations.of(context).translate('price')}',
+                  border: new OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.teal)),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            InkWell(
+              onTap: () => showCategoryDialog(context),
+              child: Theme(
+                data: new ThemeData(
+                  primaryColor: Colors.orange,
+                ),
+                child: TextField(
+                  enabled: false,
+                  controller: category,
+                  textAlign: TextAlign.start,
+                  decoration: InputDecoration(
+                      hintStyle: TextStyle(fontSize: 14),
+                      labelText:
+                          '${AppLocalizations.of(context).translate('category')}',
+                      labelStyle:
+                          TextStyle(fontSize: 14, color: Colors.blueGrey),
+                      hintText:
+                          '${AppLocalizations.of(context).translate('product_category')}',
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                      suffixIcon: Icon(Icons.arrow_drop_down)),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

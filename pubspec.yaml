@@ -99,6 +99,8 @@ dependencies:
   wc_flutter_share: ^0.2.2
   #color picker
   flutter_colorpicker: ^0.3.5
+  #reorderable list view
+  refreshable_reorderable_list: ^0.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -413,5 +413,22 @@
   "crop_image": "Crop Image",
   "qr_code": "QR Code",
   "url": "E-Menu Link",
-  "marketing_tool": "Marketing & Sales Tools"
+  "marketing_tool": "Marketing & Sales Tools",
+
+  "product_image": "Product Image",
+  "product_gallery": "Product Gallery",
+  "product_detail": "Product Detail",
+  "product_variant": "Product Variant",
+  "create_variant": "Create New Variant",
+  "duplicate_variant": "Duplicate From Others",
+  "variant_group": "Variant Group",
+  "variant_item": "Variant Item",
+  "no_variation_found": "No Variant Item Found!",
+  "item": "Item",
+  "item_name": "Item Name",
+  "size": "Size",
+  "add": "Add",
+  "clear": "Clear",
+  "multiple_select": "Enable Multiple Select",
+  "multiple_select_description": "By enable this, your customer can select more than one variant in a time."
 }

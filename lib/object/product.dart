@@ -1,5 +1,5 @@
 class Product {
-  String price, image, gallery, description, name, categoryName;
+  String price, image, gallery, description, name, categoryName, variant;
   int productId, status, categoryId, formId;
 
   Product(
