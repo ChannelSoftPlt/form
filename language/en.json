@@ -430,5 +430,8 @@
   "add": "Add",
   "clear": "Clear",
   "multiple_select": "Enable Multiple Select",
-  "multiple_select_description": "By enable this, your customer can select more than one variant in a time."
+  "multiple_select_description": "By enable this, your customer can select more than one variant in a time.",
+  "select_product": "Select Product",
+  "duplicate": "Duplicate",
+  "duplicate_success": "Duplicate Successfully!"
 }

@@ -20,7 +20,7 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  StreamController refreshController;
+  StreamController refreshController = StreamController();
 
   final int itemPerPage = 8, currentPage = 1;
   String maxProduct;
@@ -29,8 +29,7 @@ class _ProductPageState extends State<ProductPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    refreshController = StreamController();
-    refreshController.add('display');
+    refreshController.add('loading');
 
     getProductLimit();
   }
@@ -88,28 +87,17 @@ class _ProductPageState extends State<ProductPage> {
                 ),
               )
             : null,
-        body: StreamBuilder(
-            stream: refreshController.stream,
-            builder: (context, object) {
-              if (object.hasData && object.data.toString().length >= 1) {
-                return ProductList(
-                  products: responseJson
-                      .map((jsonObject) => Product.fromJson(jsonObject))
-                      .toList(),
-                  query: widget.query ?? '',
-                  categoryName: widget.categoryName ?? '',
-                  openProductDetail: (bool isUpdate, Product product) {
-                    showProductDetail(context, isUpdate, product);
-                  },
-                );
-              }
-              return CustomProgressBar();
-            }),
+        body: ProductList(
+            products: responseJson
+                .map((jsonObject) => Product.fromJson(jsonObject))
+                .toList(),
+            query: widget.query ?? '',
+            categoryName: widget.categoryName ?? ''),
         floatingActionButton: FloatingActionButton(
           elevation: 5,
           backgroundColor: Colors.orange[300],
           onPressed: () {
-            showProductDetail(context, false, null);
+            addProduct(context, false, null);
           },
           child: Icon(
             Icons.add,
@@ -118,7 +106,7 @@ class _ProductPageState extends State<ProductPage> {
         ));
   }
 
-  showProductDetail(mainContext, bool isUpdate, Product product) {
+  addProduct(mainContext, bool isUpdate, Product product) {
     // flutter defined function
     Navigator.push(
       context,
@@ -127,12 +115,7 @@ class _ProductPageState extends State<ProductPage> {
                 product: product,
                 isUpdate: isUpdate,
                 refresh: (action) {
-                  if (action == 'edit')
-                    refreshController.add('hhaa');
-                  else
-                    setState(() {
-                      refreshController.add('refresh');
-                    });
+                  setState(() {});
                 },
               )),
     );
@@ -148,7 +131,7 @@ class _ProductPageState extends State<ProductPage> {
             : '${AppLocalizations.of(context).translate('no_item_upload')}',
         showButton: widget.query.length < 1,
         refresh: () {
-          showProductDetail(context, false, null);
+          addProduct(context, false, null);
         },
         button: widget.query.length > 1
             ? ''

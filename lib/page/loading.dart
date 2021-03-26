@@ -132,7 +132,7 @@ class _LoadingPageState extends State<LoadingPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            height: 180,
+            height: 200,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my/fragment/product/product_detail.dart';
 import 'package:my/fragment/product/product_list_view.dart';
 
 import 'package:my/object/product.dart';
@@ -13,7 +14,8 @@ class ProductList extends StatefulWidget {
   final String query, categoryName;
   final Function(bool, Product) openProductDetail;
 
-  ProductList({this.products, this.query, this.categoryName, this.openProductDetail});
+  ProductList(
+      {this.products, this.query, this.categoryName, this.openProductDetail});
 
   @override
   _ProductListState createState() => _ProductListState();
@@ -74,11 +76,29 @@ class _ProductListState extends State<ProductList> {
     return ListView.builder(
         itemCount: list.length,
         itemBuilder: (BuildContext context, int index) {
-          return ProductListView(product: list[index],
-          openProductDetail: (bool isUpdate, Product product){
-            widget.openProductDetail(isUpdate, product);
-          });
+          return ProductListView(
+              product: list[index],
+              openProductDetail: (bool isUpdate, Product product) {
+                updateProduct(context, true, list[index]);
+              });
         });
+  }
+
+  updateProduct(mainContext, bool isUpdate, Product product) {
+    // flutter defined function
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ProductDetailDialog(
+                product: product,
+                isUpdate: isUpdate,
+                refresh: (action) {
+                  setState(() {
+                    if (action == 'delete') list.remove(product);
+                  });
+                },
+              )),
+    );
   }
 
   _onRefresh() async {

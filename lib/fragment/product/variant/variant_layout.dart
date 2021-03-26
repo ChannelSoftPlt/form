@@ -8,6 +8,8 @@ import 'package:my/object/productVariant/variantGroup.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 
+import 'duplicate_variant_dialog.dart';
+
 class VariantLayout extends StatefulWidget {
   final Function(String) onChange;
   final String variant;
@@ -29,14 +31,18 @@ class _VariantLayoutState extends State<VariantLayout> {
     controller = StreamController();
     controller.add('display');
     if (widget.variant != '') {
-      setupData();
+      setupData(widget.variant);
     }
   }
 
-  void setupData() {
-    List data = jsonDecode(widget.variant);
-    variant.addAll(
-        data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
+  void setupData(String variantData) {
+    try {
+      List data = jsonDecode(variantData);
+      variant.addAll(
+          data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
+    } catch ($e) {
+      print($e);
+    }
   }
 
   @override
@@ -82,7 +88,7 @@ class _VariantLayoutState extends State<VariantLayout> {
                   children: [
                     OutlineButton(
                       onPressed: () {
-                        print(jsonEncode(variant));
+                        showDuplicateDialog(context);
                       },
                       borderSide: BorderSide(
                         color: Colors.red,
@@ -113,6 +119,25 @@ class _VariantLayoutState extends State<VariantLayout> {
     );
   }
 
+  showDuplicateDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return DuplicateDialog(
+          duplicateVariant: (variation) {
+            setState(() {
+              setupData(variation);
+              widget.onChange(variation);
+              _showSnackBar('duplicate_success');
+            });
+          },
+        );
+      },
+    );
+  }
+
   Future<void> showAddVariantGroup(bool update, int position) async {
     Navigator.push(
       context,
@@ -132,8 +157,8 @@ class _VariantLayoutState extends State<VariantLayout> {
                       variant.removeAt(position);
                       _showSnackBar('delete_success');
                     }
-                    widget.onChange(jsonEncode(variant));
                   });
+                  widget.onChange(jsonEncode(variant));
                 },
               )),
     );

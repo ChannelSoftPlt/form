@@ -229,6 +229,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                 VariantLayout(
                   variant: variation,
                   onChange: (variation) {
+                    print('variation: $variation');
                     this.variation = variation;
                   },
                 ),
@@ -695,6 +696,9 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
 
                 //delete success
                 if (data['status'] == '1') {
+                  widget.product.gallery = getImageGalleryName();
+                  widget.refresh('edit');
+
                   _showSnackBar(
                       '${AppLocalizations.of(context).translate('image_delete_success')}');
                   await Future.delayed(Duration(milliseconds: 250));
@@ -873,14 +877,19 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     /*
     * update product
     * */
+    print(getImageGalleryName());
     Map data = await Domain().updateProduct(widget.product, extension,
         imageCode.toString(), getImageGalleryName(), getImageGalleryFile());
 
     if (data['status'] == '1') {
       //for easy delete image purpose
       imageName = data['image_name'];
+      widget.product.image = imageName;
+      widget.product.gallery = getImageGalleryName();
+
       //avoid double upload same image
       imageCode = '-1';
+
       //set all gallery status into 0 (mean uploaded)
       updateGalleryStatusAfterUpload();
       widget.refresh('update');
@@ -986,7 +995,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   * after delete image open back the image selection dialog
                   * */
                   setState(() {
-                    imageName = 'no-image-found.png';
+                    widget.product.image = imageName = 'no-image-found.png';
+                    widget.refresh('edit');
                     _image = null;
                     _showSelectionDialog(context);
                   });
