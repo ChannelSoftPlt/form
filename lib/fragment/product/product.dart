@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:my/fragment/product/product_detail.dart';
 import 'package:my/fragment/product/product_list.dart';
@@ -18,6 +20,8 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  StreamController refreshController;
+
   final int itemPerPage = 8, currentPage = 1;
   String maxProduct;
 
@@ -25,6 +29,9 @@ class _ProductPageState extends State<ProductPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    refreshController = StreamController();
+    refreshController.add('display');
+
     getProductLimit();
   }
 
@@ -36,6 +43,11 @@ class _ProductPageState extends State<ProductPage> {
     } else
       maxProduct = prefs.getString('product_limit');
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -76,16 +88,23 @@ class _ProductPageState extends State<ProductPage> {
                 ),
               )
             : null,
-        body: ProductList(
-          products: responseJson
-              .map((jsonObject) => Product.fromJson(jsonObject))
-              .toList(),
-          query: widget.query ?? '',
-          categoryName: widget.categoryName ?? '',
-          openProductDetail: (bool isUpdate, Product product) {
-            showProductDetail(context, isUpdate, product);
-          },
-        ),
+        body: StreamBuilder(
+            stream: refreshController.stream,
+            builder: (context, object) {
+              if (object.hasData && object.data.toString().length >= 1) {
+                return ProductList(
+                  products: responseJson
+                      .map((jsonObject) => Product.fromJson(jsonObject))
+                      .toList(),
+                  query: widget.query ?? '',
+                  categoryName: widget.categoryName ?? '',
+                  openProductDetail: (bool isUpdate, Product product) {
+                    showProductDetail(context, isUpdate, product);
+                  },
+                );
+              }
+              return CustomProgressBar();
+            }),
         floatingActionButton: FloatingActionButton(
           elevation: 5,
           backgroundColor: Colors.orange[300],
@@ -107,8 +126,13 @@ class _ProductPageState extends State<ProductPage> {
           builder: (context) => ProductDetailDialog(
                 product: product,
                 isUpdate: isUpdate,
-                refresh: () {
-                  setState(() {});
+                refresh: (action) {
+                  if (action == 'edit')
+                    refreshController.add('hhaa');
+                  else
+                    setState(() {
+                      refreshController.add('refresh');
+                    });
                 },
               )),
     );

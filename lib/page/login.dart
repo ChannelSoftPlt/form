@@ -146,6 +146,7 @@ class _LoginFormState extends State<LoginPage> {
     if (email.text.length > 0 && password.text.length > 0) {
       var response = await http.post(Domain.registration,
           body: {'login': '1', 'email': email.text, 'password': password.text});
+      print(response.body);
       Map data = jsonDecode(response.body);
       print(data);
       if (data['status'] == '1') {

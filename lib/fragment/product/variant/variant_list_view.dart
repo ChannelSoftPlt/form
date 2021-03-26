@@ -24,7 +24,8 @@ class _VariantListItemState extends State<VariantListItem> {
 
   countHeight() {
     var height = 120;
-    if (widget.variantGroup.variantChild.length > 0) {
+    if (widget.variantGroup.variantChild != null &&
+        widget.variantGroup.variantChild.length > 0) {
       height = height + (25 * widget.variantGroup.variantChild.length);
     }
     return height.toDouble();
@@ -78,9 +79,7 @@ class _VariantListItemState extends State<VariantListItem> {
                     thickness: 1.0,
                   ),
                 ),
-                for (int i = 0;
-                    i < widget.variantGroup.variantChild.length;
-                    i++)
+                for (int i = 0; i < widget.variantGroup.variantChild.length; i++)
                   Container(
                     height: 25,
                     child: Padding(
@@ -89,8 +88,8 @@ class _VariantListItemState extends State<VariantListItem> {
                         children: [
                           Expanded(
                               flex: 1,
-                              child:
-                                  Text(widget.variantGroup.variantChild[i].name)),
+                              child: Text(
+                                  widget.variantGroup.variantChild[i].name)),
                           Expanded(
                               flex: 1,
                               child: Text(

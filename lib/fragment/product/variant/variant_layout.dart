@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:ffi';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:my/fragment/product/variant/add_variant_group.dart';
@@ -9,9 +9,10 @@ import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 
 class VariantLayout extends StatefulWidget {
-  final Function(String, int) onSelect;
+  final Function(String) onChange;
+  final String variant;
 
-  VariantLayout({this.onSelect});
+  VariantLayout({this.onChange, this.variant});
 
   @override
   _VariantLayoutState createState() => _VariantLayoutState();
@@ -27,6 +28,15 @@ class _VariantLayoutState extends State<VariantLayout> {
     super.initState();
     controller = StreamController();
     controller.add('display');
+    if (widget.variant != '') {
+      setupData();
+    }
+  }
+
+  void setupData() {
+    List data = jsonDecode(widget.variant);
+    variant.addAll(
+        data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
   }
 
   @override
@@ -71,7 +81,9 @@ class _VariantLayoutState extends State<VariantLayout> {
                   alignment: MainAxisAlignment.center,
                   children: [
                     OutlineButton(
-                      onPressed: () => null,
+                      onPressed: () {
+                        print(jsonEncode(variant));
+                      },
                       borderSide: BorderSide(
                         color: Colors.red,
                         style: BorderStyle.solid,
@@ -120,6 +132,7 @@ class _VariantLayoutState extends State<VariantLayout> {
                       variant.removeAt(position);
                       _showSnackBar('delete_success');
                     }
+                    widget.onChange(jsonEncode(variant));
                   });
                 },
               )),
@@ -130,7 +143,8 @@ class _VariantLayoutState extends State<VariantLayout> {
     var height = 120 * variant.length;
     //count child size
     for (int i = 0; i < variant.length; i++) {
-      if (variant[i].variantChild.length > 0) {
+      if (variant[i].variantChild != null &&
+          variant[i].variantChild.length > 0) {
         height = height + (25 * variant[i].variantChild.length);
       }
     }

@@ -26,7 +26,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetailDialog extends StatefulWidget {
   final Product product;
-  final Function() refresh;
+  final Function(String) refresh;
   final bool isUpdate;
 
   ProductDetailDialog({this.product, this.refresh, this.isUpdate});
@@ -44,6 +44,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   var category = TextEditingController();
   int categoryId = 0;
   bool available = true;
+  String variation = '';
   Product object;
 
   File _image;
@@ -79,6 +80,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       category.text = widget.product.categoryName;
       categoryId = widget.product.categoryId;
       available = widget.product.status == 0;
+      variation = widget.product.variation;
       getUrl();
       getProductGallery();
     }
@@ -225,6 +227,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   height: 10,
                 ),
                 VariantLayout(
+                  variant: variation,
+                  onChange: (variation) {
+                    this.variation = variation;
+                  },
                 ),
               ],
             ),
@@ -831,6 +837,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
           description: description.text,
           image: imageName,
           price: price.text,
+          variation: variation,
           categoryId: categoryId),
       extension,
       imageCode.toString(),
@@ -841,7 +848,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     if (data['status'] == '1') {
       _showSnackBar(
           '${AppLocalizations.of(context).translate('product_uploaded')}');
-      widget.refresh();
+      widget.refresh('create');
       await Future.delayed(Duration(milliseconds: 300));
       Navigator.of(context).pop();
     } else if (data['status'] == '4') {
@@ -853,23 +860,21 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   }
 
   updateProduct() async {
-    print('category id: $categoryId');
+    /*
+    * update product object
+    * */
+    widget.product.name = name.text;
+    widget.product.status = available ? 0 : 1;
+    widget.product.description = description.text;
+    widget.product.image = imageName;
+    widget.product.price = price.text;
+    widget.product.variation = variation;
+    widget.product.categoryId = categoryId;
     /*
     * update product
     * */
-    Map data = await Domain().updateProduct(
-        new Product(
-            productId: widget.product.productId,
-            name: name.text,
-            status: available ? 0 : 1,
-            description: description.text,
-            image: imageName,
-            price: price.text,
-            categoryId: categoryId),
-        extension,
-        imageCode.toString(),
-        getImageGalleryName(),
-        getImageGalleryFile());
+    Map data = await Domain().updateProduct(widget.product, extension,
+        imageCode.toString(), getImageGalleryName(), getImageGalleryFile());
 
     if (data['status'] == '1') {
       //for easy delete image purpose
@@ -878,6 +883,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       imageCode = '-1';
       //set all gallery status into 0 (mean uploaded)
       updateGalleryStatusAfterUpload();
+      widget.refresh('update');
 
       _showSnackBar(
           '${AppLocalizations.of(context).translate('update_success')}');
@@ -927,7 +933,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   await Future.delayed(Duration(milliseconds: 300));
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  widget.refresh();
+                  widget.refresh('delete');
                 } else
                   _showSnackBar(
                       '${AppLocalizations.of(context).translate('something_went_wrong')}');

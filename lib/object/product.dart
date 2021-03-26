@@ -1,5 +1,5 @@
 class Product {
-  String price, image, gallery, description, name, categoryName, variant;
+  String price, image, gallery, description, name, categoryName, variation;
   int productId, status, categoryId, formId;
 
   Product(
@@ -11,6 +11,7 @@ class Product {
       this.name,
       this.categoryName,
       this.categoryId,
+      this.variation,
       this.formId,
       this.productId});
 
@@ -24,6 +25,7 @@ class Product {
         name: json['name'] as String,
         categoryName: json['category_name'] as String,
         categoryId: json['category_id'] as int,
+        variation: json['variation'] as String,
         formId: json['form_id'] as int,
         productId: json['product_id'] as int);
   }

@@ -11,9 +11,10 @@ import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
 
 class Domain {
-  static var domain = 'https://www.emenu.com.my/';
+//  static var domain = 'https://www.emenu.com.my/';
 
-//  static var domain = 'https://www.lkmng.com/form/';
+  static var domain = 'https://lkmng.com/form/';
+
   static var registration = domain + 'registration/index.php';
   static var order = domain + 'mobile_api/order/index.php';
   static var product = domain + 'mobile_api/product/index.php';
@@ -345,11 +346,8 @@ class Domain {
   * update phone number
   * */
   updatePhone(phone, orderId) async {
-    var response = await http.post(Domain.order, body: {
-      'update_phone': '1',
-      'order_id': orderId,
-      'phone': phone
-    });
+    var response = await http.post(Domain.order,
+        body: {'update_phone': '1', 'order_id': orderId, 'phone': phone});
     return jsonDecode(response.body);
   }
 
@@ -571,11 +569,14 @@ class Domain {
       'price': product.price,
       'category_id': product.categoryId.toString(),
       'image_name': product.image,
+      'variation': product.variation,
       'image_extension': extension,
       'image_code': imageCode,
       'image_gallery_name': imageGalleryName,
       'image_gallery_file': imageGalleryFile,
     });
+
+    print(response.body);
     return jsonDecode(response.body);
   }
 
@@ -771,6 +772,7 @@ class Domain {
       'image_code': imageCode,
       'image_gallery_name': imageGalleryName,
       'image_gallery_file': imageGalleryFile,
+      'variation': product.variation,
       'form_id':
           Merchant.fromJson(await SharePreferences().read("merchant")).formId,
     });
