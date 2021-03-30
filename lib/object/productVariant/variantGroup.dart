@@ -41,7 +41,9 @@ class VariantChild {
   VariantChild({this.name, this.price, this.quantity});
 
   factory VariantChild.fromJson(Map<String, dynamic> json) {
-    print('testing $json');
+    if(json['quantity'] == null){
+      json['quantity'] = 0;
+    }
     return VariantChild(
         name: json['name'] as String,
         price: json['price'] as String,
