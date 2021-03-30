@@ -22,7 +22,7 @@ class AddProductDialog extends StatefulWidget {
   @override
   _AddProductDialogState createState() => _AddProductDialogState();
 }
-
+//testing
 class _AddProductDialogState extends State<AddProductDialog> {
   List<Product> products = [];
   List<VariantGroup> variant = [];
