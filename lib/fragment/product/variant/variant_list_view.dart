@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my/object/productVariant/variantGroup.dart';
+import 'package:my/translation/AppLocalizations.dart';
 
 class VariantListItem extends StatefulWidget {
   final VariantGroup variantGroup;
@@ -23,7 +24,7 @@ class _VariantListItemState extends State<VariantListItem> {
   }
 
   countHeight() {
-    var height = 120;
+    var height = 130;
     if (widget.variantGroup.variantChild != null &&
         widget.variantGroup.variantChild.length > 0) {
       height = height + (25 * widget.variantGroup.variantChild.length);
@@ -69,6 +70,22 @@ class _VariantListItemState extends State<VariantListItem> {
                         onPressed: () => widget.onClick('delete'))
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${AppLocalizations.of(context).translate('select_type')} : ${AppLocalizations.of(context).translate(widget.variantGroup.type == 1 ? 'single' : 'multiple')}',
+                      style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+                    ),
+                    Visibility(
+                      visible: widget.variantGroup.option == 1,
+                      child: Text(
+                        '${AppLocalizations.of(context).translate('compulsory')}',
+                        style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(
                   height: 5,
                 ),
@@ -79,7 +96,26 @@ class _VariantListItemState extends State<VariantListItem> {
                     thickness: 1.0,
                   ),
                 ),
-                for (int i = 0; i < widget.variantGroup.variantChild.length; i++)
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Text(
+                          AppLocalizations.of(context).translate('type'),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        AppLocalizations.of(context).translate('add_on_price'),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                for (int i = 0;
+                    i < widget.variantGroup.variantChild.length;
+                    i++)
                   Container(
                     height: 25,
                     child: Padding(

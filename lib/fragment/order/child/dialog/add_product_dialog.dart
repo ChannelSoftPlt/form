@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:my/object/product.dart';
+import 'package:my/object/productVariant/variantGroup.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/toast.dart';
 import 'package:my/translation/AppLocalizations.dart';
@@ -22,12 +25,15 @@ class AddProductDialog extends StatefulWidget {
 
 class _AddProductDialogState extends State<AddProductDialog> {
   List<Product> products = [];
+  List<VariantGroup> variant = [];
+  List<VariantGroup> selectedVariant = [];
   StreamController selectItem;
 
   /*
   * add product purpose
   * */
   Product product;
+  var name = TextEditingController();
   var price = TextEditingController();
   var quantity = TextEditingController();
   var remark = TextEditingController();
@@ -105,23 +111,26 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   products.addAll(jsonProduct
                       .map((jsonObject) => Product.fromJson(jsonObject))
                       .toList());
+
                   return mainContent(context);
                 }
               }
             }
-            return CustomProgressBar();
+            return Container(width: 500, child: CustomProgressBar());
           }),
     );
   }
 
   Widget mainContent(context) {
+//    selectedVariant.clear();
+//    return addProductContent(product);
     return StreamBuilder<Object>(
         stream: selectItem.stream,
         builder: (context, product) {
           if (product.hasData) {
-            print(product.data);
-            if (product.data != 'back_action')
+            if (product.data != 'back_action') {
               return addProductContent(product.data);
+            }
           }
           return SingleChildScrollView(
             child: Column(
@@ -136,113 +145,227 @@ class _AddProductDialogState extends State<AddProductDialog> {
   Widget addProductContent(Product product) {
     this.product = product;
     price.text = product.price;
+    name.text = product.name;
 
     return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          FadeInImage(
-              height: 80,
-              fit: BoxFit.cover,
-              image: NetworkImage('${Domain.imagePath}${product.image}'),
-              placeholder:
-                  NetworkImage('${Domain.imagePath}no-image-found.png')),
-          Text(product.name, style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(
-            height: 7,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Theme(
+        data: new ThemeData(
+          primaryColor: Colors.orange,
+        ),
+        child: Container(
+          width: 1000,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                width: 100,
-                height: 50,
-                child: Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
-                  ),
-                  child: TextField(
-                      keyboardType: TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r"^\d*\.?\d*")),
-                      ],
-                      controller: price,
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        labelText:
-                            '${AppLocalizations.of(context).translate('price')}',
-                        labelStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.blueGrey,
-                            fontWeight: FontWeight.bold),
-                        hintText: '0.00',
-                        border: new OutlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.teal)),
-                      )),
-                ),
+                alignment: Alignment.center,
+                child: FadeInImage(
+                    height: 130,
+                    image: NetworkImage('${Domain.imagePath}${product.image}'),
+                    placeholder:
+                        NetworkImage('${Domain.imagePath}no-image-found.png')),
               ),
-              Container(
-                width: 100,
-                height: 50,
-                child: Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
-                  ),
-                  child: TextField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      controller: quantity,
-                      decoration: InputDecoration(
-                        labelText:
-                            '${AppLocalizations.of(context).translate('quantity')}',
-                        labelStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.blueGrey,
-                            fontWeight: FontWeight.bold),
-                        hintText: '0',
-                        border: new OutlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.teal)),
-                      )),
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 7,
-          ),
-          Container(
-            child: Theme(
-              data: new ThemeData(
-                primaryColor: Colors.orange,
+              SizedBox(
+                height: 15,
               ),
-              child: TextField(
-                  minLines: 1,
-                  maxLines: 4,
-                  keyboardType: TextInputType.text,
-                  controller: remark,
+              TextField(
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  controller: name,
+                  textAlign: TextAlign.start,
                   decoration: InputDecoration(
                     labelText:
-                        '${AppLocalizations.of(context).translate('remark')}',
+                        '${AppLocalizations.of(context).translate('name')}',
                     labelStyle: TextStyle(
                         fontSize: 14,
                         color: Colors.blueGrey,
                         fontWeight: FontWeight.bold),
-                    hintText:
-                        '${AppLocalizations.of(context).translate('remark_hint')}',
                     border: new OutlineInputBorder(
                         borderSide: new BorderSide(color: Colors.teal)),
                   )),
-            ),
-          )
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: TextField(
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d*\.?\d*")),
+                        ],
+                        controller: price,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          labelText:
+                              '${AppLocalizations.of(context).translate('price')}',
+                          labelStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.bold),
+                          hintText: '0.00',
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
+                        )),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: TextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: quantity,
+                        decoration: InputDecoration(
+                          labelText:
+                              '${AppLocalizations.of(context).translate('quantity')}',
+                          labelStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.bold),
+                          hintText: '0',
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
+                        )),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 7,
+              ),
+              addOnLayout(),
+              Container(
+                child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
+                    keyboardType: TextInputType.text,
+                    controller: remark,
+                    decoration: InputDecoration(
+                      labelText:
+                          '${AppLocalizations.of(context).translate('remark')}',
+                      labelStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.bold),
+                      hintText:
+                          '${AppLocalizations.of(context).translate('remark_hint')}',
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                    )),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget addOnLayout() {
+    return Visibility(
+      visible: variant.length > 0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            AppLocalizations.of(context).translate('product_variant'),
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          for (int i = 0; i < variant.length; i++) addOnChildLayout(variant[i])
         ],
       ),
     );
   }
 
+  Widget addOnChildLayout(VariantGroup data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          data.groupName,
+          style: TextStyle(color: Colors.black87),
+        ),
+        CheckboxGroup(
+            itemBuilder: (Checkbox cb, Text txt, int i) {
+              return Row(
+                children: <Widget>[
+                  cb,
+                  Expanded(
+                      flex: 2,
+                      child: Text(
+                        data.variantChild[i].name,
+                        style: TextStyle(fontSize: 14),
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: Text(
+                        '+ RM ${data.variantChild[i].price}',
+                        style: TextStyle(fontSize: 12),
+                      )),
+                ],
+              );
+            },
+            labels: <String>[
+              for (int i = 0; i < data.variantChild.length; i++)
+                data.variantChild[i].name
+            ],
+            onChange: (bool isChecked, String label, int index) {
+              //allow one only
+              if (data.type == 1 && countSelect(data.variantChild) > 1) {
+                return;
+              }
+              data.variantChild[index].quantity = 1;
+            },
+            onSelected: (List<String> checked) {
+              //allow one only
+              if (data.type == 1 && checked.length > 1) {
+                checked.removeLast();
+                for (int i = 0; i < data.variantChild.length; i++) {
+                  print(data.variantChild[i].quantity);
+                }
+                return;
+              }
+            }),
+      ],
+    );
+  }
+
+  countSelect(List<VariantChild> list) {
+    int count = 0;
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].quantity == 1) count++;
+    }
+    return count;
+  }
+
+  /*
+  * setup variant data
+  * */
+  setupVariantData(String variantData) async {
+    try {
+      variant.clear();
+      List data = jsonDecode(variantData);
+      variant.addAll(
+          data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
+    } catch ($e) {
+      print($e);
+    }
+  }
+
   Widget productList(Product product) {
     return ListTile(
-        onTap: () => selectItem.add(product),
+        onTap: () async {
+          print(product.variation);
+          await setupVariantData(product.variation);
+          selectItem.add(product);
+        },
         leading: FadeInImage(
             height: 50,
             width: 50,

@@ -250,7 +250,7 @@ class _GroupingDialogState extends State<CategoryDialog> {
               }
             }
           }
-          return CustomProgressBar();
+          return Container(width: 500, height: 500, child: CustomProgressBar());
         });
   }
 
@@ -283,7 +283,8 @@ class _GroupingDialogState extends State<CategoryDialog> {
 
   Widget customListView() {
     return Container(
-        width: double.maxFinite,
+        height: 500,
+        width: 500,
         child: ReorderableListView(
           children: category
               .asMap()
@@ -305,7 +306,7 @@ class _GroupingDialogState extends State<CategoryDialog> {
           title: Text(
             category.name,
             style:
-                TextStyle(color: Color.fromRGBO(89, 100, 109, 1), fontSize: 16),
+                TextStyle(color: Colors.black87, fontSize: 14),
           ),
           trailing: IconButton(
             icon: Icon(Icons.edit),

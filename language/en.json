@@ -418,7 +418,7 @@
   "product_image": "Product Image",
   "product_gallery": "Product Gallery",
   "product_detail": "Product Detail",
-  "product_variant": "Product Variant",
+  "product_variant": "Add Ons",
   "create_variant": "Create New Variant",
   "duplicate_variant": "Duplicate From Others",
   "variant_group": "Variant Group",
@@ -429,9 +429,16 @@
   "size": "Size",
   "add": "Add",
   "clear": "Clear",
+  "compulsory": "Compulsory",
+  "compulsory_description": "Customer must select at least one option.",
   "multiple_select": "Enable Multiple Select",
   "multiple_select_description": "By enable this, your customer can select more than one variant in a time.",
   "select_product": "Select Product",
   "duplicate": "Duplicate",
-  "duplicate_success": "Duplicate Successfully!"
+  "duplicate_success": "Duplicate Successfully!",
+  "type": "Type",
+  "add_on_price": "Add-On Price",
+  "select_type": "Select Type",
+  "single": "Single",
+  "multiple": "Multiple"
 }

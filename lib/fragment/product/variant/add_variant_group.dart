@@ -20,6 +20,8 @@ class AddVariantGroup extends StatefulWidget {
 class _AddVariantGroupState extends State<AddVariantGroup> {
   Category category;
   bool multipleChoose = false;
+  //1 = compulsory, 0 = optional
+  bool isCompulsory = false;
 
   var variantGroupLabel = TextEditingController();
   final key = new GlobalKey<ScaffoldState>();
@@ -39,6 +41,7 @@ class _AddVariantGroupState extends State<AddVariantGroup> {
     if (widget.isUpdate) {
       variantGroupLabel.text = widget.variantGroup.groupName;
       multipleChoose = widget.variantGroup.type == 0;
+      isCompulsory = widget.variantGroup.option == 1;
       variantChilds = widget.variantGroup.variantChild;
     }
   }
@@ -73,7 +76,7 @@ class _AddVariantGroupState extends State<AddVariantGroup> {
           ),
           IconButton(
             icon: Icon(
-              Icons.save,
+              Icons.check,
               color: Colors.orangeAccent,
             ),
             onPressed: () {
@@ -99,6 +102,7 @@ class _AddVariantGroupState extends State<AddVariantGroup> {
         VariantGroup(
             groupName: variantGroupLabel.text,
             type: multipleChoose ? 0 : 1,
+            option: isCompulsory ? 1 : 0,
             variantChild: variantChilds),
         !widget.isUpdate ? 'create' : 'update');
 
@@ -138,6 +142,32 @@ class _AddVariantGroupState extends State<AddVariantGroup> {
                           border: new OutlineInputBorder(
                               borderSide: new BorderSide(color: Colors.teal)),
                         )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${AppLocalizations.of(context).translate('compulsory')}',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Switch(
+                          value: isCompulsory,
+                          onChanged: (value) {
+                            setState(() {
+                              isCompulsory = value;
+                            });
+                          },
+                          activeTrackColor: Colors.orangeAccent,
+                          activeColor: Colors.deepOrangeAccent,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '${AppLocalizations.of(context).translate('compulsory_description')}',
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

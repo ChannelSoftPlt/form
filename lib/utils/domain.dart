@@ -232,6 +232,20 @@ class Domain {
     return jsonDecode(response.body);
   }
 
+  fetchProductVariationWithPagination(
+      currentPage, itemPerPage, query) async {
+    var response = await http.post(Domain.product, body: {
+      'read_variation': '1',
+      'merchant_id':
+      Merchant.fromJson(await SharePreferences().read("merchant"))
+          .merchantId,
+      'query': query,
+      'page': currentPage.toString(),
+      'itemPerPage': itemPerPage.toString()
+    });
+    return jsonDecode(response.body);
+  }
+
   /*
   * read category
   * */

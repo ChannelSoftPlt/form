@@ -27,6 +27,11 @@ class _DuplicateDialogState extends State<DuplicateDialog> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
+  Timer _debounce;
+  var queryController = TextEditingController();
+  String query = '';
+  String searchQuery = "Search query";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -37,9 +42,15 @@ class _DuplicateDialogState extends State<DuplicateDialog> {
   }
 
   @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 0),
         insetPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
         title: new Text(
             '${AppLocalizations.of(context).translate('select_product')}'),
@@ -59,48 +70,91 @@ class _DuplicateDialogState extends State<DuplicateDialog> {
 
   Widget mainContent(context) {
     return Container(
-      height: 600,
-      width: 800,
-      child: StreamBuilder(
-          stream: actionStream.stream,
-          builder: (context, data) {
-            if (data.data == 'display') {
-              return SmartRefresher(
-                  enablePullDown: true,
-                  enablePullUp: true,
-                  header: WaterDropHeader(),
-                  footer: CustomFooter(
-                    builder: (BuildContext context, LoadStatus mode) {
-                      Widget body;
-                      if (mode == LoadStatus.idle) {
-                        body = Text(
-                            '${AppLocalizations.of(context).translate('pull_up_load')}');
-                      } else if (mode == LoadStatus.loading) {
-                        body = CustomProgressBar();
-                      } else if (mode == LoadStatus.failed) {
-                        body = Text(
-                            '${AppLocalizations.of(context).translate('load_failed')}');
-                      } else if (mode == LoadStatus.canLoading) {
-                        body = Text(
-                            '${AppLocalizations.of(context).translate('release_to_load_more')}');
-                      } else {
-                        body = Text(
-                            '${AppLocalizations.of(context).translate('no_more_data')}');
-                      }
-                      return Container(
-                        height: 55.0,
-                        child: Center(child: body),
-                      );
-                    },
-                  ),
-                  controller: _refreshController,
-                  onRefresh: _onRefresh,
-                  onLoading: _onLoading,
-                  child: customListView());
-            }
-            return CustomProgressBar();
-          }),
+        height: 630,
+        width: 800,
+        child: Column(
+          children: [
+            searchWidget(),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 550,
+              child: StreamBuilder(
+                  stream: actionStream.stream,
+                  builder: (context, data) {
+                    if (data.data == 'display') {
+                      return SmartRefresher(
+                          enablePullDown: true,
+                          enablePullUp: true,
+                          header: WaterDropHeader(),
+                          footer: CustomFooter(
+                            builder: (BuildContext context, LoadStatus mode) {
+                              Widget body;
+                              if (mode == LoadStatus.idle) {
+                                body = Text(
+                                    '${AppLocalizations.of(context).translate('pull_up_load')}');
+                              } else if (mode == LoadStatus.loading) {
+                                body = CustomProgressBar();
+                              } else if (mode == LoadStatus.failed) {
+                                body = Text(
+                                    '${AppLocalizations.of(context).translate('load_failed')}');
+                              } else if (mode == LoadStatus.canLoading) {
+                                body = Text(
+                                    '${AppLocalizations.of(context).translate('release_to_load_more')}');
+                              } else {
+                                body = Text(
+                                    '${AppLocalizations.of(context).translate('no_more_data')}');
+                              }
+                              return Container(
+                                height: 55.0,
+                                child: Center(child: body),
+                              );
+                            },
+                          ),
+                          controller: _refreshController,
+                          onRefresh: _onRefresh,
+                          onLoading: _onLoading,
+                          child: customListView());
+                    }
+                    return CustomProgressBar();
+                  }),
+            ),
+          ],
+        ));
+  }
+
+  Widget searchWidget() {
+    return Card(
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: TextField(
+            controller: queryController,
+            decoration: InputDecoration(
+              hintText:
+                  '${AppLocalizations.of(context).translate('search_by')}',
+              border: InputBorder.none,
+              suffixIcon: IconButton(
+                  icon: Icon(Icons.clear),
+                  color: Colors.orangeAccent,
+                  onPressed: () {
+                    queryController.clear();
+                  }),
+            ),
+            style: TextStyle(color: Colors.black87),
+            onChanged: _onSearchChanged),
+      ),
     );
+  }
+
+  _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      products.clear();
+      this.query = query;
+      fetchProduct();
+    });
   }
 
   _onRefresh() async {
@@ -145,29 +199,31 @@ class _DuplicateDialogState extends State<DuplicateDialog> {
           child: Row(
             children: [
               Expanded(
-                flex: 1,
+                flex: 5,
                 child: Text(
                   product.name,
                   maxLines: 2,
-                  style: TextStyle(
-                      color: Color.fromRGBO(89, 100, 109, 1), fontSize: 14),
+                  style: TextStyle(color: Colors.black87, fontSize: 14),
                 ),
               ),
-              OutlineButton(
-                padding: EdgeInsets.all(1),
-                onPressed: () {
-                  widget.duplicateVariant(product.variation);
-                  Navigator.of(context).pop();
-                },
-                borderSide: BorderSide(
-                  color: Colors.green,
-                  style: BorderStyle.solid,
+              Expanded(
+                flex: 2,
+                child: OutlineButton(
+                  padding: EdgeInsets.all(1),
+                  onPressed: () {
+                    widget.duplicateVariant(product.variation);
+                    Navigator.of(context).pop();
+                  },
+                  borderSide: BorderSide(
+                    color: Colors.green,
+                    style: BorderStyle.solid,
+                  ),
+                  child: Text(
+                    '${AppLocalizations.of(context).translate('duplicate')}',
+                    style: TextStyle(color: Colors.green, fontSize: 12),
+                  ),
+                  color: Colors.orange,
                 ),
-                child: Text(
-                  '${AppLocalizations.of(context).translate('duplicate')}',
-                  style: TextStyle(color: Colors.green, fontSize: 12),
-                ),
-                color: Colors.orange,
               ),
             ],
           ),
@@ -176,11 +232,11 @@ class _DuplicateDialogState extends State<DuplicateDialog> {
 
   Future fetchProduct() async {
     Map data = await Domain()
-        .fetchProductWithPagination(currentPage, itemPerPage, '', '');
+        .fetchProductVariationWithPagination(currentPage, itemPerPage, query);
     print('data goes here: $data');
     setState(() {
       if (data['status'] == '1') {
-        List responseJson = data['product'];
+        List responseJson = data['product_variation'];
         products.addAll(responseJson
             .map((jsonObject) => Product.fromJson(jsonObject))
             .toList());

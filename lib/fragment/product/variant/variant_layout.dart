@@ -35,7 +35,7 @@ class _VariantLayoutState extends State<VariantLayout> {
     }
   }
 
-  void setupData(String variantData) {
+  setupData(String variantData) async {
     try {
       List data = jsonDecode(variantData);
       variant.addAll(
@@ -126,10 +126,10 @@ class _VariantLayoutState extends State<VariantLayout> {
       builder: (BuildContext context) {
         // return alert dialog object
         return DuplicateDialog(
-          duplicateVariant: (variation) {
+          duplicateVariant: (variation) async {
+            await setupData(variation);
             setState(() {
-              setupData(variation);
-              widget.onChange(variation);
+              widget.onChange(jsonEncode(variant));
               _showSnackBar('duplicate_success');
             });
           },
@@ -211,6 +211,7 @@ class _VariantLayoutState extends State<VariantLayout> {
       VariantGroup child = variant[oldIndex];
       variant.removeAt(oldIndex);
       variant.insert(newIndex, child);
+      widget.onChange(jsonEncode(variant));
       _showSnackBar('update_category_sequence');
     });
   }
@@ -241,6 +242,7 @@ class _VariantLayoutState extends State<VariantLayout> {
               onPressed: () async {
                 setState(() {
                   variant.removeAt(position);
+                  widget.onChange(jsonEncode(variant));
                   _showSnackBar('delete_success');
                   Navigator.of(context).pop();
                 });

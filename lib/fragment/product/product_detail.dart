@@ -229,8 +229,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                 VariantLayout(
                   variant: variation,
                   onChange: (variation) {
-                    print('variation: $variation');
-                    this.variation = variation;
+                    print('on change variation: $variation');
+                    setState(() {
+                      this.variation = variation;
+                    });
                   },
                 ),
               ],
