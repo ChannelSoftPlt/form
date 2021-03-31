@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ class AddProductDialog extends StatefulWidget {
   @override
   _AddProductDialogState createState() => _AddProductDialogState();
 }
-//testing
+
 class _AddProductDialogState extends State<AddProductDialog> {
   List<Product> products = [];
   List<VariantGroup> variant = [];
@@ -37,6 +36,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   * */
   Product product;
   var total = 0.00;
+  var singleProductTotal = 0.00;
   var name = TextEditingController();
   var price = TextEditingController();
   var quantity = TextEditingController();
@@ -79,7 +79,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
               try {
                 int inputQuantity = int.parse(quantity.text);
                 double.parse(price.text);
-                product.price = price.text;
+                product.price = singleProductTotal.toStringAsFixed(2);
                 if (inputQuantity > 0) {
                   widget.addProduct(
                       product, quantity.text.toString(), remark.text);
@@ -220,9 +220,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                                 labelText:
                                     '${AppLocalizations.of(context).translate('price')}',
                                 labelStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.blueGrey,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 14, color: Colors.blueGrey),
                                 hintText: '0.00',
                                 border: new OutlineInputBorder(
                                     borderSide:
@@ -245,9 +243,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                                 labelText:
                                     '${AppLocalizations.of(context).translate('quantity')}',
                                 labelStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.blueGrey,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 14, color: Colors.blueGrey),
                                 hintText: '0',
                                 border: new OutlineInputBorder(
                                     borderSide:
@@ -271,10 +267,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
                           decoration: InputDecoration(
                             labelText:
                                 '${AppLocalizations.of(context).translate('remark')}',
-                            labelStyle: TextStyle(
-                                fontSize: 14,
-                                color: Colors.blueGrey,
-                                fontWeight: FontWeight.bold),
+                            labelStyle:
+                                TextStyle(fontSize: 14, color: Colors.blueGrey),
                             alignLabelWithHint: true,
                             hintText:
                                 '${AppLocalizations.of(context).translate('remark_hint')}',
@@ -298,7 +292,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
 
   totalPrice() {
     try {
-      total = double.parse(price.text) * double.parse(quantity.text);
+      singleProductTotal = double.parse(price.text);
 
       //calculate add on
       List<VariantChild> addOnList = [];
@@ -306,10 +300,13 @@ class _AddProductDialogState extends State<AddProductDialog> {
         addOnList = variant[i].variantChild;
         for (int j = 0; j < addOnList.length; j++) {
           if (addOnList[j].quantity > 0) {
-            total += (addOnList[j].quantity * double.parse(addOnList[j].price));
+            singleProductTotal +=
+                (addOnList[j].quantity * double.parse(addOnList[j].price));
           }
         }
       }
+
+      total = singleProductTotal * double.parse(quantity.text);
     } catch ($e) {
       total = 0.00;
     }

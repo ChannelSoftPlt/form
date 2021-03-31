@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -20,6 +21,7 @@ import 'package:my/object/coupon.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
+import 'package:my/object/productVariant/variantGroup.dart';
 import 'package:my/shareWidget/payment_status_dialog.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/snack_bar.dart';
@@ -827,6 +829,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
                         style: TextStyle(color: Colors.grey, fontSize: 14),
                       ),
+                      addOnList(orderItem.variation),
                       SizedBox(
                         height: 5,
                       ),
@@ -886,6 +889,25 @@ class _OrderDetailState extends State<OrderDetail> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget addOnList(variation) {
+    List data = jsonDecode(variation);
+    List<VariantGroup> variant = [];
+    variant.addAll(
+        data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
+    return Column(
+      children: [
+        for (int i = 0; i < variant.length; i++)
+          Column(
+            children: [
+              Text(variant[i].groupName),
+              for (int j = 0; j < variant[i].variantChild.length; j++)
+                Text(variant[i].variantChild[j].name),
+            ],
+          )
+      ],
     );
   }
 

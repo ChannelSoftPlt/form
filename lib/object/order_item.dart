@@ -1,5 +1,13 @@
 class OrderItem {
-  String name, description, quantity, price, productId, status, image, remark;
+  String name,
+      description,
+      quantity,
+      price,
+      productId,
+      status,
+      image,
+      remark,
+      variation;
 
   int orderProductId;
 
@@ -12,6 +20,7 @@ class OrderItem {
       this.price,
       this.productId,
       this.status,
+      this.variation,
       this.image});
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
@@ -20,6 +29,7 @@ class OrderItem {
         name: json['name'] as String,
         description: json['description'] as String,
         remark: json['remark'] as String,
+        variation: json['variation'] as String,
         quantity: convertIntToString(json['quantity']),
         price: json['price'] as String,
         status: json['status'] as String);
