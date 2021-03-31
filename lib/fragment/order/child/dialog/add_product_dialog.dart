@@ -14,7 +14,7 @@ import 'package:toast/toast.dart';
 
 class AddProductDialog extends StatefulWidget {
   final String formId, quantity;
-  final Function(Product, String, String) addProduct;
+  final Function(Product, String, String, String) addProduct;
 
   AddProductDialog({this.formId, this.addProduct, this.quantity});
 
@@ -37,6 +37,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   Product product;
   var total = 0.00;
   var singleProductTotal = 0.00;
+  var variantTotal = 0.00;
   var name = TextEditingController();
   var price = TextEditingController();
   var quantity = TextEditingController();
@@ -80,9 +81,11 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 int inputQuantity = int.parse(quantity.text);
                 double.parse(price.text);
                 product.price = singleProductTotal.toStringAsFixed(2);
+                product.variation = jsonEncode(variant);
+
                 if (inputQuantity > 0) {
-                  widget.addProduct(
-                      product, quantity.text.toString(), remark.text);
+                  widget.addProduct(product, quantity.text.toString(),
+                      remark.text, variantTotal.toStringAsFixed(2));
                 } else {
                   CustomToast(
                           '${AppLocalizations.of(context).translate('invalid_input')}',
@@ -293,20 +296,20 @@ class _AddProductDialogState extends State<AddProductDialog> {
   totalPrice() {
     try {
       singleProductTotal = double.parse(price.text);
-
+      variantTotal = 0.00;
       //calculate add on
       List<VariantChild> addOnList = [];
       for (int i = 0; i < variant.length; i++) {
         addOnList = variant[i].variantChild;
         for (int j = 0; j < addOnList.length; j++) {
           if (addOnList[j].quantity > 0) {
-            singleProductTotal +=
+            variantTotal +=
                 (addOnList[j].quantity * double.parse(addOnList[j].price));
           }
         }
       }
 
-      total = singleProductTotal * double.parse(quantity.text);
+      total = (singleProductTotal + variantTotal) * double.parse(quantity.text);
     } catch ($e) {
       total = 0.00;
     }
@@ -443,6 +446,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
   }
 
   reset() {
+    variantTotal = 0.00;
+    singleProductTotal = 0.00;
     total = 0.00;
     product = null;
     quantity.clear();

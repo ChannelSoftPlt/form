@@ -20,6 +20,7 @@ class AddVariantGroup extends StatefulWidget {
 class _AddVariantGroupState extends State<AddVariantGroup> {
   Category category;
   bool multipleChoose = false;
+
   //1 = compulsory, 0 = optional
   bool isCompulsory = false;
 
@@ -310,25 +311,34 @@ class _AddVariantGroupState extends State<AddVariantGroup> {
     /**
      * add new variant child
      * */
-    if (!updateChild) {
-      if (childLabel.text.isEmpty || price.text.isEmpty) {
-        _showSnackBar('all_field_required');
-        return;
+    if (childLabel.text.isEmpty || price.text.isEmpty) {
+      _showSnackBar('all_field_required');
+      return;
+    }
+    try {
+      double finalPrice = double.parse(price.text);
+      // String price = singleProductTotal.toStringAsFixed(2);
+      if (!updateChild) {
+        variantChilds.add(VariantChild(
+            name: childLabel.text, price: finalPrice.toStringAsFixed(2)));
       }
-      variantChilds.add(VariantChild(name: childLabel.text, price: price.text));
+      /**
+       * update variant child
+       * */
+      else {
+        variantChilds.remove(selectItem);
+        variantChilds.insert(
+            0,
+            VariantChild(
+                name: childLabel.text, price: finalPrice.toStringAsFixed(2)));
+      }
+      _showSnackBar(!updateChild ? 'add_success' : 'update_success');
+      updateChild = false;
+      childLabel.clear();
+      price.clear();
+    } catch ($e) {
+      _showSnackBar('something_went_wrong');
     }
-    /**
-     * update variant child
-     * */
-    else {
-      variantChilds.remove(selectItem);
-      variantChilds.insert(
-          0, VariantChild(name: childLabel.text, price: price.text));
-    }
-    _showSnackBar(!updateChild ? 'add_success' : 'update_success');
-    updateChild = false;
-    childLabel.clear();
-    price.clear();
   }
 
   Widget variantChildListView() {

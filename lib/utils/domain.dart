@@ -660,7 +660,7 @@ class Domain {
   /*
   * add order item
   * */
-  addOrderItem(Product object, orderId, quantity, remark) async {
+  addOrderItem(Product object, orderId, quantity, remark, variantTotal) async {
     var response = await http.post(Domain.orderItem, body: {
       'create': '1',
       'status': object.status.toString(),
@@ -671,6 +671,8 @@ class Domain {
       'description': object.description,
       'name': object.name,
       'remark': remark,
+      'variation': object.variation,
+      'variation_total': variantTotal,
     });
     return jsonDecode(response.body);
   }

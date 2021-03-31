@@ -552,30 +552,31 @@ class _OrderDetailState extends State<OrderDetail> {
                       ],
                     ),
                   ),
-//                  SizedBox(
-//                    height: 10,
-//                  ),
-//                  Row(
-//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                    children: <Widget>[
-//                      Text('${AppLocalizations.of(context).translate('tax')}'),
-//                      Spacer(),
-//                      GestureDetector(
-//                        onTap: () => showEditShippingTaxDialog(context, 'tax'),
-//                        child: Padding(
-//                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-//                          child: Text('${AppLocalizations.of(context).translate('edit')}',
-//                              style: TextStyle(
-//                                color: Colors.blue,
-//                                fontSize: 14,
-//                                decoration: TextDecoration.underline,
-//                              )),
-//                        ),
-//                      ),
-//                      Text(
-//                          'RM ${Order().convertToInt(order.tax).toStringAsFixed(2)}'),
-//                    ],
-//                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('${AppLocalizations.of(context).translate('tax')}'),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () => showEditShippingTaxDialog(context, 'tax'),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: Text(
+                              '${AppLocalizations.of(context).translate('edit')}',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 14,
+                                decoration: TextDecoration.underline,
+                              )),
+                        ),
+                      ),
+                      Text(
+                          'RM ${Order().convertToInt(order.tax).toStringAsFixed(2)}'),
+                    ],
+                  ),
                   SizedBox(
                     height: 15,
                   ),
@@ -808,6 +809,7 @@ class _OrderDetailState extends State<OrderDetail> {
         child: Column(
           children: <Widget>[
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Expanded(
@@ -818,8 +820,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         orderItem.name,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 14,
-                        ),
+                            fontSize: 14, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.start,
                       ),
                       SizedBox(
@@ -829,7 +830,9 @@ class _OrderDetailState extends State<OrderDetail> {
                         'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
                         style: TextStyle(color: Colors.grey, fontSize: 14),
                       ),
-                      addOnList(orderItem.variation),
+                      Visibility(
+                          visible: orderItem.variation != '',
+                          child: addOnList(orderItem.variation)),
                       SizedBox(
                         height: 5,
                       ),
@@ -855,7 +858,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 Column(
                   children: <Widget>[
                     Text(
-                      'RM ${(Order().convertToInt(orderItem.price) * Order().convertToInt(orderItem.quantity)).toStringAsFixed(2)}',
+                      'RM ${((Order().convertToInt(orderItem.price) + countVariantTotal(orderItem.variation)) * Order().convertToInt(orderItem.quantity)).toStringAsFixed(2)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Row(
@@ -892,21 +895,86 @@ class _OrderDetailState extends State<OrderDetail> {
     );
   }
 
+  countVariantTotal(variation) {
+    var totalVariant = 0.00;
+
+    if (variation != '') {
+      List<VariantGroup> variant = [];
+      List<VariantChild> variantChild = [];
+
+      List data = jsonDecode(variation);
+      variant.addAll(data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
+
+      for (int i = 0; i < variant.length; i++) {
+        variantChild = variant[i].variantChild;
+        for (int j = 0; j < variantChild.length; j++) {
+          if (variantChild[j].quantity > 0) {
+            totalVariant += (variantChild[j].quantity *
+                double.parse(variantChild[j].price));
+          }
+        }
+      }
+    }
+    return totalVariant;
+  }
+
+  bool isUsedVariant(List<VariantChild> data) {
+    for (int j = 0; j < data.length; j++) {
+      if (data[j].quantity > 0) return true;
+    }
+    return false;
+  }
+
   Widget addOnList(variation) {
-    List data = jsonDecode(variation);
+    //variant setting
     List<VariantGroup> variant = [];
-    variant.addAll(
-        data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
+    if (variation != '') {
+      List data = jsonDecode(variation);
+      variant.addAll(
+          data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
+    }
+
     return Column(
       children: [
         for (int i = 0; i < variant.length; i++)
-          Column(
-            children: [
-              Text(variant[i].groupName),
-              for (int j = 0; j < variant[i].variantChild.length; j++)
-                Text(variant[i].variantChild[j].name),
-            ],
-          )
+          if (isUsedVariant(variant[i].variantChild))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  variant[i].groupName,
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
+                ),
+                for (int j = 0; j < variant[i].variantChild.length; j++)
+                  if (variant[i].variantChild[j].quantity > 0)
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            variant[i].variantChild[j].name,
+                            style:
+                                TextStyle(color: Colors.blueGrey, fontSize: 12),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            ' +RM ${variant[i].variantChild[j].price}',
+                            style:
+                                TextStyle(color: Colors.blueGrey, fontSize: 13),
+                          ),
+                        ),
+                      ],
+                    ),
+              ],
+            )
       ],
     );
   }
@@ -1541,12 +1609,14 @@ class _OrderDetailState extends State<OrderDetail> {
         // return alert dialog object
         return AddProductDialog(
             formId: order.formId.toString(),
-            addProduct: (Product product, quantity, remark) async {
+            addProduct:
+                (Product product, quantity, remark, variantTotal) async {
+              print(product.variation);
               await Future.delayed(Duration(milliseconds: 300));
               Navigator.pop(mainContext);
 
-              Map data = await Domain()
-                  .addOrderItem(product, order.id.toString(), quantity, remark);
+              Map data = await Domain().addOrderItem(
+                  product, order.id.toString(), quantity, remark, variantTotal);
 
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext,
