@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -12,7 +13,6 @@ import 'package:my/fragment/order/child/dialog/edit_address_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_coupon_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_discount_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_phone_dialog.dart';
-import 'package:my/fragment/order/child/dialog/edit_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_customer_note_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
 import 'package:my/fragment/order/child/dialog/grouping_dialog.dart';
@@ -309,7 +309,8 @@ class _OrderDetailState extends State<OrderDetail> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: RaisedButton.icon(
-                            onPressed: () => showAddProductDialog(context),
+                            onPressed: () =>
+                                showAddProductDialog(context, null),
                             elevation: 5,
                             color: Colors.orangeAccent,
                             icon: Icon(
@@ -867,10 +868,8 @@ class _OrderDetailState extends State<OrderDetail> {
                           IconButton(
                               icon: Icon(Icons.edit),
                               color: Colors.orangeAccent[100],
-                              onPressed: () {
-                                showEditProductDialog(
-                                    mainContent, orderItem, position);
-                              }),
+                              onPressed: () =>
+                                  showAddProductDialog(context, orderItem)),
                           IconButton(
                               icon: Icon(Icons.delete),
                               color: Colors.red,
@@ -902,8 +901,12 @@ class _OrderDetailState extends State<OrderDetail> {
       List<VariantGroup> variant = [];
       List<VariantChild> variantChild = [];
 
-      List data = jsonDecode(variation);
-      variant.addAll(data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
+      try {
+        List data = jsonDecode(variation);
+        variant.addAll(data
+            .map((jsonObject) => VariantGroup.fromJson(jsonObject))
+            .toList());
+      } catch ($e) {}
 
       for (int i = 0; i < variant.length; i++) {
         variantChild = variant[i].variantChild;
@@ -928,11 +931,14 @@ class _OrderDetailState extends State<OrderDetail> {
   Widget addOnList(variation) {
     //variant setting
     List<VariantGroup> variant = [];
-    if (variation != '') {
-      List data = jsonDecode(variation);
-      variant.addAll(
-          data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
-    }
+    try {
+      if (variation != '') {
+        List data = jsonDecode(variation);
+        variant.addAll(data
+            .map((jsonObject) => VariantGroup.fromJson(jsonObject))
+            .toList());
+      }
+    } catch ($e) {}
 
     return Column(
       children: [
@@ -1353,36 +1359,6 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   /*
-  * edit product dialog
-  * */
-  showEditProductDialog(mainContext, OrderItem orderItem, position) {
-    // flutter defined function
-    showDialog(
-      context: mainContext,
-      builder: (BuildContext context) {
-        // return alert dialog object
-        return EditProductDialog(
-            order: orderItem,
-            onClick: (orderItem) async {
-              await Future.delayed(Duration(milliseconds: 300));
-              Navigator.pop(mainContext);
-
-              Map data = await Domain().updateOrderItem(orderItem, order.id);
-              if (data['status'] == '1') {
-                showSnackBar(
-                    '${AppLocalizations.of(mainContext).translate('update_success')}');
-                setState(() {
-                  orderItems.clear();
-                });
-              } else
-                CustomSnackBar.show(mainContext,
-                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
-            });
-      },
-    );
-  }
-
-  /*
   * update phone number
   * */
   showEditPhoneDialog(mainContext) {
@@ -1601,33 +1577,54 @@ class _OrderDetailState extends State<OrderDetail> {
   /*
   * add product dialog
   * */
-  showAddProductDialog(mainContext) {
+  showAddProductDialog(mainContext, OrderItem orderItem) {
     // flutter defined function
     showDialog(
       context: mainContext,
       builder: (BuildContext context) {
         // return alert dialog object
         return AddProductDialog(
-            formId: order.formId.toString(),
-            addProduct:
-                (Product product, quantity, remark, variantTotal) async {
-              print(product.variation);
-              await Future.delayed(Duration(milliseconds: 300));
-              Navigator.pop(mainContext);
+          orderItem: orderItem,
+          isUpdate: orderItem != null,
+          formId: order.formId.toString(),
+          addProduct: (Product product, quantity, remark, variantTotal) async {
+            //delay timer
+            await Future.delayed(Duration(milliseconds: 300));
+            Navigator.pop(mainContext);
 
-              Map data = await Domain().addOrderItem(
-                  product, order.id.toString(), quantity, remark, variantTotal);
+            Map data = await Domain().addOrderItem(
+                product, order.id.toString(), quantity, remark, variantTotal);
 
-              if (data['status'] == '1') {
-                CustomSnackBar.show(mainContext,
-                    '${AppLocalizations.of(mainContext).translate('add_success')}');
-                setState(() {
-                  orderItems.clear();
-                });
-              } else
-                CustomSnackBar.show(mainContext,
-                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
-            });
+            if (data['status'] == '1') {
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(mainContext).translate('add_success')}');
+              setState(() {
+                orderItems.clear();
+              });
+            } else
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+          },
+          //edit product
+          editProduct: (OrderItem object, variantTotal) async {
+            //delay timer
+            await Future.delayed(Duration(milliseconds: 300));
+            Navigator.pop(mainContext);
+
+            Map data =
+                await Domain().updateOrderItem(object, order.id, variantTotal);
+
+            if (data['status'] == '1') {
+              showSnackBar(
+                  '${AppLocalizations.of(mainContext).translate('update_success')}');
+              setState(() {
+                orderItems.clear();
+              });
+            } else
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+          },
+        );
       },
     );
   }

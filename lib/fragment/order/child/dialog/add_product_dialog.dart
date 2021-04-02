@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
 import 'package:my/object/productVariant/variantGroup.dart';
 import 'package:my/shareWidget/progress_bar.dart';
@@ -14,9 +15,18 @@ import 'package:toast/toast.dart';
 
 class AddProductDialog extends StatefulWidget {
   final String formId, quantity;
+  final bool isUpdate;
+  final OrderItem orderItem;
   final Function(Product, String, String, String) addProduct;
+  final Function(OrderItem, String) editProduct;
 
-  AddProductDialog({this.formId, this.addProduct, this.quantity});
+  AddProductDialog(
+      {this.formId,
+      this.orderItem,
+      this.addProduct,
+      this.quantity,
+      this.editProduct,
+      this.isUpdate});
 
   @override
   _AddProductDialogState createState() => _AddProductDialogState();
@@ -38,6 +48,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   var total = 0.00;
   var singleProductTotal = 0.00;
   var variantTotal = 0.00;
+  bool status = true;
   var name = TextEditingController();
   var price = TextEditingController();
   var quantity = TextEditingController();
@@ -50,6 +61,9 @@ class _AddProductDialogState extends State<AddProductDialog> {
     selectItem = new StreamController();
     addVariant = new StreamController();
     countTotal = new StreamController();
+    if (widget.isUpdate) {
+      selectItem.add('');
+    }
   }
 
   @override
@@ -63,7 +77,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
         FlatButton(
           child: Text('${AppLocalizations.of(context).translate('cancel')}'),
           onPressed: () {
-            if (product != null) {
+            if (product != null && !widget.isUpdate) {
               reset();
               selectItem.add('back_action');
             } else
@@ -84,8 +98,25 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 product.variation = jsonEncode(variant);
 
                 if (inputQuantity > 0) {
-                  widget.addProduct(product, quantity.text.toString(),
-                      remark.text, variantTotal.toStringAsFixed(2));
+                  //create product
+                  if (!widget.isUpdate) {
+                    widget.addProduct(product, quantity.text.toString(),
+                        remark.text, variantTotal.toStringAsFixed(2));
+                  }
+                  //update product
+                  else {
+                    OrderItem orderItem = new OrderItem(
+                        name: name.text,
+                        status: status ? '0' : '1',
+                        price: product.price,
+                        quantity: quantity.text.toString(),
+                        remark: remark.text,
+                        orderProductId: widget.orderItem.orderProductId,
+                        variation: product.variation);
+
+                    widget.editProduct(
+                        orderItem, variantTotal.toStringAsFixed(2));
+                  }
                 } else {
                   CustomToast(
                           '${AppLocalizations.of(context).translate('invalid_input')}',
@@ -110,7 +141,13 @@ class _AddProductDialogState extends State<AddProductDialog> {
           },
         ),
       ],
-      content: FutureBuilder(
+      content: selectLayout(),
+    );
+  }
+
+  Widget selectLayout() {
+    if (!widget.isUpdate) {
+      return FutureBuilder(
           future: Domain().fetchProduct(widget.formId),
           builder: (context, object) {
             if (object.hasData) {
@@ -128,8 +165,19 @@ class _AddProductDialogState extends State<AddProductDialog> {
               }
             }
             return Container(width: 500, child: CustomProgressBar());
-          }),
-    );
+          });
+    } else {
+      product = new Product(
+        name: widget.orderItem.name,
+        price: widget.orderItem.price,
+      );
+      if (!mounted) status = widget.orderItem.status == '0';
+      quantity.text = widget.orderItem.quantity;
+      remark.text = widget.orderItem.remark;
+      setupVariantData(widget.orderItem.variation);
+
+      return addProductContent(product);
+    }
   }
 
   Widget mainContent(context) {
@@ -154,10 +202,18 @@ class _AddProductDialogState extends State<AddProductDialog> {
   Widget addProductContent(Product product) {
     addVariant = new StreamController();
     countTotal = new StreamController();
-
-    this.product = product;
+    //for create product use only. (clear old data when user select new product)
+    if (!widget.isUpdate) {
+      this.product = product;
+    }
     price.text = product.price;
     name.text = product.name;
+
+    //if update then auto trigger calculation
+    if (widget.isUpdate) {
+      totalPrice();
+      countTotal.add('');
+    }
 
     return Column(
       children: [
@@ -174,14 +230,17 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      alignment: Alignment.center,
-                      child: FadeInImage(
-                          height: 130,
-                          image: NetworkImage(
-                              '${Domain.imagePath}${product.image}'),
-                          placeholder: NetworkImage(
-                              '${Domain.imagePath}no-image-found.png')),
+                    Visibility(
+                      visible: !widget.isUpdate,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: FadeInImage(
+                            height: 130,
+                            image: NetworkImage(
+                                '${Domain.imagePath}${product.image}'),
+                            placeholder: NetworkImage(
+                                '${Domain.imagePath}no-image-found.png')),
+                      ),
                     ),
                     SizedBox(
                       height: 15,
@@ -255,6 +314,27 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         )
                       ],
                     ),
+                    Visibility(
+                      visible: widget.isUpdate,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                              '${AppLocalizations.of(context).translate('product_available')}'),
+                          Switch(
+                            value: status,
+                            onChanged: (value) {
+                              setState(() {
+                                print(value);
+                                status = value;
+                              });
+                            },
+                            activeTrackColor: Colors.orangeAccent,
+                            activeColor: Colors.deepOrangeAccent,
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: 7,
                     ),
@@ -296,6 +376,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
   totalPrice() {
     try {
       singleProductTotal = double.parse(price.text);
+      print(singleProductTotal);
+
       variantTotal = 0.00;
       //calculate add on
       List<VariantChild> addOnList = [];
@@ -311,6 +393,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
 
       total = (singleProductTotal + variantTotal) * double.parse(quantity.text);
     } catch ($e) {
+      print('length: ${$e}');
       total = 0.00;
     }
     countTotal.add('');

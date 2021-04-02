@@ -232,13 +232,12 @@ class Domain {
     return jsonDecode(response.body);
   }
 
-  fetchProductVariationWithPagination(
-      currentPage, itemPerPage, query) async {
+  fetchProductVariationWithPagination(currentPage, itemPerPage, query) async {
     var response = await http.post(Domain.product, body: {
       'read_variation': '1',
       'merchant_id':
-      Merchant.fromJson(await SharePreferences().read("merchant"))
-          .merchantId,
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
       'query': query,
       'page': currentPage.toString(),
       'itemPerPage': itemPerPage.toString()
@@ -402,7 +401,7 @@ class Domain {
   /*
   * update order item
   * */
-  updateOrderItem(OrderItem object, orderId) async {
+  updateOrderItem(OrderItem object, orderId, variantTotal) async {
     var response = await http.post(Domain.orderItem, body: {
       'update': '1',
       'status': object.status,
@@ -411,6 +410,8 @@ class Domain {
       'remark': object.remark,
       'order_product_id': object.orderProductId.toString(),
       'order_id': orderId.toString(),
+      'variation': object.variation,
+      'variation_total': variantTotal
     });
     return jsonDecode(response.body);
   }
@@ -672,7 +673,7 @@ class Domain {
       'name': object.name,
       'remark': remark,
       'variation': object.variation,
-      'variation_total': variantTotal,
+      'variation_total': variantTotal
     });
     return jsonDecode(response.body);
   }
