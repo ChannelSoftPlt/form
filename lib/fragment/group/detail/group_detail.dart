@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,6 +7,7 @@ import 'package:my/fragment/group/detail/group_order_list.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_group.dart';
 import 'package:my/object/order_item.dart';
+import 'package:my/object/productVariant/variantGroup.dart';
 import 'package:my/shareWidget/not_found.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
@@ -186,7 +189,8 @@ class _GroupDetailState extends State<GroupDetail> {
                           ],
                         ),
                       )),
-                  Container(height: 50, child: VerticalDivider(color: Colors.grey)),
+                  Container(
+                      height: 50, child: VerticalDivider(color: Colors.grey)),
                   Expanded(
                       flex: 1,
                       child: Container(
@@ -235,7 +239,8 @@ class _GroupDetailState extends State<GroupDetail> {
         for (int j = 0; j < totalList.length; j++) {
           if (responseJson[i]['name'] == totalList[j].name &&
               responseJson[i]['remark'] == totalList[j].remark &&
-              responseJson[i]['price'] == totalList[j].price) {
+              responseJson[i]['price'] == totalList[j].price &&
+              responseJson[i]['variation'] == totalList[j].variation) {
             /*
               * existing record goes here
               * */
@@ -254,11 +259,12 @@ class _GroupDetailState extends State<GroupDetail> {
               name: responseJson[i]['name'],
               price: responseJson[i]['price'],
               quantity: responseJson[i]['quantity'],
+              variation: responseJson[i]['variation'],
               remark: responseJson[i]['remark']));
         }
       }
     }
-    if (totalList.length > 0) _countTotalAmount();
+    if (totalList.length > 0) countProductTotal();
     setState(() {});
   }
 
@@ -278,36 +284,38 @@ class _GroupDetailState extends State<GroupDetail> {
   }
 
   headerLabel() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: Text(
-              '${AppLocalizations.of(context).translate('product')}',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text(
-              '${AppLocalizations.of(context).translate('price')}',
-              textAlign: TextAlign.end,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text(
-              '${AppLocalizations.of(context).translate('quantity')}',
-              textAlign: TextAlign.end,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),
-          ),
-        ],
-      ),
+    return Card(
+      elevation: 3,
+      child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                flex: 3,
+                child: Text(
+                  '${AppLocalizations.of(context).translate('product')}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  '${AppLocalizations.of(context).translate('price')}',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  '${AppLocalizations.of(context).translate('quantity')}',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+              ),
+            ],
+          )),
     );
   }
 
@@ -320,53 +328,51 @@ class _GroupDetailState extends State<GroupDetail> {
       return Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new Expanded(
-                    flex: 3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          orderItem.name,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Colors.black87),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                orderItem.name,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Colors.black87),
+                              ),
+                            ],
+                          )),
+                      Spacer(),
+                      new Expanded(
+                        flex: 1,
+                        child: Text(
+                          orderItem.price,
+                          textAlign: TextAlign.center,
                         ),
-                        Visibility(
-                          visible: orderItem.remark != '',
-                          child: Text(
-                            orderItem.remark,
-                            textAlign: TextAlign.start,
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.red[300]),
-                          ),
-                        )
-                      ],
-                    )),
-                Spacer(),
-                new Expanded(
-                  flex: 1,
-                  child: Text(
-                    orderItem.price,
-                    textAlign: TextAlign.center,
+                      ),
+                      new Expanded(
+                        flex: 1,
+                        child: Text(
+                          'x${orderItem.quantity}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                new Expanded(
-                  flex: 1,
-                  child: Text(
-                    'x${orderItem.quantity}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
+                  addOnList(orderItem.variation),
+                  remarkLayout(orderItem)
+                ],
+              )),
           Divider(
             color: Colors.teal.shade100,
             thickness: 1.0,
@@ -374,6 +380,154 @@ class _GroupDetailState extends State<GroupDetail> {
         ],
       );
     }
+  }
+
+  Widget addOnList(variation) {
+    //variant setting
+    List<VariantGroup> variant = [];
+    try {
+      if (variation != '') {
+        List data = jsonDecode(variation);
+        variant.addAll(data
+            .map((jsonObject) => VariantGroup.fromJson(jsonObject))
+            .toList());
+      }
+    } catch ($e) {}
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Column(
+        children: [
+          for (int i = 0; i < variant.length; i++)
+            if (isUsedVariant(variant[i].variantChild))
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    variant[i].groupName,
+                    style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  for (int j = 0; j < variant[i].variantChild.length; j++)
+                    if (variant[i].variantChild[j].quantity > 0)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              variant[i].variantChild[j].name,
+                              style: TextStyle(
+                                  color: Colors.blueGrey, fontSize: 12),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              '+ ${variant[i].variantChild[j].price}',
+                              textAlign: TextAlign.end,
+                              style: TextStyle(color: Colors.blueGrey),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(''),
+                          )
+                        ],
+                      ),
+                ],
+              )
+        ],
+      ),
+    );
+  }
+
+  Widget remarkLayout(OrderItem orderItem) {
+    return Visibility(
+        visible: orderItem.remark != '',
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            Card(
+              elevation: 2,
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).translate('remark'),
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      orderItem.remark,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 12, color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  countProductTotal() {
+    totalAmount = 0.00;
+    totalQuantity = 0;
+    //loop all order item
+    for (int i = 2; i < totalList.length; i++) {
+      var variationTotal = 0.00;
+      //for calculate variation total purpose
+      try {
+        String variation = totalList[i].variation;
+        if (variation != '') {
+          //convert variant from string to list
+          List<VariantGroup> variant = [];
+          List data = jsonDecode(variation);
+          variant.addAll(data
+              .map((jsonObject) => VariantGroup.fromJson(jsonObject))
+              .toList());
+
+          //loop all the variant and calculate variant total
+          for (int j = 0; j < variant.length; j++) {
+            List<VariantChild> variantChild = variant[j].variantChild;
+            for (int k = 0; k < variantChild.length; k++) {
+              variationTotal += (variantChild[k].quantity *
+                  double.parse(variantChild[k].price));
+            }
+          }
+        }
+      } catch ($e) {
+        variationTotal = 0.00;
+      }
+      totalQuantity += int.parse(totalList[i].quantity);
+      totalAmount += (double.parse(totalList[i].price) + variationTotal) *
+          int.parse(totalList[i].quantity);
+    }
+    return totalAmount.toStringAsFixed(2);
+  }
+
+  bool isUsedVariant(List<VariantChild> data) {
+    for (int j = 0; j < data.length; j++) {
+      if (data[j].quantity > 0) return true;
+    }
+    return false;
   }
 
   /*

@@ -17,8 +17,8 @@ class AddProductDialog extends StatefulWidget {
   final String formId, quantity;
   final bool isUpdate;
   final OrderItem orderItem;
-  final Function(Product, String, String, String) addProduct;
-  final Function(OrderItem, String) editProduct;
+  final Function(Product, OrderItem, String, String) addProduct;
+  final Function(OrderItem) editProduct;
 
   AddProductDialog(
       {this.formId,
@@ -90,54 +90,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
-            if (product != null) {
-              try {
-                int inputQuantity = int.parse(quantity.text);
-                double.parse(price.text);
-                product.price = singleProductTotal.toStringAsFixed(2);
-                product.variation = jsonEncode(variant);
-
-                if (inputQuantity > 0) {
-                  //create product
-                  if (!widget.isUpdate) {
-                    widget.addProduct(product, quantity.text.toString(),
-                        remark.text, variantTotal.toStringAsFixed(2));
-                  }
-                  //update product
-                  else {
-                    OrderItem orderItem = new OrderItem(
-                        name: name.text,
-                        status: status ? '0' : '1',
-                        price: product.price,
-                        quantity: quantity.text.toString(),
-                        remark: remark.text,
-                        orderProductId: widget.orderItem.orderProductId,
-                        variation: product.variation);
-
-                    widget.editProduct(
-                        orderItem, variantTotal.toStringAsFixed(2));
-                  }
-                } else {
-                  CustomToast(
-                          '${AppLocalizations.of(context).translate('invalid_input')}',
-                          context,
-                          gravity: Toast.BOTTOM)
-                      .show();
-                }
-              } on FormatException {
-                CustomToast(
-                        '${AppLocalizations.of(context).translate('invalid_input')}',
-                        context,
-                        gravity: Toast.BOTTOM)
-                    .show();
-              }
-            } else {
-              CustomToast(
-                      '${AppLocalizations.of(context).translate('select_an_item')}',
-                      context,
-                      gravity: Toast.BOTTOM)
-                  .show();
-            }
+            createProduct();
           },
         ),
       ],
@@ -197,6 +150,60 @@ class _AddProductDialogState extends State<AddProductDialog> {
             ),
           );
         });
+  }
+
+  createProduct() {
+    if (product != null) {
+      try {
+        //do checking here
+        int inputQuantity = int.parse(quantity.text);
+        double.parse(price.text);
+        product.price = singleProductTotal.toStringAsFixed(2);
+        product.variation = jsonEncode(variant);
+        //check quantity
+        if (inputQuantity > 0) {
+          variantTotal = variantTotal * inputQuantity;
+          //order item
+          OrderItem orderItem = new OrderItem(
+              name: name.text,
+              status: status ? '0' : '1',
+              price: product.price,
+              quantity: quantity.text.toString(),
+              remark: remark.text,
+              orderProductId: widget.orderItem != null
+                  ? widget.orderItem.orderProductId
+                  : null,
+              variation: product.variation);
+
+          //create product
+          if (!widget.isUpdate) {
+            widget.addProduct(
+                product, orderItem, quantity.text.toString(), remark.text);
+          }
+          //update product
+          else {
+            widget.editProduct(orderItem);
+          }
+        } else {
+          CustomToast(
+                  '${AppLocalizations.of(context).translate('invalid_input')}',
+                  context,
+                  gravity: Toast.BOTTOM)
+              .show();
+        }
+      } on FormatException {
+        CustomToast(
+                '${AppLocalizations.of(context).translate('invalid_input')}',
+                context,
+                gravity: Toast.BOTTOM)
+            .show();
+      }
+    } else {
+      CustomToast('${AppLocalizations.of(context).translate('select_an_item')}',
+              context,
+              gravity: Toast.BOTTOM)
+          .show();
+    }
   }
 
   Widget addProductContent(Product product) {

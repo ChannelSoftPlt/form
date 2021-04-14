@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:my/object/coupon.dart';
+import 'package:my/object/form.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_group.dart';
@@ -28,6 +29,7 @@ class Domain {
   static var notification = domain + 'mobile_api/notification/index.php';
   static var category = domain + 'mobile_api/category/index.php';
   static var export = domain + 'mobile_api/export/index.php';
+  static var form = domain + 'mobile_api/form/index.php';
 
   static var whatsAppLink = domain + 'order/view-order.php';
   static var imagePath = domain + 'product/image/';
@@ -344,6 +346,19 @@ class Domain {
   }
 
   /*
+  * read form
+  * */
+  readFormSetting() async {
+    var response = await http.post(Domain.form, body: {
+      'read': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * update status
   * */
   updateStatus(status, orderId) async {
@@ -401,7 +416,7 @@ class Domain {
   /*
   * update order item
   * */
-  updateOrderItem(OrderItem object, orderId, variantTotal) async {
+  updateOrderItem(OrderItem object, orderId, totalAmount) async {
     var response = await http.post(Domain.orderItem, body: {
       'update': '1',
       'status': object.status,
@@ -411,7 +426,7 @@ class Domain {
       'order_product_id': object.orderProductId.toString(),
       'order_id': orderId.toString(),
       'variation': object.variation,
-      'variation_total': variantTotal
+      'total_amount': totalAmount
     });
     return jsonDecode(response.body);
   }
@@ -504,13 +519,14 @@ class Domain {
   /*
   * update payment
   * */
-  updatePayment(bankDetail, bankTransfer, cod, fpayTransfer) async {
+  updatePayment(bankDetail, bankTransfer, cod, fpayTransfer, taxPercent) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'bank_details': bankDetail,
       'cash_on_delivery': cod,
       'bank_transfer': bankTransfer,
       'fpay_transfer': fpayTransfer,
+      'tax_percent': taxPercent,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
@@ -659,9 +675,31 @@ class Domain {
   }
 
   /*
+  * update order delivery and tax
+  * */
+  updateFormSetting(FormSetting object, imageCode, extension) async {
+    var response = await http.post(Domain.form, body: {
+      'update': '1',
+      'image_code': imageCode,
+      'status': object.status.toString(),
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'banner_status': object.bannerStatus.toString(),
+      'banner_video_link': object.bannerVideoLink,
+      'form_color': object.formColor,
+      'description': object.description,
+      'name': object.name,
+      'form_banner': object.formBanner,
+      'image_extension': extension
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * add order item
   * */
-  addOrderItem(Product object, orderId, quantity, remark, variantTotal) async {
+  addOrderItem(Product object, orderId, quantity, remark, totalAmount) async {
     var response = await http.post(Domain.orderItem, body: {
       'create': '1',
       'status': object.status.toString(),
@@ -673,7 +711,7 @@ class Domain {
       'name': object.name,
       'remark': remark,
       'variation': object.variation,
-      'variation_total': variantTotal
+      'total_amount': totalAmount
     });
     return jsonDecode(response.body);
   }
@@ -835,13 +873,12 @@ class Domain {
   /*
   * delete order item
   * */
-  deleteOrderItem(orderProductId, orderId) async {
-    print('product id $orderProductId');
-    print('order id $orderId');
+  deleteOrderItem(orderProductId, orderId, totalAmount) async {
     var response = await http.post(Domain.orderItem, body: {
       'delete': '1',
       'order_product_id': orderProductId,
       'order_id': orderId,
+      'total_amount': totalAmount,
     });
     return jsonDecode(response.body);
   }
@@ -914,6 +951,20 @@ class Domain {
       'delete_image': '1',
       'deleted_image_name': imageName,
       'order_id': orderId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * delete form banner
+  * */
+  deleteFormBanner(imageName) async {
+    var response = await http.post(Domain.form, body: {
+      'delete_image': '1',
+      'deleted_image_name': imageName,
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
     });
     return jsonDecode(response.body);
   }

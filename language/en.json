@@ -224,7 +224,7 @@
   "setting": "Setting",
   "edit_profile": "Edit Profile",
   "change_password": "Change Password",
-  "payment_method": "Payment Method",
+  "payment_method": "Payment Setting",
   "order_setting": "Order Setting",
   "contact_us": "Contact Us",
   "privacy_policy": "Privacy Policy",
@@ -288,7 +288,7 @@
   "completed": "Completed",
 
   "delete_image_gallery": "Confirm to remove this picture? \n*This picture will permanently removed from your product!",
-  "delete_product_image": "Are you sure that you want to replace a new picture?\n*This picture will be deleted from your product!",
+  "delete_product_image": "Are you sure that you want to replace a new picture?\n*This picture will be removed permanently",
   "image_delete_success": "Picture Delete Successfully!",
   "reach_gallery_limit": "Image gallery cannot more than",
 
@@ -440,5 +440,24 @@
   "add_on_price": "Add-On Price",
   "select_type": "Select Type",
   "single": "Single",
-  "multiple": "Multiple"
+  "multiple": "Multiple",
+
+  "tax_rate": "Tax Rate",
+  "tax_description": "Rates will be configurable and taxes will be calculated during checkout.",
+
+  "form_setting": "Form Setting",
+  "form_banner": "Form Banner",
+  "form_name": "Form Label",
+  "my_form": "My Form",
+  "banner_type": "Banner Type",
+  "photo": "Photo",
+  "video": "Video",
+  "video_link": "Youtube Embed Link",
+  "video_link_description": "Click here to know more about Youtube Embed Link",
+  "form_status": "Activate E-Menu",
+  "form_status_description": "Please make sure this option is always on otherwise your E-Menu is not accessible by others",
+  "form_description": "Form Description",
+  "background_color": "Background Color",
+  "preview": "Preview",
+  "save": "Save"
 }

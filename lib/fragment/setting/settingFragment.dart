@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'coupon/discount.dart';
+import 'edit_form.dart';
 import 'order_setting.dart';
 
 class SettingFragment extends StatefulWidget {
@@ -243,6 +244,35 @@ class _SettingFragmentState extends State<SettingFragment> {
             ),
             SizedBox(
               height: 10,
+            ),
+            ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditForm(),
+                    ),
+                  );
+                },
+                leading: Icon(
+                  Icons.web,
+                  size: 35,
+                  color: Colors.pink,
+                ),
+                title: Text(
+                  '${AppLocalizations.of(context).translate('form_setting')}',
+                  style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
+                ),
+                trailing: Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 30,
+                )),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+              child: Divider(
+                color: Colors.teal.shade100,
+                thickness: 1.0,
+              ),
             ),
             ListTile(
                 onTap: () {

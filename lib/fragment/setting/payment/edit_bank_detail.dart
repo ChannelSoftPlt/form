@@ -17,7 +17,6 @@ class EditBankDetail extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<EditBankDetail> {
-  var bankDetailController = TextEditingController();
   ZefyrController _controller;
   FocusNode _focusNode;
   final converter = NotusHtmlCodec();

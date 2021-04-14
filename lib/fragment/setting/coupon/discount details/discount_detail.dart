@@ -836,7 +836,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
   getDiscountLabel() {
     if (discountType == 0)
       return 'discount_amount';
-    else if (discountType == 0)
+    else if (discountType == 1)
       return 'discount_percentage';
     else
       return 'free_shipping';

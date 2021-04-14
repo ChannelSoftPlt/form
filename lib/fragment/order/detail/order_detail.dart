@@ -310,7 +310,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         padding: const EdgeInsets.all(8.0),
                         child: RaisedButton.icon(
                             onPressed: () =>
-                                showAddProductDialog(context, null),
+                                showAddProductDialog(context, null, null),
                             elevation: 5,
                             color: Colors.orangeAccent,
                             icon: Icon(
@@ -433,9 +433,11 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(
-                          '${AppLocalizations.of(context).translate('shipping')}'),
-                      Spacer(),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                            '${AppLocalizations.of(context).translate('shipping')}'),
+                      ),
                       GestureDetector(
                         onTap: () =>
                             showEditShippingTaxDialog(context, 'delivery_fee'),
@@ -451,8 +453,12 @@ class _OrderDetailState extends State<OrderDetail> {
                           ),
                         ),
                       ),
-                      Text(
-                          'RM ${Order().convertToInt(order.deliveryFee).toStringAsFixed(2)}'),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                            'RM ${Order().convertToInt(order.deliveryFee).toStringAsFixed(2)}',
+                            textAlign: TextAlign.end),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -461,9 +467,11 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(
-                          '${AppLocalizations.of(context).translate('discount')}'),
-                      Spacer(),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                            '${AppLocalizations.of(context).translate('discount')}'),
+                      ),
                       GestureDetector(
                         onTap: () => showEditDiscountDialog(context),
                         child: Padding(
@@ -478,9 +486,12 @@ class _OrderDetailState extends State<OrderDetail> {
                           ),
                         ),
                       ),
-                      Text(
-                        '-RM ${Order().convertToInt(order.discountAmount).toStringAsFixed(2)}',
-                        style: TextStyle(color: Colors.red),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                            '-RM ${Order().convertToInt(order.discountAmount).toStringAsFixed(2)}',
+                            style: TextStyle(color: Colors.red),
+                            textAlign: TextAlign.end),
                       ),
                     ],
                   ),
@@ -495,26 +506,28 @@ class _OrderDetailState extends State<OrderDetail> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        RichText(
-                          maxLines: 10,
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    '${AppLocalizations.of(context).translate('coupon')} ',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: order.couponCode,
-                                style: TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                        Expanded(
+                          flex: 3,
+                          child: RichText(
+                            maxLines: 10,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      '${AppLocalizations.of(context).translate('coupon')} ',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text: order.couponCode,
+                                  style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        Spacer(),
                         Visibility(
                           visible: order.couponCode != null,
                           child: GestureDetector(
@@ -546,9 +559,13 @@ class _OrderDetailState extends State<OrderDetail> {
                             ),
                           ),
                         ),
-                        Text(
-                          '-RM ${Order().convertToInt(order.couponDiscount).toStringAsFixed(2)}',
-                          style: TextStyle(color: Colors.red),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            '-RM ${Order().convertToInt(order.couponDiscount).toStringAsFixed(2)}',
+                            style: TextStyle(color: Colors.red),
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ],
                     ),
@@ -559,8 +576,10 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text('${AppLocalizations.of(context).translate('tax')}'),
-                      Spacer(),
+                      Expanded(
+                          flex: 3,
+                          child: Text(
+                              '${AppLocalizations.of(context).translate('tax')}')),
                       GestureDetector(
                         onTap: () => showEditShippingTaxDialog(context, 'tax'),
                         child: Padding(
@@ -574,8 +593,13 @@ class _OrderDetailState extends State<OrderDetail> {
                               )),
                         ),
                       ),
-                      Text(
-                          'RM ${Order().convertToInt(order.tax).toStringAsFixed(2)}'),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          'RM ${Order().convertToInt(order.tax).toStringAsFixed(2)}',
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -818,7 +842,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        orderItem.name,
+                        '${orderItem.name}',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.bold),
@@ -827,9 +851,33 @@ class _OrderDetailState extends State<OrderDetail> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
-                        style: TextStyle(color: Colors.grey, fontSize: 14),
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                AppLocalizations.of(context).translate('price'),
+                                style: TextStyle(fontSize: 12),
+                              )),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)}',
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 14),
+                              textAlign: TextAlign.end,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              ' x ${orderItem.quantity}',
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 15),
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                        ],
                       ),
                       Visibility(
                           visible: orderItem.variation != '',
@@ -868,13 +916,14 @@ class _OrderDetailState extends State<OrderDetail> {
                           IconButton(
                               icon: Icon(Icons.edit),
                               color: Colors.orangeAccent[100],
-                              onPressed: () =>
-                                  showAddProductDialog(context, orderItem)),
+                              onPressed: () => showAddProductDialog(
+                                  context, orderItem, position)),
                           IconButton(
                               icon: Icon(Icons.delete),
                               color: Colors.red,
                               onPressed: () {
-                                deleteOrderItem(mainContent, orderItem);
+                                deleteOrderItem(
+                                    mainContent, orderItem, position);
                               })
                         ])
                   ],
@@ -893,6 +942,157 @@ class _OrderDetailState extends State<OrderDetail> {
       ),
     );
   }
+
+  Widget addOnList(variation) {
+    //variant setting
+    List<VariantGroup> variant = [];
+    try {
+      if (variation != '') {
+        List data = jsonDecode(variation);
+        variant.addAll(data
+            .map((jsonObject) => VariantGroup.fromJson(jsonObject))
+            .toList());
+      }
+    } catch ($e) {}
+
+    return Column(
+      children: [
+        for (int i = 0; i < variant.length; i++)
+          if (isUsedVariant(variant[i].variantChild))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  variant[i].groupName,
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
+                ),
+                for (int j = 0; j < variant[i].variantChild.length; j++)
+                  if (variant[i].variantChild[j].quantity > 0)
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            variant[i].variantChild[j].name,
+                            style:
+                                TextStyle(color: Colors.blueGrey, fontSize: 13),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                              ' +RM ${variant[i].variantChild[j].price}',
+                              style: TextStyle(
+                                  color: Colors.blueGrey, fontSize: 14),
+                              textAlign: TextAlign.end),
+                        ),
+                        Spacer()
+                      ],
+                    ),
+              ],
+            )
+      ],
+    );
+  }
+
+//  Widget orderProductList(OrderItem orderItem, position, mainContent) {
+//    return Ink(
+//      color: orderItem.status == '0' ? null : Color.fromRGBO(255, 0, 0, 0.4),
+//      child: Padding(
+//        padding: const EdgeInsets.all(8.0),
+//        child: Column(
+//          children: <Widget>[
+//            Row(
+//              crossAxisAlignment: CrossAxisAlignment.start,
+//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//              children: <Widget>[
+//                Expanded(
+//                  child: Column(
+//                    crossAxisAlignment: CrossAxisAlignment.start,
+//                    children: <Widget>[
+//                      Text(
+//                        orderItem.name,
+//                        overflow: TextOverflow.ellipsis,
+//                        style: TextStyle(
+//                            fontSize: 14, fontWeight: FontWeight.bold),
+//                        textAlign: TextAlign.start,
+//                      ),
+//                      SizedBox(
+//                        height: 5,
+//                      ),
+//                      Text(
+//                        'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
+//                        style: TextStyle(color: Colors.grey, fontSize: 14),
+//                      ),
+//                      Visibility(
+//                          visible: orderItem.variation != '',
+//                          child: addOnList(orderItem.variation)),
+//                      SizedBox(
+//                        height: 5,
+//                      ),
+//                      Visibility(
+//                        visible: orderItem.remark != null &&
+//                            orderItem.remark.length > 0,
+//                        child: Container(
+//                          width: double.infinity,
+//                          child: Text(
+//                            '${AppLocalizations.of(context).translate('remark')}: ${orderItem.remark}',
+//                            overflow: TextOverflow.ellipsis,
+//                            maxLines: 1,
+//                            style: TextStyle(
+//                                color: Colors.red[400],
+//                                fontSize: 12,
+//                                fontWeight: FontWeight.bold),
+//                          ),
+//                        ),
+//                      ),
+//                    ],
+//                  ),
+//                ),
+//                Column(
+//                  children: <Widget>[
+//                    Text(
+//                      'RM ${((Order().convertToInt(orderItem.price) + countVariantTotal(orderItem.variation)) * Order().convertToInt(orderItem.quantity)).toStringAsFixed(2)}',
+//                      style: TextStyle(fontWeight: FontWeight.bold),
+//                    ),
+//                    Row(
+//                        mainAxisAlignment: MainAxisAlignment.center,
+//                        children: <Widget>[
+//                          IconButton(
+//                              icon: Icon(Icons.edit),
+//                              color: Colors.orangeAccent[100],
+//                              onPressed: () => showAddProductDialog(
+//                                  context, orderItem, position)),
+//                          IconButton(
+//                              icon: Icon(Icons.delete),
+//                              color: Colors.red,
+//                              onPressed: () {
+//                                deleteOrderItem(
+//                                    mainContent, orderItem, position);
+//                              })
+//                        ])
+//                  ],
+//                ),
+//              ],
+//            ),
+//            Padding(
+//              padding: const EdgeInsets.fromLTRB(70, 0, 0, 0),
+//              child: Divider(
+//                color: Colors.teal.shade100,
+//                thickness: 1.0,
+//              ),
+//            )
+//          ],
+//        ),
+//      ),
+//    );
+//  }
 
   countVariantTotal(variation) {
     var totalVariant = 0.00;
@@ -926,63 +1126,6 @@ class _OrderDetailState extends State<OrderDetail> {
       if (data[j].quantity > 0) return true;
     }
     return false;
-  }
-
-  Widget addOnList(variation) {
-    //variant setting
-    List<VariantGroup> variant = [];
-    try {
-      if (variation != '') {
-        List data = jsonDecode(variation);
-        variant.addAll(data
-            .map((jsonObject) => VariantGroup.fromJson(jsonObject))
-            .toList());
-      }
-    } catch ($e) {}
-
-    return Column(
-      children: [
-        for (int i = 0; i < variant.length; i++)
-          if (isUsedVariant(variant[i].variantChild))
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  variant[i].groupName,
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold),
-                ),
-                for (int j = 0; j < variant[i].variantChild.length; j++)
-                  if (variant[i].variantChild[j].quantity > 0)
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            variant[i].variantChild[j].name,
-                            style:
-                                TextStyle(color: Colors.blueGrey, fontSize: 12),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            ' +RM ${variant[i].variantChild[j].price}',
-                            style:
-                                TextStyle(color: Colors.blueGrey, fontSize: 13),
-                          ),
-                        ),
-                      ],
-                    ),
-              ],
-            )
-      ],
-    );
   }
 
   String getGroupName(groupName) {
@@ -1392,7 +1535,7 @@ class _OrderDetailState extends State<OrderDetail> {
   /*
   * edit product dialog
   * */
-  deleteOrderItem(mainContext, OrderItem orderItem) {
+  deleteOrderItem(mainContext, OrderItem orderItem, int position) {
     // flutter defined function
     showDialog(
       context: mainContext,
@@ -1414,8 +1557,13 @@ class _OrderDetailState extends State<OrderDetail> {
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
+                orderItems.removeAt(position);
+
                 Map data = await Domain().deleteOrderItem(
-                    orderItem.orderProductId.toString(), order.id.toString());
+                    orderItem.orderProductId.toString(),
+                    order.id.toString(),
+                    countProductTotal());
+
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
                   CustomSnackBar.show(mainContext,
@@ -1577,7 +1725,7 @@ class _OrderDetailState extends State<OrderDetail> {
   /*
   * add product dialog
   * */
-  showAddProductDialog(mainContext, OrderItem orderItem) {
+  showAddProductDialog(mainContext, OrderItem orderItem, position) {
     // flutter defined function
     showDialog(
       context: mainContext,
@@ -1587,13 +1735,21 @@ class _OrderDetailState extends State<OrderDetail> {
           orderItem: orderItem,
           isUpdate: orderItem != null,
           formId: order.formId.toString(),
-          addProduct: (Product product, quantity, remark, variantTotal) async {
+          /*
+          *
+          * add order product
+          *
+          * */
+          addProduct:
+              (Product product, OrderItem orderItem, quantity, remark) async {
             //delay timer
             await Future.delayed(Duration(milliseconds: 300));
             Navigator.pop(mainContext);
+            //add order item (for calculate total amount purpose)
+            orderItems.add(orderItem);
 
-            Map data = await Domain().addOrderItem(
-                product, order.id.toString(), quantity, remark, variantTotal);
+            Map data = await Domain().addOrderItem(product, order.id.toString(),
+                quantity, remark, countProductTotal());
 
             if (data['status'] == '1') {
               CustomSnackBar.show(mainContext,
@@ -1605,14 +1761,20 @@ class _OrderDetailState extends State<OrderDetail> {
               CustomSnackBar.show(mainContext,
                   '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
           },
-          //edit product
-          editProduct: (OrderItem object, variantTotal) async {
+          /*
+          *
+          * edit order product
+          *
+          * */
+          editProduct: (OrderItem object) async {
             //delay timer
             await Future.delayed(Duration(milliseconds: 300));
             Navigator.pop(mainContext);
-
-            Map data =
-                await Domain().updateOrderItem(object, order.id, variantTotal);
+            //update current order item list
+            orderItems[position] = object;
+            //update db
+            Map data = await Domain()
+                .updateOrderItem(object, order.id, countProductTotal());
 
             if (data['status'] == '1') {
               showSnackBar(
@@ -1627,6 +1789,40 @@ class _OrderDetailState extends State<OrderDetail> {
         );
       },
     );
+  }
+
+  countProductTotal() {
+    var productTotal = 0.00;
+    //loop all order item
+    for (int i = 0; i < orderItems.length; i++) {
+      var variationTotal = 0.00;
+      //for calculate variation total purpose
+      try {
+        String variation = orderItems[i].variation;
+        if (variation != '') {
+          //convert variant from string to list
+          List<VariantGroup> variant = [];
+          List data = jsonDecode(variation);
+          variant.addAll(data
+              .map((jsonObject) => VariantGroup.fromJson(jsonObject))
+              .toList());
+
+          //loop all the variant and calculate variant total
+          for (int j = 0; j < variant.length; j++) {
+            List<VariantChild> variantChild = variant[j].variantChild;
+            for (int k = 0; k < variantChild.length; k++) {
+              variationTotal += (variantChild[k].quantity *
+                  double.parse(variantChild[k].price));
+            }
+          }
+        }
+      } catch ($e) {
+        variationTotal = 0.00;
+      }
+      productTotal += (double.parse(orderItems[i].price) + variationTotal) *
+          int.parse(orderItems[i].quantity);
+    }
+    return productTotal.toStringAsFixed(2);
   }
 
   /*

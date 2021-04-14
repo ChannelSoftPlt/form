@@ -23,6 +23,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
   var bankDetails = TextEditingController();
   bool manualBankTransfer, cod, fpay, allowFpay;
   StreamController refreshController;
+  var taxPercent = TextEditingController();
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
 
   @override
   Widget build(BuildContext context) {
+    refreshController = StreamController();
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
@@ -68,6 +70,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                   cod = merchant.cashOnDelivery != '1';
                   fpay = merchant.fpayTransfer != '1';
                   allowFpay = merchant.allowfPay != '1';
+                  taxPercent.text = merchant.taxPercent;
 
                   return mainContent(context);
                 } else {
@@ -113,7 +116,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                       children: <TextSpan>[
                                         TextSpan(
                                             text:
-                                            '${AppLocalizations.of(context).translate('payment_setting')}',
+                                                '${AppLocalizations.of(context).translate('payment_setting')}',
                                             style: TextStyle(
                                                 color: Color.fromRGBO(
                                                     89, 100, 109, 1),
@@ -121,7 +124,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                         TextSpan(text: '\n'),
                                         TextSpan(
                                           text:
-                                          '${AppLocalizations.of(context).translate('payment_setting_description')}',
+                                              '${AppLocalizations.of(context).translate('payment_setting_description')}',
                                           style: TextStyle(
                                               color: Colors.grey, fontSize: 12),
                                         ),
@@ -173,17 +176,21 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                               controlAffinity: ListTileControlAffinity
                                   .trailing, //  <-- leading Checkbox
                             ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                              child: Divider(
-                                color: Colors.teal.shade100,
-                                thickness: 1.0,
+                            Visibility(
+                              visible: allowFpay,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                                child: Divider(
+                                  color: Colors.teal.shade100,
+                                  thickness: 1.0,
+                                ),
                               ),
                             ),
                             Visibility(
                               visible: allowFpay,
                               child: Container(
-                                padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(15, 0, 12, 0),
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -193,14 +200,16 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                     )),
                                     RaisedButton(
                                       elevation: 5,
-                                      onPressed: () => showPaymentGatewayDialog(),
+                                      onPressed: () =>
+                                          showPaymentGatewayDialog(),
                                       child: Text(
                                         '${AppLocalizations.of(context).translate('setup')}',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       color: Colors.grey,
                                       shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(5)),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
                                     ),
                                     Checkbox(
                                       value: fpay,
@@ -210,6 +219,48 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                       },
                                     )
                                   ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('tax_rate')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('tax_description')}',
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                              trailing: Container(
+                                width: 70,
+                                height: 50,
+                                alignment: Alignment.center,
+                                child: TextField(
+                                  controller: taxPercent,
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 2,
+                                  decoration: InputDecoration(
+                                      hintText: '6',
+                                      labelText: '%',
+                                      counterText: '',
+                                      labelStyle: TextStyle(
+                                          color: Colors.blueGrey, fontSize: 15),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.orangeAccent,
+                                            width: 1.0),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.black45, width: 1.0),
+                                      )),
                                 ),
                               ),
                             ),
@@ -250,6 +301,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                                   Duration(milliseconds: 500));
                                               Navigator.pop(context);
                                               bankDetails.text = value;
+                                              print(value);
                                               refreshController.add('');
                                             },
                                           ),
@@ -370,7 +422,8 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
         bankDetails.text,
         (manualBankTransfer ? '0' : '1'),
         (cod ? '0' : '1'),
-        (fpay ? '0' : '1'));
+        (fpay ? '0' : '1'),
+        taxPercent.text.isEmpty ? '0' : taxPercent.text);
 
     if (data['status'] == '1') {
       CustomSnackBar.show(context,

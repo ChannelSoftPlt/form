@@ -44,33 +44,36 @@ class _EditRemarkDialogState extends State<EditRemarkDialog> {
           },
         ),
       ],
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
+      content: Container(
+        width: 1000,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Theme(
+              data: new ThemeData(
+                primaryColor: Colors.orange,
+              ),
+              child: TextField(
+                  minLines: 3,
+                  maxLines: 10,
+                  controller: note,
+                  textAlign: TextAlign.left,
+                  decoration: InputDecoration(
+                    labelText:
+                        '${AppLocalizations.of(context).translate('remark')}',
+                    alignLabelWithHint: true,
+                    labelStyle: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blueGrey,
+                        fontWeight: FontWeight.bold),
+                    hintText:
+                        '${AppLocalizations.of(context).translate('remark')}',
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.teal)),
+                  )),
             ),
-            child: TextField(
-                minLines: 3,
-                maxLines: 10,
-                controller: note,
-                textAlign: TextAlign.left,
-                decoration: InputDecoration(
-                  labelText:
-                      '${AppLocalizations.of(context).translate('remark')}',
-                  alignLabelWithHint: true,
-                  labelStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blueGrey,
-                      fontWeight: FontWeight.bold),
-                  hintText:
-                      '${AppLocalizations.of(context).translate('remark')}',
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                )),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
