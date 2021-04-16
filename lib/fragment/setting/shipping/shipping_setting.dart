@@ -67,68 +67,71 @@ class _ShippingSettingState extends State<ShippingSetting> {
     return Card(
       margin: EdgeInsets.all(15),
       elevation: 5,
-      child: Container(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.0),
-                  border: Border.all(color: Colors.black12, width: 1.5)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                        flex: 3,
-                        child: Text(
-                          AppLocalizations.of(context)
-                              .translate('shipping_type'),
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        )),
-                    Expanded(
-                      flex: 5,
-                      child: DropdownButton(
-                          isExpanded: true,
-                          itemHeight: 50,
-                          value: shipping.shippingStatus,
-                          style: TextStyle(fontSize: 15, color: Colors.black87),
-                          items: [
-                            DropdownMenuItem(
-                              child: Text(AppLocalizations.of(context)
-                                  .translate('east_west')),
-                              value: 0,
-                            ),
-                            DropdownMenuItem(
-                              child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('postcode'),
-                                textAlign: TextAlign.center,
+      child: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    border: Border.all(color: Colors.black12, width: 1.5)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          flex: 3,
+                          child: Text(
+                            AppLocalizations.of(context)
+                                .translate('shipping_type'),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          )),
+                      Expanded(
+                        flex: 5,
+                        child: DropdownButton(
+                            isExpanded: true,
+                            itemHeight: 50,
+                            value: shipping.shippingStatus,
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.black87),
+                            items: [
+                              DropdownMenuItem(
+                                child: Text(AppLocalizations.of(context)
+                                    .translate('east_west')),
+                                value: 0,
                               ),
-                              value: 1,
-                            ),
-                            DropdownMenuItem(
-                              child: Text(AppLocalizations.of(context)
-                                  .translate('distance')),
-                              value: 2,
-                            ),
-                          ],
-                          onChanged: (value) {
-                            print(value);
-                            shipping.shippingStatus = value;
-                            updateShippingStatus();
-                          }),
-                    ),
-                  ],
+                              DropdownMenuItem(
+                                child: Text(
+                                  AppLocalizations.of(context)
+                                      .translate('postcode'),
+                                  textAlign: TextAlign.center,
+                                ),
+                                value: 1,
+                              ),
+                              DropdownMenuItem(
+                                child: Text(AppLocalizations.of(context)
+                                    .translate('distance')),
+                                value: 2,
+                              ),
+                            ],
+                            onChanged: (value) {
+                              print(value);
+                              shipping.shippingStatus = value;
+                              updateShippingStatus();
+                            }),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            StreamBuilder(
-                stream: refreshStream.stream,
-                builder: (context, snapshot) {
-                  return EastWestLayout();
-                })
-          ],
+              StreamBuilder(
+                  stream: refreshStream.stream,
+                  builder: (context, snapshot) {
+                    return EastWestLayout();
+                  })
+            ],
+          ),
         ),
       ),
     );

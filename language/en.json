@@ -466,5 +466,9 @@
   "shipping_type": "Shipping Type",
   "east_west": "East West",
   "distance": "Distance",
-  "shipping_updated": "Shipping Type Updated"
+  "shipping_updated": "Shipping Type Updated",
+  "west": "Enable West Malaysia Shipping",
+  "east": "Enable East Malaysia Shipping",
+  "flat_rate_1": "Flat Rate One",
+  "flat_rate_2": "Flat Rate Two"
 }
