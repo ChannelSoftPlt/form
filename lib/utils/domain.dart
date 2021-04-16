@@ -30,6 +30,7 @@ class Domain {
   static var category = domain + 'mobile_api/category/index.php';
   static var export = domain + 'mobile_api/export/index.php';
   static var form = domain + 'mobile_api/form/index.php';
+  static var shipping = domain + 'mobile_api/shipping/index.php';
 
   static var whatsAppLink = domain + 'order/view-order.php';
   static var imagePath = domain + 'product/image/';
@@ -359,6 +360,32 @@ class Domain {
   }
 
   /*
+  * read shipping setting
+  * */
+  readShippingSetting() async {
+    var response = await http.post(Domain.shipping, body: {
+      'read': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * read east west setting
+  * */
+  readEastWestSetting() async {
+    var response = await http.post(Domain.shipping, body: {
+      'read_east_west': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * update status
   * */
   updateStatus(status, orderId) async {
@@ -366,6 +393,20 @@ class Domain {
       'update_order_status': '1',
       'order_id': orderId,
       'status': status
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * update shipping status
+  * */
+  updateShippingStatus(status) async {
+    var response = await http.post(Domain.shipping, body: {
+      'update_status': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'status': status.toString()
     });
     return jsonDecode(response.body);
   }

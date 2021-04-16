@@ -8,6 +8,7 @@ import 'package:my/fragment/setting/payment/edit_payment_method.dart';
 import 'package:my/fragment/setting/payment/language_setting.dart';
 import 'package:my/fragment/setting/qr_dialog.dart';
 import 'package:my/fragment/setting/reset_password.dart';
+import 'package:my/fragment/setting/shipping/shipping_setting.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/page/loading.dart';
 import 'package:my/translation/AppLocalizations.dart';
@@ -261,6 +262,35 @@ class _SettingFragmentState extends State<SettingFragment> {
                 ),
                 title: Text(
                   '${AppLocalizations.of(context).translate('form_setting')}',
+                  style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
+                ),
+                trailing: Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 30,
+                )),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+              child: Divider(
+                color: Colors.teal.shade100,
+                thickness: 1.0,
+              ),
+            ),
+            ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShippingSetting(),
+                    ),
+                  );
+                },
+                leading: Icon(
+                  Icons.local_shipping,
+                  size: 35,
+                  color: Colors.green,
+                ),
+                title: Text(
+                  '${AppLocalizations.of(context).translate('shipping_setting')}',
                   style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                 ),
                 trailing: Icon(

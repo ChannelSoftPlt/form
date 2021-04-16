@@ -10,12 +10,15 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my/object/form.dart';
+import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/HexColor.dart';
 import 'package:my/utils/domain.dart';
+import 'package:my/utils/sharePreference.dart';
 import 'package:notustohtml/notustohtml.dart';
 import 'package:quill_delta/quill_delta.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zefyr/zefyr.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
@@ -47,11 +50,15 @@ class _EditFormState extends State<EditForm> {
   //background color
   Color backgroundColor = Colors.white;
 
+  //url
+  String url = '';
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fetchFormSetting();
+    getUrl();
     _focusNode = FocusNode();
   }
 
@@ -74,7 +81,10 @@ class _EditFormState extends State<EditForm> {
               Icons.open_in_new,
               color: Colors.blueGrey,
             ),
-            onPressed: () {},
+            onPressed: () {
+              print(url);
+              launch(url);
+            },
           ),
           TextButton.icon(
             label: Text(
@@ -639,5 +649,10 @@ class _EditFormState extends State<EditForm> {
     key.currentState.showSnackBar(new SnackBar(
       content: new Text(message),
     ));
+  }
+
+  getUrl() async {
+    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    setState(() {});
   }
 }

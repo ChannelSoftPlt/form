@@ -1,4 +1,3 @@
-import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:intl/intl.dart';
 import 'package:my/shareWidget/snack_bar.dart';
 import 'package:url_launcher/url_launcher.dart';

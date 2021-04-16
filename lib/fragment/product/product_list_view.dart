@@ -17,6 +17,7 @@ class ProductListView extends StatefulWidget {
 class _ProductListViewState extends State<ProductListView> {
   @override
   Widget build(BuildContext context) {
+    print(widget.product.variation);
     return Card(
       elevation: 5,
       margin: EdgeInsets.all(10.0),
@@ -88,10 +89,19 @@ class _ProductListViewState extends State<ProductListView> {
                 ),
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     'RM ${widget.product.price}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                  Visibility(
+                    visible: widget.product.variation != '[]',
+                    child: Text(
+                      AppLocalizations.of(context).translate('add_on_available'),
+                      textAlign: TextAlign.end,
+                      style: TextStyle(fontSize: 10, color: Colors.green),
+                    ),
                   ),
                   SizedBox(
                     height: 60,

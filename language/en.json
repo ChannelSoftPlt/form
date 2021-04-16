@@ -438,6 +438,7 @@
   "duplicate_success": "Duplicate Successfully!",
   "type": "Type",
   "add_on_price": "Add-On Price",
+  "add_on_available": "Add On",
   "select_type": "Select Type",
   "single": "Single",
   "multiple": "Multiple",
@@ -459,5 +460,11 @@
   "form_description": "Form Description",
   "background_color": "Background Color",
   "preview": "Preview",
-  "save": "Save"
+  "save": "Save",
+
+  "shipping_setting": "Shipping Setting",
+  "shipping_type": "Shipping Type",
+  "east_west": "East West",
+  "distance": "Distance",
+  "shipping_updated": "Shipping Type Updated"
 }
