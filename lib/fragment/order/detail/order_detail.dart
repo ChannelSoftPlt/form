@@ -1888,8 +1888,7 @@ class _OrderDetailState extends State<OrderDetail> {
           '${order.address + ' ' + order.postcode + ' ' + order.city}';
       String apiKey = await SharePreferences().read('google_api_key');
 
-      var addresses =
-          await Geocoder.google(apiKey).findAddressesFromQuery(query);
+      var addresses = await Geocoder.google(apiKey).findAddressesFromQuery(query);
       var addressCoordinate = addresses.first;
 
       final coordinate = Coords(addressCoordinate.coordinates.latitude,

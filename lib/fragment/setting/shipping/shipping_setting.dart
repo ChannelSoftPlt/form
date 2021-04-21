@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my/fragment/setting/shipping/distance_layout.dart';
 import 'package:my/fragment/setting/shipping/east_west_layout.dart';
+import 'package:my/fragment/setting/shipping/postcode_layout.dart';
 import 'package:my/object/shippingSetting/shippingSetting.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
@@ -34,19 +36,6 @@ class _ShippingSettingState extends State<ShippingSetting> {
       key: key,
       appBar: AppBar(
         brightness: Brightness.dark,
-        actions: [
-          TextButton.icon(
-            label: Text(
-              AppLocalizations.of(context).translate('save'),
-              style: TextStyle(color: Colors.blueGrey),
-            ),
-            icon: Icon(
-              Icons.save,
-              color: Colors.blueGrey,
-            ),
-            onPressed: () {},
-          ),
-        ],
         title: Text(
           '${AppLocalizations.of(context).translate('shipping_setting')}',
           style: GoogleFonts.cantoraOne(
@@ -64,14 +53,12 @@ class _ShippingSettingState extends State<ShippingSetting> {
   }
 
   Widget mainContent() {
-    return Card(
-      margin: EdgeInsets.all(15),
-      elevation: 5,
-      child: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              Container(
+    return SingleChildScrollView(
+      child: Container(
+        child: Column(
+          children: [
+            Card(
+              child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     border: Border.all(color: Colors.black12, width: 1.5)),
@@ -125,13 +112,27 @@ class _ShippingSettingState extends State<ShippingSetting> {
                   ),
                 ),
               ),
-              StreamBuilder(
-                  stream: refreshStream.stream,
-                  builder: (context, snapshot) {
-                    return EastWestLayout();
-                  })
-            ],
-          ),
+            ),
+            StreamBuilder(
+                stream: refreshStream.stream,
+                builder: (context, object) {
+                  print(object.data);
+                  if (object.data == 'east_west') {
+                    return EastWestLayout(
+                      callBack: (message) => _showSnackBar(message),
+                    );
+                  } else if (object.data == 'postcode')
+                    return PostcodeLayout(
+                      callBack: (message) => _showSnackBar(message),
+                    );
+                  else if (object.data == 'distance') {
+                    return DistanceLayout(
+                      callBack: (message) => _showSnackBar(message),
+                    );
+                  } else
+                    return CustomProgressBar();
+                })
+          ],
         ),
       ),
     );
@@ -174,6 +175,7 @@ class _ShippingSettingState extends State<ShippingSetting> {
 
   _showSnackBar(message) {
     key.currentState.showSnackBar(new SnackBar(
+      duration: Duration(milliseconds: 700),
       content: new Text(AppLocalizations.of(context).translate(message)),
     ));
   }

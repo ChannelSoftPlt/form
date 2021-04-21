@@ -7,6 +7,7 @@ import 'package:my/object/order.dart';
 import 'package:my/object/order_group.dart';
 import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
+import 'package:my/object/shippingSetting/east_west.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
@@ -386,6 +387,32 @@ class Domain {
   }
 
   /*
+  * read distance
+  * */
+  readDistanceSetting() async {
+    var response = await http.post(Domain.shipping, body: {
+      'read_distance': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * read postcode
+  * */
+  readPostcodeSetting() async {
+    var response = await http.post(Domain.shipping, body: {
+      'read_postcode': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * update status
   * */
   updateStatus(status, orderId) async {
@@ -733,6 +760,52 @@ class Domain {
       'name': object.name,
       'form_banner': object.formBanner,
       'image_extension': extension
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * update east west shipping
+  * */
+  updateEastWestShipping(EastWest object) async {
+    var response = await http.post(Domain.shipping, body: {
+      'update_east_west': '1',
+      'status': object.status,
+      'first_fee': object.firstFee,
+      'price_point': object.pricePoint,
+      'second_fee': object.secondFee,
+      'id': object.id.toString()
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * update postcode shipping
+  * */
+  updatePostcodeShipping(postcode) async {
+    var response = await http.post(Domain.shipping, body: {
+      'update_postcode': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'shipping_by_postcode': postcode
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * update distance shipping
+  * */
+  updateDistanceShipping(distance, address, longitude, latitude) async {
+    var response = await http.post(Domain.shipping, body: {
+      'update_distance': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'shipping_by_distance': distance,
+      'address_long_lat': address,
+      'longitude': longitude,
+      'latitude': latitude,
     });
     return jsonDecode(response.body);
   }
