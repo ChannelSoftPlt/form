@@ -33,4 +33,15 @@ class Product {
   static double checkDouble(num value) {
     return value is double ? value : value.toDouble();
   }
+
+  Map toJson() => {
+        'status': status,
+        'price': price,
+        'image': image,
+        'image_gallery': gallery,
+        'description': description,
+        'name': name,
+        'category_id': categoryId,
+        'variation': variation,
+      };
 }

@@ -78,8 +78,7 @@ class _DuplicateDialogState extends State<DuplicateDialog> {
             SizedBox(
               height: 10,
             ),
-            Container(
-              height: 550,
+            Expanded(
               child: StreamBuilder(
                   stream: actionStream.stream,
                   builder: (context, data) {

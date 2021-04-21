@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -1891,8 +1890,7 @@ class _OrderDetailState extends State<OrderDetail> {
       var addresses = await Geocoder.google(apiKey).findAddressesFromQuery(query);
       var addressCoordinate = addresses.first;
 
-      final coordinate = Coords(addressCoordinate.coordinates.latitude,
-          addressCoordinate.coordinates.longitude);
+      final coordinate = Coords(addressCoordinate.coordinates.latitude, addressCoordinate.coordinates.longitude);
       final availableMaps = await MapLauncher.installedMaps;
 
       showModalBottomSheet(

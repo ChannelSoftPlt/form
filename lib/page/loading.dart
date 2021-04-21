@@ -73,7 +73,6 @@ class _LoadingPageState extends State<LoadingPage> {
 
   void launchChecking() async {
     Map data = await Domain().launchCheck();
-    print(data);
     if (data['status'] == '1') {
       status = data['merchant_status'][0]['status'].toString();
 

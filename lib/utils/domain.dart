@@ -15,9 +15,10 @@ import 'package:package_info/package_info.dart';
 class Domain {
 //  static var domain = 'https://www.emenu.com.my/';
 
-  static var domain = 'https://lkmng.com/form/';
+  //testing server
+  static var domain = 'https://emenumobile.lkmng.com/';
+  static var webDomain = 'https://www.formtest.lkmng.com/';
 
-  static var registration = domain + 'registration/index.php';
   static var order = domain + 'mobile_api/order/index.php';
   static var product = domain + 'mobile_api/product/index.php';
   static var orderItem = domain + 'mobile_api/order_detail/index.php';
@@ -32,10 +33,14 @@ class Domain {
   static var export = domain + 'mobile_api/export/index.php';
   static var form = domain + 'mobile_api/form/index.php';
   static var shipping = domain + 'mobile_api/shipping/index.php';
-
-  static var whatsAppLink = domain + 'order/view-order.php';
-  static var imagePath = domain + 'product/image/';
-  static var proofImgPath = domain + 'order/proof_img/';
+  /*
+  * Web Domain
+  *
+  * */
+  static var registration = webDomain + 'registration/index.php';
+  static var whatsAppLink = webDomain + 'order/view-order.php';
+  static var imagePath = webDomain + 'product/image/';
+  static var proofImgPath = webDomain + 'order/proof_img/';
 
   fetchOrder(currentPage, itemPerPage, orderStatus, query, orderGroupId,
       driverId, startDate, endDate) async {
@@ -312,6 +317,7 @@ class Domain {
   * launch check
   * */
   launchCheck() async {
+    print(Domain.registration);
     var response = await http.post(Domain.registration, body: {
       'launch_check': '1',
       'merchant_id':

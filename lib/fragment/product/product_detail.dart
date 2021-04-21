@@ -37,6 +37,7 @@ class ProductDetailDialog extends StatefulWidget {
 
 class _ProductDetailDialogState extends State<ProductDetailDialog> {
   final key = new GlobalKey<ScaffoldState>();
+  Product initialProduct;
 
   var name = TextEditingController();
   var description = TextEditingController();
@@ -73,6 +74,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     imageStateStream.add('display');
 
     if (widget.isUpdate == true) {
+      print(widget.product.name);
       name.text = widget.product.name;
       description.text = widget.product.description;
       price.text = widget.product.price;
@@ -83,6 +85,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       variation = widget.product.variation;
       getUrl();
       getProductGallery();
+      //for On Back Press checking purpose
+      setInitialObject();
     }
     getGalleryLimit();
     setGalleryButton(true);
@@ -112,9 +116,13 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
-                name.clear();
-                description.clear();
-                price.clear();
+                if (widget.isUpdate) {
+                  reverseObject();
+                } else {
+                  name.clear();
+                  description.clear();
+                  price.clear();
+                }
                 Navigator.of(context).pop();
                 _onBackPressed();
               },
@@ -132,6 +140,15 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             price.text.length > 0)) {
       leaveConfirmation();
       return null;
+    }
+
+    if (widget.isUpdate) {
+      updateObject();
+      if (jsonEncode(initialProduct).toString() !=
+          jsonEncode(widget.product).toString()) {
+        leaveConfirmation();
+        return null;
+      }
     }
     Navigator.of(context).pop();
     return null;
@@ -493,8 +510,6 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         galleryList.insert(newIndex, gallery);
       });
     }
-    print('slot: ${countGalleryLimit()}');
-    print('slot: ${galleryLimit - countGalleryLimit()}');
   }
 
   Widget imageGalleryList(ProductGallery imageGallery, int position) {
@@ -699,12 +714,16 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                 //delete success
                 if (data['status'] == '1') {
                   widget.product.gallery = getImageGalleryName();
+                  /*
+                 * for control on back press purpose
+                 * */
+                  setInitialObject();
                   widget.refresh('edit');
-
                   _showSnackBar(
                       '${AppLocalizations.of(context).translate('image_delete_success')}');
                   await Future.delayed(Duration(milliseconds: 250));
                   Navigator.of(context).pop();
+
                   setState(() {});
                 } else
                   _showSnackBar(
@@ -866,16 +885,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   }
 
   updateProduct() async {
-    /*
-    * update product object
-    * */
-    widget.product.name = name.text;
-    widget.product.status = available ? 0 : 1;
-    widget.product.description = description.text;
-    widget.product.image = imageName;
-    widget.product.price = price.text;
-    widget.product.variation = variation;
-    widget.product.categoryId = categoryId;
+    updateObject();
     /*
     * update product
     * */
@@ -887,15 +897,16 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       //for easy delete image purpose
       imageName = data['image_name'];
       widget.product.image = imageName;
-      widget.product.gallery = getImageGalleryName();
-
       //avoid double upload same image
       imageCode = '-1';
-
       //set all gallery status into 0 (mean uploaded)
       updateGalleryStatusAfterUpload();
+      /*
+       * for control on back press purpose
+       * */
+      setInitialObject();
+      //update parent ui
       widget.refresh('update');
-
       _showSnackBar(
           '${AppLocalizations.of(context).translate('update_success')}');
     } else
@@ -944,6 +955,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   await Future.delayed(Duration(milliseconds: 300));
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
+                  /*
+                  * for control on back press purpose
+                  * */
+                  setInitialObject();
                   widget.refresh('delete');
                 } else
                   _showSnackBar(
@@ -993,6 +1008,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                       '${AppLocalizations.of(context).translate('image_delete_success')}');
                   await Future.delayed(Duration(milliseconds: 250));
                   Navigator.of(context).pop();
+                  /*
+                  * for control on back press purpose
+                  * */
+                  setInitialObject();
                   /*
                   * after delete image open back the image selection dialog
                   * */
@@ -1124,5 +1143,39 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     if (data['status'] == '1') {
       galleryLimit = data['gallery_limit'][0]['gallery_limit'];
     }
+  }
+
+  updateObject() {
+    widget.product.name = name.text;
+    widget.product.status = available ? 0 : 1;
+    widget.product.description = description.text;
+    widget.product.image = imageName;
+    widget.product.gallery = getImageGalleryName();
+    widget.product.categoryId = categoryId;
+    widget.product.price = price.text;
+    widget.product.variation = variation;
+  }
+
+  reverseObject() {
+    widget.product.name = initialProduct.name;
+    widget.product.status = initialProduct.status;
+    widget.product.description = initialProduct.description;
+    widget.product.image = initialProduct.image;
+    widget.product.gallery = initialProduct.gallery;
+    widget.product.categoryId = initialProduct.categoryId;
+    widget.product.price = initialProduct.price;
+    widget.product.variation = initialProduct.variation;
+  }
+
+  setInitialObject() {
+    initialProduct = new Product(
+        name: widget.product.name,
+        status: widget.product.status,
+        description: widget.product.description,
+        image: widget.product.image,
+        gallery: widget.product.gallery,
+        price: widget.product.price,
+        variation: widget.product.variation,
+        categoryId: widget.product.categoryId);
   }
 }
