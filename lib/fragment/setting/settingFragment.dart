@@ -6,10 +6,12 @@ import 'package:my/fragment/setting/edit_profile.dart';
 import 'package:my/fragment/setting/export_setting.dart';
 import 'package:my/fragment/setting/payment/edit_payment_method.dart';
 import 'package:my/fragment/setting/payment/language_setting.dart';
+import 'package:my/fragment/setting/promotion_dialog.dart';
 import 'package:my/fragment/setting/qr_dialog.dart';
 import 'package:my/fragment/setting/reset_password.dart';
 import 'package:my/fragment/setting/shipping/shipping_setting.dart';
 import 'package:my/object/merchant.dart';
+import 'package:my/object/promotion_dialog.dart';
 import 'package:my/page/loading.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
@@ -221,6 +223,30 @@ class _SettingFragmentState extends State<SettingFragment> {
                   Icons.keyboard_arrow_right,
                   size: 30,
                 )),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+              child: Divider(
+                color: Colors.teal.shade100,
+                thickness: 1.0,
+              ),
+            ),
+            ListTile(
+                onTap: () {
+                  showQRCodeDialog();
+                },
+                leading: Icon(
+                  Icons.qr_code,
+                  size: 35,
+                  color: Colors.redAccent,
+                ),
+                title: Text(
+                  '${AppLocalizations.of(context).translate('qr_code')}',
+                  style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
+                ),
+                trailing: Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 30,
+                )),
           ],
         ),
       ),
@@ -402,15 +428,20 @@ class _SettingFragmentState extends State<SettingFragment> {
             ),
             ListTile(
                 onTap: () {
-                  showExportDialog();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditPromotionDialog(),
+                    ),
+                  );
                 },
                 leading: Icon(
-                  Icons.insert_drive_file,
+                  Icons.perm_media,
                   size: 35,
-                  color: Colors.blueGrey,
+                  color: Colors.blue,
                 ),
                 title: Text(
-                  '${AppLocalizations.of(context).translate('export_data')}',
+                  '${AppLocalizations.of(context).translate('promotion_dialog')}',
                   style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                 ),
                 trailing: Icon(
@@ -426,15 +457,15 @@ class _SettingFragmentState extends State<SettingFragment> {
             ),
             ListTile(
                 onTap: () {
-                  showQRCodeDialog();
+                  showExportDialog();
                 },
                 leading: Icon(
-                  Icons.qr_code,
+                  Icons.insert_drive_file,
                   size: 35,
-                  color: Colors.redAccent,
+                  color: Colors.blueGrey,
                 ),
                 title: Text(
-                  '${AppLocalizations.of(context).translate('qr_code')}',
+                  '${AppLocalizations.of(context).translate('export_data')}',
                   style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1)),
                 ),
                 trailing: Icon(

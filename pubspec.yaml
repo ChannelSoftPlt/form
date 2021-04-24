@@ -101,6 +101,8 @@ dependencies:
   flutter_colorpicker: ^0.3.5
   #reorderable list view
   refreshable_reorderable_list: ^0.0.1
+  mime: ^1.0.0
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -214,11 +214,11 @@ class _CardViewState extends State<CardView> {
             openOrderDetail();
             break;
           case 'whatsapp':
+            String message =
+                'Hi,%20*${widget.orders.name.replaceAll(' ', '%20')}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orders.orderID)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${widget.orders.publicUrl}';
             Order().openWhatsApp(
                 '+' + Order.getPhoneNumber(widget.orders.phone),
-                '👋你好, *${widget.orders.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${Order().whatsAppOrderPrefix(widget.orders.orderID)}'
-                '\n\n\n*检查订单/Check Order*\n点击这里/Click here👇\n'
-                '${Domain.whatsAppLink}?id=${widget.orders.publicUrl}',
+                message,
                 context);
             break;
           case 'call':

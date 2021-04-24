@@ -34,7 +34,7 @@ class _GroupingDialogState extends State<GroupingDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: new Text('Assign Group / 统计'),
+        title: new Text('Assign Group'),
         actions: <Widget>[
           FlatButton(
             child: Text('Cancel'),

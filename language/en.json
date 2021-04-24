@@ -463,6 +463,8 @@
   "save": "Save",
 
   "shipping_setting": "Shipping Setting",
+  "allow_self_collect": "Self Collect",
+  "allow_self_collect_description": "Allow customer to pick up their order at your store.",
   "shipping_type": "Shipping Type",
   "east_west": "East West",
   "distance": "Distance",
@@ -491,5 +493,26 @@
   "distance_required": "Please add at least one distance!",
   "postcode_required": "Please add at least one postcode!",
   "summary": "Summary",
-  "from": "From"
+  "from": "From",
+  "stock": "Available Stock",
+  "stock_description": "Please leave blank if no stock is required.",
+  "stock_available": "Stock",
+  "stock_not_enough": "Stock Not Enough",
+  "stock_not_enough_description": "This quantity already exceeded your current stock.\nAre you sure that you want to proceed?",
+
+
+  "promotion_dialog": "Promotion Dialog",
+  "enable_promotion_dialog": "Enable Promotion dialog",
+  "enable_promotion_dialog_description": "Pop up a dialog to your visitor when the open your E-Menu",
+  "title": "Title",
+  "subtitle": "Subtitle",
+  "button_text": "Button Text",
+  "footer_title": "Footer Title",
+  "sub_footer_title": "Sub Footer Title",
+  "text_color": "Text Color",
+  "text": "Text Content",
+  "text_content": "All of your promotion dialog's content will goes here.",
+  "background_setting": "Background Setting",
+  "background_setting_description": "Customize your promotion dialog's background picture and color over here!",
+  "background_opacity": "Background Overlay Opacity"
 }

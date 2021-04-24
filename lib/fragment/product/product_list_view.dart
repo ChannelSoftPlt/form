@@ -98,20 +98,26 @@ class _ProductListViewState extends State<ProductListView> {
                   Visibility(
                     visible: widget.product.variation != '[]',
                     child: Text(
-                      AppLocalizations.of(context).translate('add_on_available'),
+                      AppLocalizations.of(context)
+                          .translate('add_on_available'),
                       textAlign: TextAlign.end,
-                      style: TextStyle(fontSize: 10, color: Colors.green),
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.orangeAccent,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(
                     height: 60,
                   ),
                   Text(
-                    '${AppLocalizations.of(context).translate('details')}',
+                    '${AppLocalizations.of(context).translate('stock_available')} ${widget.product.stock == '' ? '-' : widget.product.stock}',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 13,
-                        color: Colors.orangeAccent),
+                        color: stockStatus(widget.product.stock)
+                            ? Colors.green
+                            : Colors.red),
                   )
                 ],
               )
@@ -120,6 +126,19 @@ class _ProductListViewState extends State<ProductListView> {
         ),
       ),
     );
+  }
+
+  stockStatus(stock) {
+    try {
+      if (stock == '') {
+        return true;
+      } else {
+        int currentStock = int.parse(stock);
+        return currentStock > 0;
+      }
+    } catch (e) {
+      return false;
+    }
   }
 
   showProductDetail(mainContext, bool action) {

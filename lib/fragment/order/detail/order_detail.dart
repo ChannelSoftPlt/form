@@ -6,7 +6,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:map_launcher/map_launcher.dart';
-import 'package:my/fragment/order/child/dialog/add_product_dialog.dart';
+import 'package:my/fragment/order/child/dialog/add_edit_product/add_product_dialog.dart';
 import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_address_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_coupon_dialog.dart';
@@ -93,7 +93,7 @@ class _OrderDetailState extends State<OrderDetail> {
             if (object.hasData) {
               if (object.connectionState == ConnectionState.done) {
                 Map data = object.data;
-                print(data);
+
                 if (data['order_detail_status'] == '1') {
                   List orderDetail = data['order_detail'];
                   order = Order.fromJson(orderDetail[0]);
@@ -862,8 +862,8 @@ class _OrderDetailState extends State<OrderDetail> {
                             flex: 1,
                             child: Text(
                               'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)}',
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 14),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
                               textAlign: TextAlign.end,
                             ),
                           ),
@@ -871,8 +871,8 @@ class _OrderDetailState extends State<OrderDetail> {
                             flex: 1,
                             child: Text(
                               ' x ${orderItem.quantity}',
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 15),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 15),
                               textAlign: TextAlign.start,
                             ),
                           ),
@@ -1000,99 +1000,6 @@ class _OrderDetailState extends State<OrderDetail> {
     );
   }
 
-//  Widget orderProductList(OrderItem orderItem, position, mainContent) {
-//    return Ink(
-//      color: orderItem.status == '0' ? null : Color.fromRGBO(255, 0, 0, 0.4),
-//      child: Padding(
-//        padding: const EdgeInsets.all(8.0),
-//        child: Column(
-//          children: <Widget>[
-//            Row(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//              children: <Widget>[
-//                Expanded(
-//                  child: Column(
-//                    crossAxisAlignment: CrossAxisAlignment.start,
-//                    children: <Widget>[
-//                      Text(
-//                        orderItem.name,
-//                        overflow: TextOverflow.ellipsis,
-//                        style: TextStyle(
-//                            fontSize: 14, fontWeight: FontWeight.bold),
-//                        textAlign: TextAlign.start,
-//                      ),
-//                      SizedBox(
-//                        height: 5,
-//                      ),
-//                      Text(
-//                        'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
-//                        style: TextStyle(color: Colors.grey, fontSize: 14),
-//                      ),
-//                      Visibility(
-//                          visible: orderItem.variation != '',
-//                          child: addOnList(orderItem.variation)),
-//                      SizedBox(
-//                        height: 5,
-//                      ),
-//                      Visibility(
-//                        visible: orderItem.remark != null &&
-//                            orderItem.remark.length > 0,
-//                        child: Container(
-//                          width: double.infinity,
-//                          child: Text(
-//                            '${AppLocalizations.of(context).translate('remark')}: ${orderItem.remark}',
-//                            overflow: TextOverflow.ellipsis,
-//                            maxLines: 1,
-//                            style: TextStyle(
-//                                color: Colors.red[400],
-//                                fontSize: 12,
-//                                fontWeight: FontWeight.bold),
-//                          ),
-//                        ),
-//                      ),
-//                    ],
-//                  ),
-//                ),
-//                Column(
-//                  children: <Widget>[
-//                    Text(
-//                      'RM ${((Order().convertToInt(orderItem.price) + countVariantTotal(orderItem.variation)) * Order().convertToInt(orderItem.quantity)).toStringAsFixed(2)}',
-//                      style: TextStyle(fontWeight: FontWeight.bold),
-//                    ),
-//                    Row(
-//                        mainAxisAlignment: MainAxisAlignment.center,
-//                        children: <Widget>[
-//                          IconButton(
-//                              icon: Icon(Icons.edit),
-//                              color: Colors.orangeAccent[100],
-//                              onPressed: () => showAddProductDialog(
-//                                  context, orderItem, position)),
-//                          IconButton(
-//                              icon: Icon(Icons.delete),
-//                              color: Colors.red,
-//                              onPressed: () {
-//                                deleteOrderItem(
-//                                    mainContent, orderItem, position);
-//                              })
-//                        ])
-//                  ],
-//                ),
-//              ],
-//            ),
-//            Padding(
-//              padding: const EdgeInsets.fromLTRB(70, 0, 0, 0),
-//              child: Divider(
-//                color: Colors.teal.shade100,
-//                thickness: 1.0,
-//              ),
-//            )
-//          ],
-//        ),
-//      ),
-//    );
-//  }
-
   countVariantTotal(variation) {
     var totalVariant = 0.00;
 
@@ -1155,7 +1062,6 @@ class _OrderDetailState extends State<OrderDetail> {
       ],
       onCanceled: () {},
       onSelected: (value) {
-        print(value);
         switch (value) {
           case 'message':
             openWhatsApp(1);
@@ -1213,7 +1119,6 @@ class _OrderDetailState extends State<OrderDetail> {
       ],
       onCanceled: () {},
       onSelected: (value) {
-        print(value);
         switch (value) {
           case 'group':
             showGroupingDialog(context);
@@ -1250,7 +1155,6 @@ class _OrderDetailState extends State<OrderDetail> {
     try {
       var date, time;
       var now = new DateTime.now();
-      print(now);
 
       if (order.deliveryDate != '') {
         date = order.deliveryDate.split("\-");
@@ -1273,10 +1177,9 @@ class _OrderDetailState extends State<OrderDetail> {
 
   showDatePicker(DateTime date) {
     DatePicker.showDateTimePicker(context,
-        showTitleActions: true, currentTime: date, onChanged: (date) {
-      print('change $date in time zone ' +
-          date.timeZoneOffset.inHours.toString());
-    }, onConfirm: (date) async {
+        showTitleActions: true,
+        currentTime: date,
+        onChanged: (date) {}, onConfirm: (date) async {
       String selectedDate = DateFormat("yyyy-MM-dd").format(date);
       String selectedTime = DateFormat("hh:mm").format(date);
 
@@ -1353,8 +1256,6 @@ class _OrderDetailState extends State<OrderDetail> {
             Map data = await Domain().setOrderGroup(
                 order.status, groupName, order.id.toString(), orderGroupId);
 
-            print(data);
-
             if (data['status'] == '1') {
               showSnackBar(
                   '${AppLocalizations.of(mainContext).translate('update_success')}');
@@ -1416,8 +1317,6 @@ class _OrderDetailState extends State<OrderDetail> {
         return EditRemarkDialog(
             order: order,
             onClick: (note) async {
-              print('remark: $note');
-
               await Future.delayed(Duration(milliseconds: 500));
               Navigator.pop(mainContext);
               Map data =
@@ -1561,7 +1460,9 @@ class _OrderDetailState extends State<OrderDetail> {
                 Map data = await Domain().deleteOrderItem(
                     orderItem.orderProductId.toString(),
                     order.id.toString(),
-                    countProductTotal());
+                    countProductTotal(),
+                    calculateStock(orderItem),
+                    orderItem.productId.toString());
 
                 if (data['status'] == '1') {
                   Navigator.of(context).pop();
@@ -1579,6 +1480,18 @@ class _OrderDetailState extends State<OrderDetail> {
         );
       },
     );
+  }
+
+  calculateStock(OrderItem item) {
+    if (item.stock != '') {
+      try {
+        int currentStock = int.parse(item.stock) + int.parse(item.quantity);
+        return currentStock.toString();
+      } catch (e) {
+        return 0;
+      }
+    } else
+      return '';
   }
 
   /*
@@ -1644,7 +1557,6 @@ class _OrderDetailState extends State<OrderDetail> {
               Navigator.pop(mainContext);
 
               Map data = await Domain().updateShippingFeeAndTax(order);
-              print(data);
               if (data['status'] == '1') {
                 showSnackBar(
                     '${AppLocalizations.of(mainContext).translate('update_success')}');
@@ -1765,7 +1677,7 @@ class _OrderDetailState extends State<OrderDetail> {
           * edit order product
           *
           * */
-          editProduct: (OrderItem object) async {
+          editProduct: (OrderItem object, stock) async {
             //delay timer
             await Future.delayed(Duration(milliseconds: 300));
             Navigator.pop(mainContext);
@@ -1773,7 +1685,7 @@ class _OrderDetailState extends State<OrderDetail> {
             orderItems[position] = object;
             //update db
             Map data = await Domain()
-                .updateOrderItem(object, order.id, countProductTotal());
+                .updateOrderItem(object, order.id, countProductTotal(), stock);
 
             if (data['status'] == '1') {
               showSnackBar(
@@ -1856,29 +1768,17 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   openWhatsApp(int messageType) async {
-    print(Order().orderPrefix(widget.orderId));
     String message = '';
     if (messageType == 0) {
-      //for android
-      if (Platform.isAndroid) {
-        message =
-            '👋你好, *${order.name}*\n我们已经收到你的订单的哦。\nWe have received your order.\n\n*订单号码/Order ID*👇\nNo.${Order().whatsAppOrderPrefix(widget.orderId)}'
-            '\n\n\n*检查订单/Check Order*\n点击这里/Click here👇\n'
-            '${Domain.whatsAppLink}?id=${order.publicUrl}';
-      }
-      //for ios
-      else {
-        message =
-            'Hi,%20*${order.name.replaceAll(' ', '%20')}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orderId)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${order.publicUrl}';
-      }
+      message =
+      'Hi,%20*${order.name.replaceAll(' ', '%20')}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orderId)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${order.publicUrl}';
     }
     //send receipt
     else if (messageType == 2) {
       message = '${Domain.whatsAppLink}?id=${order.publicUrl}';
     }
 
-    Order().openWhatsApp(
-        '+' + Order.getPhoneNumber(order.phone), message, context);
+    Order().openWhatsApp('+' + Order.getPhoneNumber(order.phone), message, context);
   }
 
   openMapsSheet(context) async {
@@ -1887,10 +1787,12 @@ class _OrderDetailState extends State<OrderDetail> {
           '${order.address + ' ' + order.postcode + ' ' + order.city}';
       String apiKey = await SharePreferences().read('google_api_key');
 
-      var addresses = await Geocoder.google(apiKey).findAddressesFromQuery(query);
+      var addresses =
+          await Geocoder.google(apiKey).findAddressesFromQuery(query);
       var addressCoordinate = addresses.first;
 
-      final coordinate = Coords(addressCoordinate.coordinates.latitude, addressCoordinate.coordinates.longitude);
+      final coordinate = Coords(addressCoordinate.coordinates.latitude,
+          addressCoordinate.coordinates.longitude);
       final availableMaps = await MapLauncher.installedMaps;
 
       showModalBottomSheet(

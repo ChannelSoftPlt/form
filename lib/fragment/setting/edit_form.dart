@@ -463,8 +463,7 @@ class _EditFormState extends State<EditForm> {
     /*
     * update form
     * */
-    Map data =
-        await Domain().updateFormSetting(form, imageCode.toString(), extension);
+    Map data = await Domain().updateFormSetting(form, imageCode.toString(), extension);
 
     if (data['status'] == '1') {
       //for easy delete image purpose

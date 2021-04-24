@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:my/object/coupon.dart';
 import 'package:my/object/form.dart';
 import 'package:my/object/merchant.dart';
@@ -25,7 +26,7 @@ class Domain {
   static var postcode = domain + 'mobile_api/postcode/index.php';
   static var orderGroup = domain + 'mobile_api/order_group/index.php';
   static var driver = domain + 'mobile_api/driver/index.php';
-  static var profile = domain + 'profile/index.php';
+  static var profile = domain + 'mobile_api/profile/index.php';
   static var user = domain + 'mobile_api/user/index.php';
   static var discount = domain + 'mobile_api/coupon/index.php';
   static var notification = domain + 'mobile_api/notification/index.php';
@@ -33,6 +34,8 @@ class Domain {
   static var export = domain + 'mobile_api/export/index.php';
   static var form = domain + 'mobile_api/form/index.php';
   static var shipping = domain + 'mobile_api/shipping/index.php';
+  static var promotionDialog = domain + 'mobile_api/promotion_dialog/index.php';
+
   /*
   * Web Domain
   *
@@ -109,10 +112,15 @@ class Domain {
   /*
   * read product
   * */
-  fetchProduct(formId) async {
+  fetchProduct(query, currentPage, itemPerPage) async {
     var response = await http.post(Domain.product, body: {
-      'read': '1',
-      'form_id': formId,
+      'read_order_product': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'query': query,
+      'page': currentPage.toString(),
+      'itemPerPage': itemPerPage.toString()
     });
     return jsonDecode(response.body);
   }
@@ -271,9 +279,6 @@ class Domain {
   * export customer
   * */
   fetchExportCustomer($startDate, $endDate) async {
-    print('haha');
-    print($startDate);
-    print($endDate);
     var response = await http.post(Domain.export, body: {
       'export_customer': '1',
       'merchant_id':
@@ -289,8 +294,6 @@ class Domain {
   * export product
   * */
   fetchExportProduct($startDate, $endDate) async {
-    print($startDate);
-    print($endDate);
     var response = await http.post(Domain.export, body: {
       'export_product': '1',
       'merchant_id':
@@ -317,7 +320,6 @@ class Domain {
   * launch check
   * */
   launchCheck() async {
-    print(Domain.registration);
     var response = await http.post(Domain.registration, body: {
       'launch_check': '1',
       'merchant_id':
@@ -358,6 +360,19 @@ class Domain {
   * */
   readFormSetting() async {
     var response = await http.post(Domain.form, body: {
+      'read': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * read promotion dialog
+  * */
+  readPromotionDialogSetting() async {
+    var response = await http.post(Domain.promotionDialog, body: {
       'read': '1',
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
@@ -445,6 +460,20 @@ class Domain {
   }
 
   /*
+  * update self collect
+  * */
+  updateSelfCollect(status) async {
+    var response = await http.post(Domain.shipping, body: {
+      'update_self_collect': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'status': status.toString()
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * update phone number
   * */
   updatePhone(phone, orderId) async {
@@ -478,7 +507,6 @@ class Domain {
   * update status
   * */
   updateMultipleStatus(status, orderIds) async {
-    print(orderIds);
     var response = await http.post(Domain.order, body: {
       'update_order_status': '1',
       'order_ids': orderIds,
@@ -490,7 +518,7 @@ class Domain {
   /*
   * update order item
   * */
-  updateOrderItem(OrderItem object, orderId, totalAmount) async {
+  updateOrderItem(OrderItem object, orderId, totalAmount, stock) async {
     var response = await http.post(Domain.orderItem, body: {
       'update': '1',
       'status': object.status,
@@ -500,7 +528,9 @@ class Domain {
       'order_product_id': object.orderProductId.toString(),
       'order_id': orderId.toString(),
       'variation': object.variation,
-      'total_amount': totalAmount
+      'total_amount': totalAmount,
+      'product_id': object.productId.toString(),
+      'stock': stock,
     });
     return jsonDecode(response.body);
   }
@@ -664,7 +694,6 @@ class Domain {
   * */
   updateProduct(Product product, extension, imageCode, imageGalleryName,
       imageGalleryFile) async {
-    print('category id: ${product.categoryId}');
     var response = await http.post(Domain.product, body: {
       'update': '1',
       'product_id': product.productId.toString(),
@@ -675,13 +704,12 @@ class Domain {
       'category_id': product.categoryId.toString(),
       'image_name': product.image,
       'variation': product.variation,
+      'stock': product.stock,
       'image_extension': extension,
       'image_code': imageCode,
       'image_gallery_name': imageGalleryName,
       'image_gallery_file': imageGalleryFile,
     });
-
-    print(response.body);
     return jsonDecode(response.body);
   }
 
@@ -817,6 +845,20 @@ class Domain {
   }
 
   /*
+  * update promotion dialog
+  * */
+  updatePromotionDialog(promotionDialog) async {
+    var response = await http.post(Domain.promotionDialog, body: {
+      'update_promotion_dialog': '1',
+      'promotion_dialog': promotionDialog,
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * add order item
   * */
   addOrderItem(Product object, orderId, quantity, remark, totalAmount) async {
@@ -831,6 +873,7 @@ class Domain {
       'name': object.name,
       'remark': remark,
       'variation': object.variation,
+      'stock': object.stock,
       'total_amount': totalAmount
     });
     return jsonDecode(response.body);
@@ -840,11 +883,6 @@ class Domain {
   * assign order group
   * */
   setOrderGroup(status, groupName, orderId, orderGroupId) async {
-    print('status: $status');
-    print('groupName: $groupName');
-    print('orderId: $orderId');
-    print('orderGroupId: $orderGroupId');
-
     var response = await http.post(Domain.orderGroup, body: {
       'action': orderGroupId == '' ? 'create' : 'update',
       'status': status,
@@ -862,10 +900,6 @@ class Domain {
   * assign driver
   * */
   setDriver(driverName, orderId, driverId) async {
-    print('driverName: $driverName');
-    print('orderId: $orderId');
-    print('driverId: $driverId');
-
     var response = await http.post(Domain.driver, body: {
       'action': driverId == '' ? 'create' : 'update',
       'merchant_id':
@@ -948,6 +982,7 @@ class Domain {
       'image_gallery_name': imageGalleryName,
       'image_gallery_file': imageGalleryFile,
       'variation': product.variation,
+      'stock': product.stock,
       'form_id':
           Merchant.fromJson(await SharePreferences().read("merchant")).formId,
     });
@@ -993,12 +1028,15 @@ class Domain {
   /*
   * delete order item
   * */
-  deleteOrderItem(orderProductId, orderId, totalAmount) async {
+  deleteOrderItem(
+      orderProductId, orderId, totalAmount, stock, productId) async {
     var response = await http.post(Domain.orderItem, body: {
       'delete': '1',
       'order_product_id': orderProductId,
       'order_id': orderId,
       'total_amount': totalAmount,
+      'stock': stock,
+      'product_id': productId
     });
     return jsonDecode(response.body);
   }
@@ -1007,7 +1045,6 @@ class Domain {
   * delete order
   * */
   deleteOrder(orderIds) async {
-    print('delete id here: $orderIds');
     var response = await http.post(Domain.order, body: {
       'delete': '1',
       'order_ids': orderIds,
@@ -1030,7 +1067,6 @@ class Domain {
   * delete product
   * */
   deleteProduct(productId) async {
-    print('product id: $productId');
     var response = await http.post(Domain.product, body: {
       'delete': '1',
       'product_id': productId,

@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my/fragment/order/child/dialog/add_edit_product/product_list.dart';
 import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
 import 'package:my/object/productVariant/variantGroup.dart';
-import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/toast.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
@@ -18,7 +18,7 @@ class AddProductDialog extends StatefulWidget {
   final bool isUpdate;
   final OrderItem orderItem;
   final Function(Product, OrderItem, String, String) addProduct;
-  final Function(OrderItem) editProduct;
+  final Function(OrderItem, String) editProduct;
 
   AddProductDialog(
       {this.formId,
@@ -33,7 +33,6 @@ class AddProductDialog extends StatefulWidget {
 }
 
 class _AddProductDialogState extends State<AddProductDialog> {
-  List<Product> products = [];
   List<VariantGroup> variant = [];
   List<VariantGroup> selectedVariant = [];
 
@@ -49,6 +48,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   var singleProductTotal = 0.00;
   var variantTotal = 0.00;
   bool status = true;
+  bool allowBackOrder = false;
   var name = TextEditingController();
   var price = TextEditingController();
   var quantity = TextEditingController();
@@ -100,30 +100,13 @@ class _AddProductDialogState extends State<AddProductDialog> {
 
   Widget selectLayout() {
     if (!widget.isUpdate) {
-      return FutureBuilder(
-          future: Domain().fetchProduct(widget.formId),
-          builder: (context, object) {
-            if (object.hasData) {
-              if (object.connectionState == ConnectionState.done) {
-                Map data = object.data;
-                if (data['status'] == '1') {
-                  List jsonProduct = data['product'];
-
-                  products.addAll(jsonProduct
-                      .map((jsonObject) => Product.fromJson(jsonObject))
-                      .toList());
-
-                  return mainContent(context);
-                }
-              }
-            }
-            return Container(width: 500, child: CustomProgressBar());
-          });
+      return mainContent(context);
     } else {
       product = new Product(
-        name: widget.orderItem.name,
-        price: widget.orderItem.price,
-      );
+          name: widget.orderItem.name,
+          price: widget.orderItem.price,
+          stock: widget.orderItem.stock);
+
       if (!mounted) status = widget.orderItem.status == '0';
       quantity.text = widget.orderItem.quantity;
       remark.text = widget.orderItem.remark;
@@ -142,12 +125,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
               return addProductContent(product.data);
             }
           }
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                for (var product in products) productList(product),
-              ],
-            ),
+          return ProductList(
+            selectItem: (Product product) async {
+              print(product.toString());
+              await setupVariantData(product.variation);
+              selectItem.add(product);
+            },
           );
         });
   }
@@ -162,8 +145,24 @@ class _AddProductDialogState extends State<AddProductDialog> {
         product.variation = jsonEncode(variant);
         //check quantity
         if (inputQuantity > 0) {
+          /*
+          * check stock
+          * */
+          if (!isStockAvailable(inputQuantity) && !allowBackOrder) {
+            showStockNotEnoughDialog(context, false);
+            return;
+          }
+          /*
+          * calculate stock
+          * */
+          product.stock = calculateStock(inputQuantity);
+          /*
+          * calculate variant total
+          * */
           variantTotal = variantTotal * inputQuantity;
-          //order item
+          /*
+          * create new order item
+          * */
           OrderItem orderItem = new OrderItem(
               name: name.text,
               status: status ? '0' : '1',
@@ -173,6 +172,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
               orderProductId: widget.orderItem != null
                   ? widget.orderItem.orderProductId
                   : null,
+              productId:
+                  widget.orderItem != null ? widget.orderItem.productId : null,
               variation: product.variation);
 
           //create product
@@ -182,7 +183,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
           }
           //update product
           else {
-            widget.editProduct(orderItem);
+            widget.editProduct(orderItem, product.stock);
           }
         } else {
           CustomToast(
@@ -400,7 +401,6 @@ class _AddProductDialogState extends State<AddProductDialog> {
 
       total = (singleProductTotal + variantTotal) * double.parse(quantity.text);
     } catch ($e) {
-      print('length: ${$e}');
       total = 0.00;
     }
     countTotal.add('');
@@ -500,39 +500,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
       List data = jsonDecode(variantData);
       variant.addAll(
           data.map((jsonObject) => VariantGroup.fromJson(jsonObject)).toList());
-    } catch ($e) {
-      print($e);
-    }
-  }
-
-  Widget productList(Product product) {
-    return ListTile(
-        onTap: () async {
-          print(product.variation);
-          await setupVariantData(product.variation);
-          selectItem.add(product);
-        },
-        leading: FadeInImage(
-            height: 50,
-            width: 50,
-            image: NetworkImage('${Domain.imagePath}${product.image}'),
-            placeholder: NetworkImage('${Domain.imagePath}no-image-found.png')),
-        title: Text(
-          product.name,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-        ),
-        subtitle: Text(
-          product.status == 0
-              ? '${AppLocalizations.of(context).translate('available')}'
-              : '${AppLocalizations.of(context).translate('unavailable')}',
-          style: TextStyle(
-              fontSize: 12,
-              color: product.status == 0 ? Colors.green : Colors.red),
-        ),
-        trailing: Text(
-          'RM ${product.price}',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-        ));
+    } catch ($e) {}
   }
 
   reset() {
@@ -543,5 +511,91 @@ class _AddProductDialogState extends State<AddProductDialog> {
     quantity.clear();
     addVariant.close();
     countTotal.close();
+  }
+
+  /*
+  *
+  *
+  * stock purpose
+  *
+  *
+  * */
+
+  isStockAvailable(inputQuantity) {
+    if (product.stock != '') {
+      if (widget.isUpdate) {
+        if (inputQuantity >
+            (int.parse(product.stock) + int.parse(widget.orderItem.quantity))) {
+          return false;
+        }
+      } else {
+        if (inputQuantity > int.parse(product.stock)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  calculateStock(inputQuantity) {
+    if (product.stock != '') {
+      int stockAvailable = int.parse(product.stock);
+      /**
+       * update order product
+       */
+      if (widget.isUpdate) {
+        int currentQuantity = int.parse(widget.orderItem.quantity);
+        stockAvailable = (stockAvailable + currentQuantity) - inputQuantity;
+      }
+      /**
+       * create new product
+       */
+      else {
+        stockAvailable = stockAvailable - inputQuantity;
+      }
+      return stockAvailable.toString();
+    }
+    //if no stock control then return ''
+    else
+      return '';
+  }
+
+  /*
+  * delete order
+  * */
+  showStockNotEnoughDialog(mainContext, isUpdate) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text(
+              "${AppLocalizations.of(context).translate('stock_not_enough')}"),
+          content: Text(
+              '${AppLocalizations.of(context).translate('stock_not_enough_description')}'),
+          actions: <Widget>[
+            FlatButton(
+              child:
+                  Text('${AppLocalizations.of(context).translate('cancel')}'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                '${AppLocalizations.of(context).translate('confirm')}',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                allowBackOrder = true;
+                if (!isUpdate) createProduct();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

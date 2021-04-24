@@ -43,28 +43,31 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   var description = TextEditingController();
   var price = TextEditingController();
   var category = TextEditingController();
+  var stock = TextEditingController();
   int categoryId = 0;
   bool available = true;
   String variation = '';
   Product object;
 
+  //image purpose
+  final picker = ImagePicker();
   File _image;
   ImageProvider provider;
   StreamController imageStateStream;
-
   String imageCode = '-1';
   String imageName = 'no-image-found.png';
   String extension = '';
   var compressedFileSource;
 
-  final picker = ImagePicker();
-
-  String url = '';
-
+  //image gallery purpose
   List<ProductGallery> galleryList = [];
   List<Asset> selectedImages = [];
   String error = 'No Error Detected';
   int galleryLimit = 0;
+
+  //on back press purpose
+  bool confirmExit = false;
+  String url = '';
 
   @override
   void initState() {
@@ -83,6 +86,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       categoryId = widget.product.categoryId;
       available = widget.product.status == 0;
       variation = widget.product.variation;
+      stock.text = widget.product.stock;
+
       getUrl();
       getProductGallery();
       //for On Back Press checking purpose
@@ -117,6 +122,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
               ),
               onPressed: () async {
                 if (widget.isUpdate) {
+                  confirmExit = true;
                   reverseObject();
                 } else {
                   name.clear();
@@ -142,7 +148,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       return null;
     }
 
-    if (widget.isUpdate) {
+    if (widget.isUpdate && !confirmExit) {
       updateObject();
       if (jsonEncode(initialProduct).toString() !=
           jsonEncode(widget.product).toString()) {
@@ -229,30 +235,35 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       ),
       body: WillPopScope(
         onWillPop: _onBackPressed,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                imagePart(),
-                SizedBox(
-                  height: 10,
-                ),
-                bottomPart(),
-                SizedBox(
-                  height: 10,
-                ),
-                VariantLayout(
-                  variant: variation,
-                  onChange: (variation) {
-                    print('on change variation: $variation');
-                    setState(() {
-                      this.variation = variation;
-                    });
-                  },
-                ),
-              ],
+        child: Theme(
+          data: new ThemeData(
+            primaryColor: Colors.orange,
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  imagePart(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  bottomPart(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  VariantLayout(
+                    variant: variation,
+                    onChange: (variation) {
+                      print('on change variation: $variation');
+                      setState(() {
+                        this.variation = variation;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -365,79 +376,61 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             SizedBox(
               height: 10,
             ),
-            Theme(
-              data: new ThemeData(
-                primaryColor: Colors.orange,
-              ),
-              child: TextField(
-                controller: name,
-                textAlign: TextAlign.start,
-                minLines: 1,
-                maxLengthEnforced: true,
-                maxLength: 75,
-                style: TextStyle(fontSize: 14),
-                decoration: InputDecoration(
-                  labelText:
-                      '${AppLocalizations.of(context).translate('name')}',
-                  labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                  hintText:
-                      '${AppLocalizations.of(context).translate('product_name')}',
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                ),
+            TextField(
+              controller: name,
+              textAlign: TextAlign.start,
+              minLines: 1,
+              maxLengthEnforced: true,
+              maxLength: 75,
+              style: TextStyle(fontSize: 14),
+              decoration: InputDecoration(
+                labelText: '${AppLocalizations.of(context).translate('name')}',
+                labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                hintText:
+                    '${AppLocalizations.of(context).translate('product_name')}',
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
               ),
             ),
             SizedBox(
               height: 5,
             ),
-            Theme(
-              data: new ThemeData(
-                primaryColor: Colors.orange,
-              ),
-              child: TextField(
-                keyboardType: TextInputType.multiline,
-                controller: description,
-                textAlign: TextAlign.start,
-                minLines: 3,
-                maxLines: 5,
-                maxLength: 500,
-                maxLengthEnforced: true,
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(fontSize: 14),
-                  labelText:
-                      '${AppLocalizations.of(context).translate('description')}',
-                  labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                  hintText:
-                      '${AppLocalizations.of(context).translate('product_description')}',
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                ),
+            TextField(
+              keyboardType: TextInputType.multiline,
+              controller: description,
+              textAlign: TextAlign.start,
+              minLines: 3,
+              maxLines: 5,
+              maxLength: 500,
+              maxLengthEnforced: true,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 14),
+                labelText:
+                    '${AppLocalizations.of(context).translate('description')}',
+                labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                hintText:
+                    '${AppLocalizations.of(context).translate('product_description')}',
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
               ),
             ),
             SizedBox(
               height: 5,
             ),
-            Theme(
-              data: new ThemeData(
-                primaryColor: Colors.orange,
-              ),
-              child: TextField(
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
-                ],
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                controller: price,
-                textAlign: TextAlign.start,
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(fontSize: 14),
-                  labelText:
-                      '${AppLocalizations.of(context).translate('price')}',
-                  labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                  hintText:
-                      '${AppLocalizations.of(context).translate('price')}',
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                ),
+            TextField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+              ],
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              controller: price,
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 14),
+                labelText: '${AppLocalizations.of(context).translate('price')}',
+                labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                hintText: '${AppLocalizations.of(context).translate('price')}',
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
               ),
             ),
             SizedBox(
@@ -467,6 +460,34 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 15,
+            ),
+            Card(
+              elevation: 2,
+              child: ListTile(
+                contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                title: Text(
+                  '${AppLocalizations.of(context).translate('stock')}',
+                  style: TextStyle(fontSize: 14),
+                ),
+                subtitle: Text(
+                  '${AppLocalizations.of(context).translate('stock_description')}',
+                  style: TextStyle(fontSize: 12),
+                ),
+                trailing: Container(
+                  width: 70,
+                  child: TextField(
+                    controller: stock,
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.black12)),
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -863,7 +884,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
           image: imageName,
           price: price.text,
           variation: variation,
-          categoryId: categoryId),
+          categoryId: categoryId,
+          stock: stock.text),
       extension,
       imageCode.toString(),
       getImageGalleryName(),
@@ -1154,6 +1176,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     widget.product.categoryId = categoryId;
     widget.product.price = price.text;
     widget.product.variation = variation;
+    widget.product.stock = stock.text;
   }
 
   reverseObject() {
@@ -1165,6 +1188,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     widget.product.categoryId = initialProduct.categoryId;
     widget.product.price = initialProduct.price;
     widget.product.variation = initialProduct.variation;
+    widget.product.stock = initialProduct.stock;
   }
 
   setInitialObject() {
@@ -1176,6 +1200,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         gallery: widget.product.gallery,
         price: widget.product.price,
         variation: widget.product.variation,
-        categoryId: widget.product.categoryId);
+        categoryId: widget.product.categoryId,
+        stock: widget.product.stock);
   }
 }

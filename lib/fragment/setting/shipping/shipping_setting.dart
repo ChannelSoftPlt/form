@@ -58,6 +58,34 @@ class _ShippingSettingState extends State<ShippingSetting> {
         child: Column(
           children: [
             Card(
+              elevation: 5,
+              margin: EdgeInsets.all(5),
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                child: CheckboxListTile(
+                  contentPadding: const EdgeInsets.all(2.0),
+                  title: Text(
+                    AppLocalizations.of(context)
+                        .translate('allow_self_collect'),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    AppLocalizations.of(context)
+                        .translate('allow_self_collect_description'),
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  value: shipping.selfCollect == 0,
+                  onChanged: (newValue) {
+                    shipping.selfCollect = newValue ? 0 : 1;
+                    updateSelfCollect();
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Card(
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
@@ -165,6 +193,17 @@ class _ShippingSettingState extends State<ShippingSetting> {
   updateShippingStatus() async {
     Map data =
         await Domain().updateShippingStatus(shipping.shippingStatus.toString());
+    if (data['status'] == '1') {
+      setState(() {
+        changeShippingLayout();
+        _showSnackBar('shipping_updated');
+      });
+    }
+  }
+
+  updateSelfCollect() async {
+    Map data =
+        await Domain().updateSelfCollect(shipping.selfCollect.toString());
     if (data['status'] == '1') {
       setState(() {
         changeShippingLayout();
