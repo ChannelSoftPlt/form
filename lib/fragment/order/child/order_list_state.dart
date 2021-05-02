@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
@@ -12,7 +10,6 @@ import 'package:my/shareWidget/status_dialog.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
-import 'package:package_info/package_info.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'card_view.dart';
@@ -370,8 +367,7 @@ class _OrderListState extends State<OrderList> {
             onClick: (value) async {
               await Future.delayed(Duration(milliseconds: 500));
               Navigator.pop(mainContext);
-              Map data = await Domain()
-                  .updateMultipleStatus(value, selectedList.join(','));
+              Map data = await Domain().updateMultipleStatus(value, selectedList.join(','));
 
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext,

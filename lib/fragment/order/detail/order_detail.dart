@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:geocoder/geocoder.dart';
@@ -73,7 +72,7 @@ class _OrderDetailState extends State<OrderDetail> {
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
                 fontWeight: FontWeight.bold,
-                fontSize: 25),
+                fontSize: 16),
           ),
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),

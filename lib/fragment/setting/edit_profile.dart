@@ -37,7 +37,7 @@ class _ResetPasswordState extends State<EditProfile> {
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
                 fontWeight: FontWeight.bold,
-                fontSize: 25),
+                fontSize: 16),
           ),
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),

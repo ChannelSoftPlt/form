@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:io' as Io;
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -101,7 +100,7 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
                 fontWeight: FontWeight.bold,
-                fontSize: 20),
+                fontSize: 16),
           ),
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),
@@ -305,6 +304,13 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
             SizedBox(
               height: 20,
             ),
+            Text(
+              AppLocalizations.of(context).translate('background_image'),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
             StreamBuilder(
                 stream: controller.stream,
                 builder: (context, object) {
@@ -314,11 +320,11 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
                   return CustomProgressBar();
                 }),
             SizedBox(
-              height: 10,
+              height: 30,
             ),
             Text(
               AppLocalizations.of(context).translate('background_color'),
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 10,
@@ -335,11 +341,11 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
               pickerAreaHeightPercent: 0.5,
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             Text(
               AppLocalizations.of(context).translate('background_opacity'),
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
             Slider(
               value: promotionDialog.overlayOpacity,
@@ -368,11 +374,11 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
               child: compressedFileSource != null
                   ? Image.memory(
                       compressedFileSource,
-                      height: 180,
+                      height: 250,
                     )
                   : Image.asset(
                       'drawable/no-image-found.png',
-                      height: 180,
+                      height: 250,
                     ),
             ),
           ),
@@ -380,7 +386,7 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
             visible: compressedFileSource != null,
             child: Container(
                 padding: EdgeInsets.all(5),
-                height: 180,
+                height: 250,
                 alignment: Alignment.topRight,
                 child: IconButton(
                   icon: Icon(
@@ -424,8 +430,8 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
       overLayColor = HexColor(promotionDialog.overlayColor);
 
       if (promotionDialog.promoImage.isNotEmpty)
-        compressedFileSource =
-            base64Decode(base64Data(promotionDialog.promoImage.split(',').last));
+        compressedFileSource = base64Decode(
+            base64Data(promotionDialog.promoImage.split(',').last));
       controller.add('display');
     });
   }
@@ -439,19 +445,19 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
     promotionDialog.textColor = textColor.toHex();
     promotionDialog.overlayColor = overLayColor.toHex();
     promotionDialog.promoImage = compressedFileSource != null
-        ? base64Encode(compressedFileSource).toString()
+        ? 'data:image/jpeg;base64,${base64Encode(compressedFileSource).toString()}'
         : '';
 
-//    Map data = await Domain()
-//        .updatePromotionDialog('[${jsonEncode(promotionDialog)}]');
-//
-//    print(jsonEncode(promotionDialog));
-//
-//    setState(() {
-//      if (data['status'] == '1') {
-//        _showSnackBar('update_success');
-//      }
-//    });
+    Map data = await Domain()
+        .updatePromotionDialog('[${jsonEncode(promotionDialog)}]');
+
+    print(jsonEncode(promotionDialog));
+
+    setState(() {
+      if (data['status'] == '1') {
+        _showSnackBar('update_success');
+      }
+    });
   }
 
   _showSnackBar(message) {
@@ -536,7 +542,7 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
   * */
   Future getImage(isCamera) async {
     imagePath = await picker.getImage(
-      imageQuality: 50,
+        imageQuality: isCamera ? 20 : 40,
         source: isCamera ? ImageSource.camera : ImageSource.gallery);
     // compressFileMethod();
     _cropImage();
@@ -598,6 +604,7 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
   }
 
   countQuality(int quality) {
+    print('quality: $quality');
     if (quality <= 100)
       return 60;
     else if (quality > 100 && quality < 500)

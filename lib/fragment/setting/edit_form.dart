@@ -106,7 +106,7 @@ class _EditFormState extends State<EditForm> {
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
                 fontWeight: FontWeight.bold,
-                fontSize: 20),
+                fontSize: 16),
           ),
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),
@@ -130,6 +130,7 @@ class _EditFormState extends State<EditForm> {
                     widgetStatus(),
                     widgetBannerLayout(),
                     widgetDescription(),
+                    widgetProductLayout(),
                     widgetBackgroundColor()
                   ])),
             ),
@@ -361,6 +362,119 @@ class _EditFormState extends State<EditForm> {
     );
   }
 
+  widgetProductLayout() {
+    return Card(
+      margin: EdgeInsets.all(15),
+      elevation: 5,
+      child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${AppLocalizations.of(context).translate('product_layout')}',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueGrey,
+                    fontSize: 15),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Divider(
+                  color: Colors.teal.shade100,
+                  thickness: 1.0,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          form.productViewPhone == 0
+                              ? 'drawable/active_list.png'
+                              : 'drawable/inactive_list.png',
+                          height: 70,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          AppLocalizations.of(context).translate('list_layout'),
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: form.productViewPhone == 0
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: form.productViewPhone == 0
+                                  ? Colors.orangeAccent
+                                  : Colors.blueGrey),
+                        ),
+                        Radio(
+                          value: 0,
+                          activeColor: Colors.orangeAccent,
+                          groupValue: form.productViewPhone,
+                          onChanged: (value) {
+                            setState(() {
+                              form.productViewPhone = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          form.productViewPhone == 1
+                              ? 'drawable/active_grid.png'
+                              : 'drawable/inactive_grid.png',
+                          height: 70,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          AppLocalizations.of(context).translate('grid_layout'),
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: form.productViewPhone == 1
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: form.productViewPhone == 1
+                                  ? Colors.orangeAccent
+                                  : Colors.blueGrey),
+                        ),
+                        Radio(
+                          value: 1,
+                          activeColor: Colors.orangeAccent,
+                          groupValue: form.productViewPhone,
+                          onChanged: (value) {
+                            setState(() {
+                              form.productViewPhone = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                '${AppLocalizations.of(context).translate('layout_description')}',
+                style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+              ),
+            ],
+          )),
+    );
+  }
+
   widgetBackgroundColor() {
     return Card(
       margin: EdgeInsets.all(15),
@@ -410,7 +524,8 @@ class _EditFormState extends State<EditForm> {
                   width: double.infinity,
                   child: FadeInImage(
                       fit: BoxFit.fill,
-                      image: NetworkImage(Domain.imagePath + form.formBanner),
+                      image: NetworkImage(
+                          Domain.imagePath.toString() + form.formBanner),
                       placeholder: NetworkImage(
                           '${Domain.imagePath}no-image-found.png')));
             } else
@@ -436,7 +551,7 @@ class _EditFormState extends State<EditForm> {
     if (data['status'] == '1') {
       setState(() {
         List responseJson = data['form'];
-
+        print(data);
         form = responseJson
             .map((jsonObject) => FormSetting().fromJson(jsonObject))
             .toList()[0];
@@ -445,7 +560,6 @@ class _EditFormState extends State<EditForm> {
         formName.text = form.name;
         _controller = ZefyrController(loadFormDescription());
         backgroundColor = HexColor(form.formColor);
-        print(backgroundColor);
       });
     }
   }
@@ -463,7 +577,8 @@ class _EditFormState extends State<EditForm> {
     /*
     * update form
     * */
-    Map data = await Domain().updateFormSetting(form, imageCode.toString(), extension);
+    Map data =
+        await Domain().updateFormSetting(form, imageCode.toString(), extension);
 
     if (data['status'] == '1') {
       //for easy delete image purpose

@@ -459,6 +459,7 @@
   "form_status_description": "Please make sure this option is always on otherwise your E-Menu is not accessible by others",
   "form_description": "Form Description",
   "background_color": "Background Color",
+  "product_layout": "Product Layout",
   "preview": "Preview",
   "save": "Save",
 
@@ -514,5 +515,9 @@
   "text_content": "All of your promotion dialog's content will goes here.",
   "background_setting": "Background Setting",
   "background_setting_description": "Customize your promotion dialog's background picture and color over here!",
-  "background_opacity": "Background Overlay Opacity"
+  "background_opacity": "Background Overlay Opacity",
+  "background_image": "Background Picture",
+  "list_layout": "List Style",
+  "grid_layout": "Grid Style",
+  "layout_description": "Note: This setting will be use for mobile view only."
 }

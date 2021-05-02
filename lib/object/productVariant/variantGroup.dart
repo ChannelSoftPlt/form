@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:my/fragment/product/variant/variant_child_list_view.dart';
-
 class VariantGroup {
   String groupName;
   List<VariantChild> variantChild = [];

@@ -3,9 +3,11 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:my/fragment/group/group.dart';
@@ -56,25 +58,9 @@ class _ListState extends State<HomePage> {
   /*
   * firebase messaging
   * */
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   var appLanguage;
-
-  static Future<dynamic> backgroundMessageHandler(
-      Map<String, dynamic> message) async {
-    print('onbackground here');
-    if (message.containsKey('data')) {
-      await notificationPlugin.showNotification(message['data']);
-    }
-// Or do other work.
-    return null;
-  }
-
-  onNotificationInLowerVersions(ReceivedNotification receivedNotification) {}
-
-  setOnNotificationClick(String payload) {
-    print('payload here: $payload');
-  }
 
   @override
   void initState() {
@@ -90,50 +76,72 @@ class _ListState extends State<HomePage> {
       });
     });
 
+    setupNotification();
+  }
+
+  setupNotification() async {
     //initialize
     notificationPlugin
         .setListenerForLowerVersions(onNotificationInLowerVersions);
+
     notificationPlugin.setOnNotificationClick(setOnNotificationClick);
 
-    _firebaseMessaging.requestNotificationPermissions();
-
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        _setupNotificationSound(message);
-        print("onMessage: $message");
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        setState(() {
-          currentIndex = 0;
-        });
-      },
+    // Update the iOS foreground notification presentation options to allow
+    // heads up notifications.
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
     );
 
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: false));
-
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage message) {
+      print('initialize message: $message');
+      if (message != null) {
+      }
     });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('on message: $message');
+      _setupNotificationSound(message);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('on message open app: $message');
+      setState(() {
+        currentIndex = 0;
+      });
+    });
+
+    if (Platform.isIOS) {
+      _firebaseMessaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+    }
     /*
     * register token
     * */
     _firebaseMessaging.getToken().then((token) async {
-      print(token);
       await SharePreferences().save('token', token);
-      Map data = await Domain().registerDeviceToken(token);
-      print(data);
+      await Domain().registerDeviceToken(token);
     });
   }
 
+  onNotificationInLowerVersions(ReceivedNotification receivedNotification) {
+    print('lower version: $receivedNotification');
+  }
+
+  setOnNotificationClick(String payload) {
+    print('payload here: $payload');
+  }
+
   _setupNotificationSound(message) async {
-    print(message['data']);
     Merchant merchant =
         Merchant.fromJson(await SharePreferences().read('merchant'));
     String merchantId = merchant.merchantId;
@@ -142,7 +150,7 @@ class _ListState extends State<HomePage> {
       if (Platform.isAndroid) {
         if (message['data']['merchant_id'] != merchantId) return;
       } else {
-        if (message['merchant_id'] != merchantId) return;
+        if (message.data['merchant_id'] != merchantId) return;
       }
 
       showSnackBar(
@@ -152,6 +160,7 @@ class _ListState extends State<HomePage> {
       assetsAudioPlayer.open(
         Audio("audio/notification.mp3"),
       );
+      FlutterAppBadger.updateBadgeCount(1);
     }
   }
 
@@ -164,7 +173,6 @@ class _ListState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('refresh');
     return Scaffold(
       key: key,
       appBar: AppBar(

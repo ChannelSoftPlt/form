@@ -11,7 +11,6 @@ import 'package:my/fragment/setting/qr_dialog.dart';
 import 'package:my/fragment/setting/reset_password.dart';
 import 'package:my/fragment/setting/shipping/shipping_setting.dart';
 import 'package:my/object/merchant.dart';
-import 'package:my/object/promotion_dialog.dart';
 import 'package:my/page/loading.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';

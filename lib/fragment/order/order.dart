@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:my/translation/AppLocalizations.dart';
 
 import 'child/orderFragment.dart';
@@ -14,8 +15,10 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage>
     with SingleTickerProviderStateMixin {
+
   @override
   Widget build(BuildContext context) {
+    FlutterAppBadger.removeBadge();
     return Scaffold(
       body: SafeArea(
         child: DefaultTabController(
@@ -31,9 +34,15 @@ class _OrderPageState extends State<OrderPage>
                     labelColor: Colors.orangeAccent,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
-                      Tab(text: '${AppLocalizations.of(context).translate('new_order')}'),
-                      Tab(text: '${AppLocalizations.of(context).translate('processing')}'),
-                      Tab(text: '${AppLocalizations.of(context).translate('all_orders')}'),
+                      Tab(
+                          text:
+                              '${AppLocalizations.of(context).translate('new_order')}'),
+                      Tab(
+                          text:
+                              '${AppLocalizations.of(context).translate('processing')}'),
+                      Tab(
+                          text:
+                              '${AppLocalizations.of(context).translate('all_orders')}'),
                     ]),
               ),
               Expanded(

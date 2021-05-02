@@ -1,6 +1,6 @@
 class FormSetting {
   String bannerVideoLink, formBanner, formColor, description, name, publicURL;
-  int status, bannerStatus;
+  int status, bannerStatus, productViewPhone;
 
   FormSetting(
       {this.bannerVideoLink,
@@ -10,7 +10,8 @@ class FormSetting {
       this.name,
       this.publicURL,
       this.status,
-      this.bannerStatus});
+      this.bannerStatus,
+      this.productViewPhone});
 
   fromJson(Map<String, dynamic> json) {
     print(json['banner_video_link']);
@@ -22,6 +23,7 @@ class FormSetting {
         name: json['name'],
         publicURL: json['public_url'],
         status: json['status'] as int,
-        bannerStatus: json['banner_status'] as int);
+        bannerStatus: json['banner_status'] as int,
+        productViewPhone: json['product_view_phone'] as int);
   }
 }

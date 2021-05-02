@@ -59,7 +59,7 @@ class _ExportDialogState extends State<ExportDialog> {
           textStyle: TextStyle(
               color: Colors.orangeAccent,
               fontWeight: FontWeight.bold,
-              fontSize: 25),
+              fontSize: 16),
         ),
       ),
       content: StreamBuilder(
@@ -239,7 +239,7 @@ class _ExportDialogState extends State<ExportDialog> {
     if (exportData == 'Customer') {
       await fetchExportCustomer();
       for (int i = 0; i < userList.length; i++) {
-        List<dynamic> row = List();
+        List<dynamic> row = [];
         //add header
         if (i == 0) {
           row.add('Name');
@@ -249,7 +249,7 @@ class _ExportDialogState extends State<ExportDialog> {
           row.add('Postcode');
           row.add('Create Date');
           rows.add(row);
-          row = List();
+          row = [];
         }
         row.add(userList[i].name);
         row.add(userList[i].email);
@@ -263,7 +263,7 @@ class _ExportDialogState extends State<ExportDialog> {
       //fetch and check data
       await fetchExportProduct();
       for (int i = 0; i < productList.length; i++) {
-        List<dynamic> row = List();
+        List<dynamic> row = [];
         //add header
         if (i == 0) {
           row.add('Name');
@@ -273,7 +273,7 @@ class _ExportDialogState extends State<ExportDialog> {
           row.add('Product Gallery');
           row.add('Category');
           rows.add(row);
-          row = List();
+          row = [];
         }
         row.add(productList[i].name);
         row.add(productList[i].description);

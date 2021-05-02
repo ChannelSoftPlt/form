@@ -57,7 +57,7 @@ class _GroupDetailState extends State<GroupDetail> {
               textStyle: TextStyle(
                   color: Colors.orangeAccent,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20),
+                  fontSize: 16),
             ),
           ),
           iconTheme: IconThemeData(color: Colors.orangeAccent),
@@ -266,21 +266,6 @@ class _GroupDetailState extends State<GroupDetail> {
     }
     if (totalList.length > 0) countProductTotal();
     setState(() {});
-  }
-
-  _countTotalAmount() {
-    try {
-      totalQuantity = 0;
-      totalAmount = 0.00;
-      for (int i = 2; i < totalList.length; i++) {
-        totalQuantity += int.parse(totalList[i].quantity);
-        totalAmount +=
-            int.parse(totalList[i].quantity) * double.parse(totalList[i].price);
-      }
-    } catch ($e) {
-      showSnackBar(
-          '${AppLocalizations.of(context).translate('total_amount_error')}');
-    }
   }
 
   headerLabel() {

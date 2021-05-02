@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my/fragment/order/child/card_view.dart';
@@ -9,7 +7,6 @@ import 'package:my/shareWidget/not_found.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
-import 'package:package_info/package_info.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class GroupOrderList extends StatefulWidget {
@@ -50,7 +47,7 @@ class _GroupOrderListState extends State<GroupOrderList> {
               textStyle: TextStyle(
                   color: Colors.orangeAccent,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20),
+                  fontSize: 16),
             ),
           ),
           iconTheme: IconThemeData(color: Colors.orangeAccent),

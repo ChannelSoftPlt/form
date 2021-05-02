@@ -46,7 +46,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
           textStyle: TextStyle(
               color: Colors.orangeAccent,
               fontWeight: FontWeight.bold,
-              fontSize: 25),
+              fontSize: 16),
         ),
       ),
       content: SingleChildScrollView(

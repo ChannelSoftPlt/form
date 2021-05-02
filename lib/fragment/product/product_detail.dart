@@ -183,7 +183,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
                 fontWeight: FontWeight.bold,
-                fontSize: 20),
+                fontSize: 16),
           ),
         ),
         actions: <Widget>[
@@ -583,7 +583,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         return FadeInImage(
             fit: BoxFit.contain,
             width: 120,
-            image: NetworkImage(Domain.imagePath + '${imageGallery.imageName}'),
+            image: NetworkImage(
+                Domain.imagePath.toString() + '${imageGallery.imageName}'),
             placeholder: NetworkImage('${Domain.imagePath}no-image-found.png'));
       } else
         return Container(
@@ -617,7 +618,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
           selectCircleStrokeColor: "#FF9800",
         ),
       );
-    } on Exception catch (e) {}
+    } on Exception {}
 
     if (!mounted) return;
     if (resultList.length <= 0) return;
@@ -1114,7 +1115,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   constraints: BoxConstraints(maxHeight: 300),
                   child: FadeInImage(
                       fit: BoxFit.fill,
-                      image: NetworkImage(Domain.imagePath +
+                      image: NetworkImage(Domain.imagePath.toString() +
                           (widget.product != null
                               ? imageName
                               : 'no-image-found.png')),

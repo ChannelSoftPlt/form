@@ -141,7 +141,7 @@ class _ProofOfDeliveryState extends State<ProofOfDelivery> {
                   constraints: BoxConstraints(maxHeight: 150),
                   child: FadeInImage(
                       fit: BoxFit.fill,
-                      image: NetworkImage(Domain.proofImgPath +
+                      image: NetworkImage(Domain.proofImgPath.toString() +
                           (widget.orders.proofPhoto != null
                               ? imageName
                               : 'no-image-found.png')),
@@ -186,7 +186,8 @@ class _ProofOfDeliveryState extends State<ProofOfDelivery> {
                 TextSpan(
                   text:
                       '${AppLocalizations.of(context).translate('upload_photo_description_2')} ',
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
                 ),
               ],
             ),

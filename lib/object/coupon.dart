@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Coupon {
   String couponCode,
       discountCondition,

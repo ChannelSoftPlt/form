@@ -59,7 +59,7 @@ class _AddVariantGroupState extends State<AddVariantGroup> {
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
                 fontWeight: FontWeight.bold,
-                fontSize: 20),
+                fontSize: 16),
           ),
         ),
         actions: <Widget>[

@@ -42,7 +42,8 @@ class NotificationPlugin {
     /*
     * initialize for both
     * */
-    initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
   }
 
   _requestIOSPermission() {
@@ -64,6 +65,7 @@ class NotificationPlugin {
 
   setOnNotificationClick(Function onNotificationClick) async {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: (String payload) async {
+      print('payload here: $payload');
       onNotificationClick(payload);
     });
   }
@@ -75,8 +77,8 @@ class NotificationPlugin {
       data['id'],
       data['name'],
       "CHANNEL_DESCRIPTION",
-      importance: Importance.Max,
-      priority: Priority.High,
+      importance: Importance.max,
+      priority: Priority.high,
       playSound: true,
       sound: RawResourceAndroidNotificationSound('notification'),
       icon: 'logo',
@@ -85,8 +87,8 @@ class NotificationPlugin {
 
     var iosChannelSpecifics = IOSNotificationDetails();
 
-    var platformChannelSpecifics = NotificationDetails(androidChannelSpecifics, iosChannelSpecifics);
-
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidChannelSpecifics, iOS: iosChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(
       0,
@@ -97,22 +99,22 @@ class NotificationPlugin {
     );
   }
 
-  Future<void> createAndroidNotificationChannel(String id, String name, String description) async {
+  Future<void> createAndroidNotificationChannel(
+      String id, String name, String description) async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     var androidNotificationChannel = AndroidNotificationChannel(
       id,
       name,
       description,
       playSound: true,
-      importance: Importance.High,
+      importance: Importance.high,
       sound: RawResourceAndroidNotificationSound('notification'),
     );
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(androidNotificationChannel);
   }
-
 
   Future<int> getPendingNotificationCount() async {
     List<PendingNotificationRequest> p =

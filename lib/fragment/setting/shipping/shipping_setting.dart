@@ -42,7 +42,7 @@ class _ShippingSettingState extends State<ShippingSetting> {
             textStyle: TextStyle(
                 color: Colors.orangeAccent,
                 fontWeight: FontWeight.bold,
-                fontSize: 20),
+                fontSize: 16),
           ),
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),

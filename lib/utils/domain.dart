@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:my/object/coupon.dart';
 import 'package:my/object/form.dart';
 import 'package:my/object/merchant.dart';
@@ -20,30 +19,54 @@ class Domain {
   static var domain = 'https://emenumobile.lkmng.com/';
   static var webDomain = 'https://www.formtest.lkmng.com/';
 
-  static var order = domain + 'mobile_api/order/index.php';
-  static var product = domain + 'mobile_api/product/index.php';
-  static var orderItem = domain + 'mobile_api/order_detail/index.php';
-  static var postcode = domain + 'mobile_api/postcode/index.php';
-  static var orderGroup = domain + 'mobile_api/order_group/index.php';
-  static var driver = domain + 'mobile_api/driver/index.php';
-  static var profile = domain + 'mobile_api/profile/index.php';
-  static var user = domain + 'mobile_api/user/index.php';
-  static var discount = domain + 'mobile_api/coupon/index.php';
-  static var notification = domain + 'mobile_api/notification/index.php';
-  static var category = domain + 'mobile_api/category/index.php';
-  static var export = domain + 'mobile_api/export/index.php';
-  static var form = domain + 'mobile_api/form/index.php';
-  static var shipping = domain + 'mobile_api/shipping/index.php';
-  static var promotionDialog = domain + 'mobile_api/promotion_dialog/index.php';
+//  static var order = domain + 'mobile_api/order/index.php';
+//  static var product = domain + 'mobile_api/product/index.php';
+//  static var orderItem = domain + 'mobile_api/order_detail/index.php';
+//  static var postcode = domain + 'mobile_api/postcode/index.php';
+//  static var orderGroup = domain + 'mobile_api/order_group/index.php';
+//  static var driver = domain + 'mobile_api/driver/index.php';
+//  static var profile = domain + 'mobile_api/profile/index.php';
+//  static var user = domain + 'mobile_api/user/index.php';
+//  static var discount = domain + 'mobile_api/coupon/index.php';
+//  static var notification = domain + 'mobile_api/notification/index.php';
+//  static var category = domain + 'mobile_api/category/index.php';
+//  static var export = domain + 'mobile_api/export/index.php';
+//  static var form = domain + 'mobile_api/form/index.php';
+//  static var shipping = domain + 'mobile_api/shipping/index.php';
+//  static var promotionDialog = domain + 'mobile_api/promotion_dialog/index.php';
 
   /*
   * Web Domain
   *
   * */
-  static var registration = webDomain + 'registration/index.php';
-  static var whatsAppLink = webDomain + 'order/view-order.php';
-  static var imagePath = webDomain + 'product/image/';
-  static var proofImgPath = webDomain + 'order/proof_img/';
+//  static var registration = webDomain + 'registration/index.php';
+//  static var whatsAppLink = webDomain + 'order/view-order.php';
+//  static var imagePath = webDomain + 'product/image/';
+//  static var proofImgPath = webDomain + 'order/proof_img/';
+
+  static Uri order = Uri.parse(domain + 'mobile_api/order/index.php');
+  static Uri product = Uri.parse(domain + 'mobile_api/product/index.php');
+  static Uri orderItem = Uri.parse(domain + 'mobile_api/order_detail/index.php');
+  static Uri postcode = Uri.parse(domain + 'mobile_api/postcode/index.php');
+  static Uri orderGroup = Uri.parse(domain + 'mobile_api/order_group/index.php');
+  static Uri driver = Uri.parse(domain + 'mobile_api/driver/index.php');
+  static Uri profile = Uri.parse(domain + 'mobile_api/profile/index.php');
+  static Uri user = Uri.parse(domain + 'mobile_api/user/index.php');
+  static Uri discount = Uri.parse(domain + 'mobile_api/coupon/index.php');
+  static Uri notification = Uri.parse(domain + 'mobile_api/notification/index.php');
+  static Uri category = Uri.parse(domain + 'mobile_api/category/index.php');
+  static Uri export = Uri.parse(domain + 'mobile_api/export/index.php');
+  static Uri form = Uri.parse(domain + 'mobile_api/form/index.php');
+  static Uri shipping = Uri.parse(domain + 'mobile_api/shipping/index.php');
+  static Uri promotionDialog = Uri.parse(domain + 'mobile_api/promotion_dialog/index.php');
+  /*
+  * Web Domain
+  *
+  * */
+  static Uri registration = Uri.parse(webDomain + 'registration/index.php');
+  static Uri whatsAppLink = Uri.parse(webDomain + 'order/view-order.php');
+  static Uri imagePath = Uri.parse(webDomain + 'product/image/');
+  static Uri proofImgPath = Uri.parse(webDomain + 'order/proof_img/');
 
   fetchOrder(currentPage, itemPerPage, orderStatus, query, orderGroupId,
       driverId, startDate, endDate) async {
@@ -793,7 +816,8 @@ class Domain {
       'description': object.description,
       'name': object.name,
       'form_banner': object.formBanner,
-      'image_extension': extension
+      'image_extension': extension,
+      'product_view_phone': object.productViewPhone.toString(),
     });
     return jsonDecode(response.body);
   }
