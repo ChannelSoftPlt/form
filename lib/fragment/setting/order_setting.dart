@@ -374,7 +374,7 @@ class _OrderSettingState extends State<OrderSetting> {
                 workingDays[i] = workingDays[i] == 0 ? 1 : 0;
                 refreshController.add('');
               },
-              tileColor: workingDays[i] == 0 ? Colors.lightGreen : Colors.white,
+              tileColor: workingDays[i] == 0 ? Colors.blueGrey : Colors.white,
               title: Text(
                 '${AppLocalizations.of(context).translate('day${i + 1}')}',
                 textAlign: TextAlign.center,

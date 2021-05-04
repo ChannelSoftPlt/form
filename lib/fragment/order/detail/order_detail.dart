@@ -1503,7 +1503,7 @@ class _OrderDetailState extends State<OrderDetail> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text("Delete Request"),
+          title: Text(AppLocalizations.of(mainContext).translate('delete_request')),
           content: Text(
               '${AppLocalizations.of(mainContext).translate('remove_coupon')}'),
           actions: <Widget>[

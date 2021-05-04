@@ -29,7 +29,7 @@ class ExportDialog extends StatefulWidget {
 class _ExportDialogState extends State<ExportDialog> {
   List<User> userList = [];
   List<Product> productList = [];
-  var exportData = 'Customer';
+  var exportData = 'customer';
   var fromDate, toDate;
   var path, fileName;
 
@@ -119,12 +119,15 @@ class _ExportDialogState extends State<ExportDialog> {
                     items: getExportType(context).map((item) {
                       return DropdownMenuItem(
                         value: item,
-                        child: Text(item),
+                        child:
+                            Text(AppLocalizations.of(context).translate(item)),
                       );
                     }).toList(),
-                    onChanged: (selectedItem) => setState(
-                          () => exportData = selectedItem,
-                        )),
+                    onChanged: (selectedItem) {
+                      setState(
+                        () => exportData = selectedItem,
+                      );
+                    }),
               ),
             ),
           ),
@@ -217,10 +220,7 @@ class _ExportDialogState extends State<ExportDialog> {
   }
 
   List getExportType(context) {
-    return <String>[
-      AppLocalizations.of(context).translate('customer'),
-      AppLocalizations.of(context).translate('product')
-    ];
+    return <String>['customer', 'products'];
   }
 
   checkPermission() async {
@@ -236,7 +236,7 @@ class _ExportDialogState extends State<ExportDialog> {
 
   getExportDataList() async {
     List<List<dynamic>> rows = List<List<dynamic>>();
-    if (exportData == 'Customer') {
+    if (exportData == 'customer') {
       await fetchExportCustomer();
       for (int i = 0; i < userList.length; i++) {
         List<dynamic> row = [];
@@ -259,7 +259,7 @@ class _ExportDialogState extends State<ExportDialog> {
         row.add(userList[i].createAt);
         rows.add(row);
       }
-    } else if (exportData == 'Product') {
+    } else if (exportData == 'products') {
       //fetch and check data
       await fetchExportProduct();
       for (int i = 0; i < productList.length; i++) {
@@ -272,6 +272,7 @@ class _ExportDialogState extends State<ExportDialog> {
           row.add('Product Picture');
           row.add('Product Gallery');
           row.add('Category');
+          row.add('Stock');
           rows.add(row);
           row = [];
         }
@@ -281,6 +282,7 @@ class _ExportDialogState extends State<ExportDialog> {
         row.add('${Domain.imagePath}${productList[i].image}');
         row.add(getProductGallery(productList[i].gallery));
         row.add(productList[i].categoryName);
+        row.add(productList[i].stock);
         rows.add(row);
       }
     }
@@ -338,7 +340,7 @@ class _ExportDialogState extends State<ExportDialog> {
     if (rows.length > 0) {
       String csv = const ListToCsvConverter().convert(rows);
       String dir = (await getApplicationDocumentsDirectory()).path;
-      fileName = '$exportData (${fileDateForm.format(DateTime.now())}).csv';
+      fileName = '${AppLocalizations.of(context).translate(exportData)} (${fileDateForm.format(DateTime.now())}).csv';
       path = '$dir/$fileName';
 
       File file = new File(path);

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -182,7 +181,7 @@ class _ListState extends State<HomePage> {
             textAlign: TextAlign.center,
             style: GoogleFonts.cantoraOne(
               textStyle: TextStyle(
-                  color: Colors.orangeAccent,
+                  color: Colors.blueGrey,
                   fontWeight: FontWeight.bold,
                   fontSize: 25),
             )),

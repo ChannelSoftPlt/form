@@ -46,19 +46,24 @@ class Domain {
 
   static Uri order = Uri.parse(domain + 'mobile_api/order/index.php');
   static Uri product = Uri.parse(domain + 'mobile_api/product/index.php');
-  static Uri orderItem = Uri.parse(domain + 'mobile_api/order_detail/index.php');
+  static Uri orderItem =
+      Uri.parse(domain + 'mobile_api/order_detail/index.php');
   static Uri postcode = Uri.parse(domain + 'mobile_api/postcode/index.php');
-  static Uri orderGroup = Uri.parse(domain + 'mobile_api/order_group/index.php');
+  static Uri orderGroup =
+      Uri.parse(domain + 'mobile_api/order_group/index.php');
   static Uri driver = Uri.parse(domain + 'mobile_api/driver/index.php');
   static Uri profile = Uri.parse(domain + 'mobile_api/profile/index.php');
   static Uri user = Uri.parse(domain + 'mobile_api/user/index.php');
   static Uri discount = Uri.parse(domain + 'mobile_api/coupon/index.php');
-  static Uri notification = Uri.parse(domain + 'mobile_api/notification/index.php');
+  static Uri notification =
+      Uri.parse(domain + 'mobile_api/notification/index.php');
   static Uri category = Uri.parse(domain + 'mobile_api/category/index.php');
   static Uri export = Uri.parse(domain + 'mobile_api/export/index.php');
   static Uri form = Uri.parse(domain + 'mobile_api/form/index.php');
   static Uri shipping = Uri.parse(domain + 'mobile_api/shipping/index.php');
-  static Uri promotionDialog = Uri.parse(domain + 'mobile_api/promotion_dialog/index.php');
+  static Uri promotionDialog =
+      Uri.parse(domain + 'mobile_api/promotion_dialog/index.php');
+
   /*
   * Web Domain
   *
@@ -818,6 +823,7 @@ class Domain {
       'form_banner': object.formBanner,
       'image_extension': extension,
       'product_view_phone': object.productViewPhone.toString(),
+      'color': '${jsonEncode(object.customColor)}'
     });
     return jsonDecode(response.body);
   }

@@ -268,7 +268,7 @@ class _PostcodeLayoutState extends State<PostcodeLayout> {
                 ),
                 child: Container(
                     width: 2000,
-                    height: 150,
+                    height: 170,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

@@ -485,7 +485,7 @@ class _EditFormState extends State<EditForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${AppLocalizations.of(context).translate('background_color')}',
+                '${AppLocalizations.of(context).translate('color_setting')}',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.blueGrey,
@@ -498,6 +498,59 @@ class _EditFormState extends State<EditForm> {
                   thickness: 1.0,
                 ),
               ),
+              ButtonBar(
+                alignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => colorPickerDialog(
+                        form.customColor.primaryColor, 'primary_color'),
+                    child: Text(
+                      AppLocalizations.of(context).translate('primary_color'),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: useWhiteForeground(form.customColor.primaryColor)
+                            ? const Color(0xffffffff)
+                            : const Color(0xff000000),
+                      ),
+                    ),
+                    style: ButtonStyle(
+                        padding: MaterialStateProperty.all(EdgeInsets.all(15)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            form.customColor.primaryColor)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => colorPickerDialog(
+                        form.customColor.secondColor, 'second_color'),
+                    child: Text(
+                      AppLocalizations.of(context).translate('second_color'),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: useWhiteForeground(form.customColor.secondColor)
+                            ? const Color(0xffffffff)
+                            : const Color(0xff000000),
+                      ),
+                    ),
+                    style: ButtonStyle(
+                        padding: MaterialStateProperty.all(EdgeInsets.all(15)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            form.customColor.secondColor)),
+                  ),
+                ],
+              ),
+              Text(
+                '${AppLocalizations.of(context).translate('color_description')}',
+                style: TextStyle(color: Colors.black87, fontSize: 14),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                '${AppLocalizations.of(context).translate('background_color')}',
+                style: TextStyle(color: Colors.black87, fontSize: 14),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               ColorPicker(
                 pickerColor: backgroundColor,
                 onColorChanged: changeColor,
@@ -509,8 +562,54 @@ class _EditFormState extends State<EditForm> {
     );
   }
 
+  colorPickerDialog(color, label) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actions: <Widget>[
+            TextButton(
+              child: Text('${AppLocalizations.of(context).translate('apply')}'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          titlePadding: const EdgeInsets.all(0.0),
+          contentPadding: const EdgeInsets.all(0.0),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: color,
+              colorPickerWidth: 300.0,
+              pickerAreaHeightPercent: 0.7,
+              enableAlpha: false,
+              displayThumbColor: true,
+              showLabel: true,
+              paletteType: PaletteType.hsv,
+              pickerAreaBorderRadius: const BorderRadius.only(
+                topLeft: const Radius.circular(2.0),
+                topRight: const Radius.circular(2.0),
+              ),
+              onColorChanged: (Color color) {
+                setState(() {
+                  switch (label) {
+                    case 'primary_color':
+                      form.customColor.primaryColor = color;
+                      break;
+                    case 'second_color':
+                      form.customColor.secondColor = color;
+                      break;
+                  }
+                });
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void changeColor(Color color) {
-//    form.formColor
     setState(() => backgroundColor = color);
   }
 
