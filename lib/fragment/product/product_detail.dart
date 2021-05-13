@@ -479,6 +479,10 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   width: 70,
                   child: TextField(
                     controller: stock,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
                       border: new OutlineInputBorder(

@@ -388,16 +388,6 @@ class _GroupDetailState extends State<GroupDetail> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    variant[i].groupName,
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
-                  ),
                   for (int j = 0; j < variant[i].variantChild.length; j++)
                     if (variant[i].variantChild[j].quantity > 0)
                       Row(
@@ -440,32 +430,28 @@ class _GroupDetailState extends State<GroupDetail> {
             SizedBox(
               height: 10,
             ),
-            Card(
-              elevation: 2,
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).translate('remark'),
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      orderItem.remark,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 12, color: Colors.black),
-                    ),
-                  ],
-                ),
+            Container(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context).translate('remark'),
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    orderItem.remark,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 12, color: Colors.black),
+                  ),
+                ],
               ),
             ),
           ],

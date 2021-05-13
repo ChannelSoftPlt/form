@@ -25,7 +25,7 @@ class NotificationPlugin {
   }
 
   initializePlatformSpecifics() {
-    var initializationSettingsAndroid = AndroidInitializationSettings('logo');
+    var initializationSettingsAndroid = AndroidInitializationSettings('emenu');
     /*
     * ios
     * */

@@ -122,17 +122,20 @@ class _EditFormState extends State<EditForm> {
             data: new ThemeData(
               primaryColor: Colors.orange,
             ),
-            child: SingleChildScrollView(
-              child: Container(
-                  color: backgroundColor,
-                  width: double.infinity,
-                  child: Column(children: [
-                    widgetStatus(),
-                    widgetBannerLayout(),
-                    widgetDescription(),
-                    widgetProductLayout(),
-                    widgetBackgroundColor()
-                  ])),
+            child: Container(
+              color: backgroundColor,
+              child: SingleChildScrollView(
+                child: Container(
+                    color: backgroundColor,
+                    width: double.infinity,
+                    child: Column(children: [
+                      widgetStatus(),
+                      widgetBannerLayout(),
+                      widgetDescription(),
+                      widgetProductLayout(),
+                      widgetBackgroundColor()
+                    ])),
+              ),
             ),
           )
         : CustomProgressBar();
@@ -166,6 +169,7 @@ class _EditFormState extends State<EditForm> {
               Expanded(
                 child: ZefyrScaffold(
                   child: ZefyrEditor(
+                    autofocus: false,
                     controller: _controller,
                     focusNode: _focusNode,
                   ),
@@ -298,13 +302,40 @@ class _EditFormState extends State<EditForm> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        AppLocalizations.of(context)
-                            .translate('video_link_description'),
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold),
+                      RichText(
+                        text: TextSpan(
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text:
+                                    '${AppLocalizations.of(context).translate('video_link_description')}',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold)),
+                            TextSpan(text: '\n'),
+                            TextSpan(
+                              text:
+                                  '${AppLocalizations.of(context).translate('video_link_description1')}',
+                              style: TextStyle(
+                                  color: Colors.blueGrey, fontSize: 12),
+                            ),
+                            TextSpan(text: '\n'),
+                            TextSpan(
+                              text:
+                                  '${AppLocalizations.of(context).translate('video_link_description3')}',
+                              style: TextStyle(
+                                  color: Colors.blueGrey, fontSize: 12),
+                            ),
+                            TextSpan(text: '\n'),
+                            TextSpan(
+                              text:
+                                  '${AppLocalizations.of(context).translate('video_link_description2')}',
+                              style: TextStyle(
+                                  color: Colors.blueGrey, fontSize: 12),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -539,7 +570,10 @@ class _EditFormState extends State<EditForm> {
               ),
               Text(
                 '${AppLocalizations.of(context).translate('color_description')}',
-                style: TextStyle(color: Colors.black87, fontSize: 14),
+                style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: 12,
+                ),
               ),
               SizedBox(
                 height: 20,

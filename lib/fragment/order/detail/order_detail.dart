@@ -860,21 +860,13 @@ class _OrderDetailState extends State<OrderDetail> {
                           Expanded(
                             flex: 1,
                             child: Text(
-                              'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)}',
+                              'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 14),
                               textAlign: TextAlign.end,
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              ' x ${orderItem.quantity}',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 15),
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
+                          Spacer(),
                         ],
                       ),
                       Visibility(
@@ -961,14 +953,7 @@ class _OrderDetailState extends State<OrderDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  variant[i].groupName,
-                  style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold),
+                  height: 5,
                 ),
                 for (int j = 0; j < variant[i].variantChild.length; j++)
                   if (variant[i].variantChild[j].quantity > 0)
@@ -984,8 +969,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         ),
                         Expanded(
                           flex: 1,
-                          child: Text(
-                              ' +RM ${variant[i].variantChild[j].price}',
+                          child: Text('+RM ${variant[i].variantChild[j].price}',
                               style: TextStyle(
                                   color: Colors.blueGrey, fontSize: 14),
                               textAlign: TextAlign.end),
@@ -1503,7 +1487,8 @@ class _OrderDetailState extends State<OrderDetail> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text(AppLocalizations.of(mainContext).translate('delete_request')),
+          title: Text(
+              AppLocalizations.of(mainContext).translate('delete_request')),
           content: Text(
               '${AppLocalizations.of(mainContext).translate('remove_coupon')}'),
           actions: <Widget>[
@@ -1770,14 +1755,15 @@ class _OrderDetailState extends State<OrderDetail> {
     String message = '';
     if (messageType == 0) {
       message =
-      'Hi,%20*${order.name.replaceAll(' ', '%20')}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orderId)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${order.publicUrl}';
+          'Hi,%20*${order.name.replaceAll(' ', '%20')}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orderId)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${order.publicUrl}';
     }
     //send receipt
     else if (messageType == 2) {
       message = '${Domain.whatsAppLink}?id=${order.publicUrl}';
     }
 
-    Order().openWhatsApp('+' + Order.getPhoneNumber(order.phone), message, context);
+    Order().openWhatsApp(
+        '+' + Order.getPhoneNumber(order.phone), message, context);
   }
 
   openMapsSheet(context) async {

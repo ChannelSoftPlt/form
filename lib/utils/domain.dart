@@ -13,36 +13,12 @@ import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
 
 class Domain {
-//  static var domain = 'https://www.emenu.com.my/';
+  static var domain = 'https://www.mobile.emenu.com.my/';
+  static var webDomain = 'https://www.cp.emenu.com.my/';
 
   //testing server
-  static var domain = 'https://emenumobile.lkmng.com/';
-  static var webDomain = 'https://www.formtest.lkmng.com/';
-
-//  static var order = domain + 'mobile_api/order/index.php';
-//  static var product = domain + 'mobile_api/product/index.php';
-//  static var orderItem = domain + 'mobile_api/order_detail/index.php';
-//  static var postcode = domain + 'mobile_api/postcode/index.php';
-//  static var orderGroup = domain + 'mobile_api/order_group/index.php';
-//  static var driver = domain + 'mobile_api/driver/index.php';
-//  static var profile = domain + 'mobile_api/profile/index.php';
-//  static var user = domain + 'mobile_api/user/index.php';
-//  static var discount = domain + 'mobile_api/coupon/index.php';
-//  static var notification = domain + 'mobile_api/notification/index.php';
-//  static var category = domain + 'mobile_api/category/index.php';
-//  static var export = domain + 'mobile_api/export/index.php';
-//  static var form = domain + 'mobile_api/form/index.php';
-//  static var shipping = domain + 'mobile_api/shipping/index.php';
-//  static var promotionDialog = domain + 'mobile_api/promotion_dialog/index.php';
-
-  /*
-  * Web Domain
-  *
-  * */
-//  static var registration = webDomain + 'registration/index.php';
-//  static var whatsAppLink = webDomain + 'order/view-order.php';
-//  static var imagePath = webDomain + 'product/image/';
-//  static var proofImgPath = webDomain + 'order/proof_img/';
+//  static var domain = 'https://emenumobile.lkmng.com/';
+//  static var webDomain = 'https://www.formtest.lkmng.com/';
 
   static Uri order = Uri.parse(domain + 'mobile_api/order/index.php');
   static Uri product = Uri.parse(domain + 'mobile_api/product/index.php');
@@ -55,8 +31,7 @@ class Domain {
   static Uri profile = Uri.parse(domain + 'mobile_api/profile/index.php');
   static Uri user = Uri.parse(domain + 'mobile_api/user/index.php');
   static Uri discount = Uri.parse(domain + 'mobile_api/coupon/index.php');
-  static Uri notification =
-      Uri.parse(domain + 'mobile_api/notification/index.php');
+  static Uri notification = Uri.parse(domain + 'mobile_api/notification/index.php');
   static Uri category = Uri.parse(domain + 'mobile_api/category/index.php');
   static Uri export = Uri.parse(domain + 'mobile_api/export/index.php');
   static Uri form = Uri.parse(domain + 'mobile_api/form/index.php');

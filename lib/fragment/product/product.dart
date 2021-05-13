@@ -76,6 +76,7 @@ class _ProductPageState extends State<ProductPage> {
         appBar: widget.query.isEmpty
             ? AppBar(
                 toolbarHeight: 30,
+                elevation: 2,
                 title: Container(
                   alignment: Alignment.topRight,
                   child: Text('$currentTotalProduct / $maxProduct Products',

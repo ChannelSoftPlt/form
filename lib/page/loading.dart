@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my/object/merchant.dart';
+import 'package:my/shareWidget/not_found.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
@@ -19,6 +21,12 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
+  /*
+  * network checking purpose
+  * */
+  StreamSubscription<ConnectivityResult> connectivity;
+  bool networkConnection = true;
+
   final key = new GlobalKey<ScaffoldState>();
   String status;
 
@@ -29,31 +37,41 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    checkMerchantInformation();
+    netWorkChecking();
     return Scaffold(
       key: key,
-      body: CustomProgressBar(),
+      body: networkConnection ? CustomProgressBar() : networkNotFound(),
     );
   }
 
+  Widget networkNotFound() {
+    return NotFound(
+        title: '${AppLocalizations.of(context).translate('no_network_found')}',
+        description:
+            '${AppLocalizations.of(context).translate('no_network_found_description')}',
+        showButton: true,
+        refresh: () {
+          setState(() {});
+        },
+        button: '${AppLocalizations.of(context).translate('retry')}',
+        drawable: 'drawable/no_wifi.png');
+  }
+
   netWorkChecking() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
-      launchChecking();
+    var result = await (Connectivity().checkConnectivity());
+    if (result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.wifi) {
+      checkMerchantInformation();
     } else {
-      key.currentState.showSnackBar(new SnackBar(
-          duration: Duration(days: 1),
-          content: new Text("No Internet Connection!"),
-          action: SnackBarAction(
-            label: 'Retry',
-            onPressed: () {
-              key.currentState.hideCurrentSnackBar();
-              setState(() {});
-              // Some code to undo the change.
-            },
-          )));
+      setState(() {
+        networkConnection = false;
+      });
     }
   }
 
@@ -82,9 +100,12 @@ class _LoadingPageState extends State<LoadingPage> {
 
       var prefs = await SharedPreferences.getInstance();
       print('product limit: ${data['user_preference'][0]['product_limit']}');
-      await prefs.setString('allow_discount', data['user_preference'][0]['allow_discount'].toString());
-      await prefs.setString('product_limit', data['user_preference'][0]['product_limit'].toString());
-      await prefs.setString('allow_take_photo', data['user_preference'][0]['allow_take_photo'].toString());
+      await prefs.setString('allow_discount',
+          data['user_preference'][0]['allow_discount'].toString());
+      await prefs.setString('product_limit',
+          data['user_preference'][0]['product_limit'].toString());
+      await prefs.setString('allow_take_photo',
+          data['user_preference'][0]['allow_take_photo'].toString());
 
       if (latestVersion != currentVersion) {
         openUpdateDialog(data);
@@ -98,8 +119,7 @@ class _LoadingPageState extends State<LoadingPage> {
   checkMerchantStatus() async {
     String merchantStatus = status;
     if (merchantStatus == '1') {
-      Merchant merchant =
-          Merchant.fromJson(await SharePreferences().read('merchant'));
+      Merchant merchant = Merchant.fromJson(await SharePreferences().read('merchant'));
       merchant.merchantId != null
           ? Navigator.pushReplacementNamed(context, '/home')
           : Navigator.pushReplacementNamed(context, '/login');

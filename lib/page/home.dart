@@ -66,22 +66,18 @@ class _ListState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     getUrl();
-    connectivity = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
+    connectivity = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       setState(() {
-        networkConnection = (result == ConnectivityResult.mobile ||
-            result == ConnectivityResult.wifi);
+        networkConnection = (result == ConnectivityResult.mobile || result == ConnectivityResult.wifi);
       });
     });
 
     setupNotification();
   }
 
-  setupNotification() async {
+  Future<void> setupNotification() async {
     //initialize
-    notificationPlugin
-        .setListenerForLowerVersions(onNotificationInLowerVersions);
+    notificationPlugin.setListenerForLowerVersions(onNotificationInLowerVersions);
 
     notificationPlugin.setOnNotificationClick(setOnNotificationClick);
 
@@ -94,11 +90,6 @@ class _ListState extends State<HomePage> {
       sound: true,
     );
 
-    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage message) {
-      print('initialize message: $message');
-      if (message != null) {
-      }
-    });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('on message: $message');
@@ -110,6 +101,11 @@ class _ListState extends State<HomePage> {
       setState(() {
         currentIndex = 0;
       });
+    });
+
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage message) {
+      print('initialize message: $message');
+      if (message != null) {}
     });
 
     if (Platform.isIOS) {
@@ -141,17 +137,12 @@ class _ListState extends State<HomePage> {
   }
 
   _setupNotificationSound(message) async {
+    print('message');
     Merchant merchant =
         Merchant.fromJson(await SharePreferences().read('merchant'));
     String merchantId = merchant.merchantId;
-
     if (merchant != null) {
-      if (Platform.isAndroid) {
-        if (message['data']['merchant_id'] != merchantId) return;
-      } else {
-        if (message.data['merchant_id'] != merchantId) return;
-      }
-
+      if (message.data['merchant_id'] != merchantId) return;
       showSnackBar(
           '${AppLocalizations.of(context).translate('new_order_received')}',
           '${AppLocalizations.of(context).translate('see_now')}');
@@ -176,7 +167,7 @@ class _ListState extends State<HomePage> {
       key: key,
       appBar: AppBar(
         centerTitle: true,
-        elevation: 0,
+        elevation: currentIndex == 0 || currentIndex == 3 ? 0 : 2,
         title: Text(getTitle(),
             textAlign: TextAlign.center,
             style: GoogleFonts.cantoraOne(
