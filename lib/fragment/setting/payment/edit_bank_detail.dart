@@ -25,14 +25,28 @@ class _ResetPasswordState extends State<EditBankDetail> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _controller = ZefyrController(loadDocument());
+    _controller = ZefyrController(loadFormDescription());
     _focusNode = FocusNode();
   }
 
-  NotusDocument loadDocument() {
-    Delta delta = converter.decode(widget.bankDetails);
+  NotusDocument loadFormDescription() {
+    String htmlText = widget.bankDetails;
+    Delta delta;
+    try {
+      htmlText = htmlText.replaceAll('<p>', '');
+      htmlText = htmlText.replaceAll('</p>', '');
+      htmlText = htmlText.replaceAll('<b><b>', '<br>');
+      htmlText = htmlText.replaceAll('<br />', '');
+      delta = converter.decode(htmlText);
+    } catch ($e) {
+      delta = converter.decode('<p><\/p>');
+    }
     return NotusDocument.fromDelta(delta);
+  }
+
+  convertToHtml() {
+    var htmlText = converter.encode(_controller.document.toDelta());
+    return htmlText.replaceAll('<br><br>', '<br>');
   }
 
   @override
@@ -54,8 +68,7 @@ class _ResetPasswordState extends State<EditBankDetail> {
             IconButton(
               icon: Icon(Icons.save),
               onPressed: () {
-                widget
-                    .callBack(converter.encode(_controller.document.toDelta()));
+                widget.callBack(convertToHtml());
               },
             ),
           ],

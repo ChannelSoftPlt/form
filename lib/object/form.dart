@@ -4,7 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:my/utils/HexColor.dart';
 
 class FormSetting {
-  String bannerVideoLink, formBanner, formColor, description, name, publicURL;
+  String bannerVideoLink,
+      formBanner,
+      formColor,
+      description,
+      name,
+      publicURL,
+      defaultLanguage;
   int status, bannerStatus, productViewPhone;
   CustomColor customColor;
 
@@ -18,6 +24,7 @@ class FormSetting {
       this.status,
       this.customColor,
       this.bannerStatus,
+      this.defaultLanguage,
       this.productViewPhone});
 
   fromJson(Map<String, dynamic> json) {
@@ -28,6 +35,7 @@ class FormSetting {
         description: json['description'],
         name: json['name'],
         publicURL: json['public_url'],
+        defaultLanguage: json['default_language'],
         customColor: getColor(json['color']),
         status: json['status'] as int,
         bannerStatus: json['banner_status'] as int,

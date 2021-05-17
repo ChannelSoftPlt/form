@@ -244,20 +244,21 @@ class _PostcodeLayoutState extends State<PostcodeLayout> {
                         shippingFee.text.isEmpty) {
                       widget.callBack('invalid_input');
                     } else {
-                      setState(() {
-                        double fee = double.parse(shippingFee.text);
-                        if (!isUpdate) {
-                          this.postcode.add(new Postcode(
-                              postcodeOne: postcodeOne.text,
-                              postcodeTwo: postcodeTwo.text,
-                              shippingFee: fee.toStringAsFixed(2)));
-                        } else {
-                          postcode.shippingFee = fee.toStringAsFixed(2);
-                          postcode.postcodeOne = postcodeOne.text;
-                          postcode.postcodeTwo = postcodeTwo.text;
-                        }
-                        Navigator.of(context).pop();
-                      });
+                      if (checkInput(postcodeOne.text, postcodeTwo.text))
+                        setState(() {
+                          double fee = double.parse(shippingFee.text);
+                          if (!isUpdate) {
+                            this.postcode.add(new Postcode(
+                                postcodeOne: postcodeOne.text,
+                                postcodeTwo: postcodeTwo.text,
+                                shippingFee: fee.toStringAsFixed(2)));
+                          } else {
+                            postcode.shippingFee = fee.toStringAsFixed(2);
+                            postcode.postcodeOne = postcodeOne.text;
+                            postcode.postcodeTwo = postcodeTwo.text;
+                          }
+                          Navigator.of(context).pop();
+                        });
                     }
                   },
                 ),
@@ -399,5 +400,28 @@ class _PostcodeLayoutState extends State<PostcodeLayout> {
         );
       },
     );
+  }
+
+  bool checkInput(fromPostcode, toPostcode) {
+    try {
+      int postcode1 = int.parse(fromPostcode);
+      int postcode2 = int.parse(toPostcode);
+      if (postcode1 >= postcode2) {
+        widget.callBack('invalid_postcode');
+        return false;
+      }
+      for (int i = 0; i < postcode.length; i++) {
+        if ((postcode1 >= int.parse(postcode[i].postcodeOne) &&
+                postcode1 <= int.parse(postcode[i].postcodeTwo)) ||
+            (postcode2 >= int.parse(postcode[i].postcodeOne) &&
+                postcode2 <= int.parse(postcode[i].postcodeTwo))) {
+          widget.callBack('overlay_postcode');
+          return false;
+        }
+      }
+    } catch ($e) {
+      return false;
+    }
+    return true;
   }
 }

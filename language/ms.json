@@ -466,7 +466,7 @@
   "form_description": "Penerangan E-Menu",
   "color_setting": "Color Setting",
   "background_color": "Warna latar belakang",
-  "product_layout": "Susun atur Produk",
+  "product_layout": "Paparan Menu",
   "preview": "Pratonton",
   "save": "Save",
 
@@ -531,5 +531,16 @@
   "theme_color": "Warna Tema",
   "primary_color": "Warna Utama",
   "second_color": "Warna Sekunder",
-  "color_description": "Pengaturan warna ini akan digunakan pada warna butang dan warna teks pada E-Menu anda."
+  "color_description": "Pengaturan warna ini akan digunakan pada warna butang dan warna teks pada E-Menu anda.",
+
+  "invalid_postcode": "Poskod kiri tidak boleh lebih kecil daripada kod pos kanan",
+  "overlay_postcode": "Poskod anda bertindih.",
+  "invalid_distance": "Jarak kiri tidak boleh lebih kecil daripada jarak kanan",
+  "overlay_distance": "Jarak anda bertindih.",
+
+  "display_language": "Bahasa Paparan",
+  "display_language_description": "Bahasa yang dipilih akan digunakan untuk pengunjung anda secara lalai.",
+  "english": "English",
+  "chinese": "Chinese",
+  "malay": "Malay"
 }

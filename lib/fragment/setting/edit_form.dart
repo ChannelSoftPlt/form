@@ -82,7 +82,6 @@ class _EditFormState extends State<EditForm> {
               color: Colors.blueGrey,
             ),
             onPressed: () {
-              print(url);
               launch(url);
             },
           ),
@@ -422,6 +421,60 @@ class _EditFormState extends State<EditForm> {
               Row(
                 children: [
                   Expanded(
+                      flex: 3,
+                      child: Text(
+                        AppLocalizations.of(context)
+                            .translate('display_language'),
+                        style: TextStyle(fontSize: 15),
+                      )),
+                  Expanded(
+                    flex: 2,
+                    child: DropdownButton(
+                        isExpanded: true,
+                        itemHeight: 50,
+                        value: form.defaultLanguage == ''
+                            ? 'en'
+                            : form.defaultLanguage,
+                        style: TextStyle(fontSize: 15, color: Colors.black87),
+                        items: [
+                          DropdownMenuItem(
+                            child: Text(AppLocalizations.of(context)
+                                .translate('english')),
+                            value: 'en',
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              AppLocalizations.of(context).translate('malay'),
+                              textAlign: TextAlign.center,
+                            ),
+                            value: 'ms',
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              AppLocalizations.of(context).translate('chinese'),
+                              textAlign: TextAlign.center,
+                            ),
+                            value: 'zh',
+                          ),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            form.defaultLanguage = value;
+                          });
+                        }),
+                  ),
+                ],
+              ),
+              Text(
+                '${AppLocalizations.of(context).translate('display_language_description')}',
+                style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
                     flex: 1,
                     child: Column(
                       children: [
@@ -684,7 +737,6 @@ class _EditFormState extends State<EditForm> {
     if (data['status'] == '1') {
       setState(() {
         List responseJson = data['form'];
-        print(data);
         form = responseJson
             .map((jsonObject) => FormSetting().fromJson(jsonObject))
             .toList()[0];
@@ -698,12 +750,26 @@ class _EditFormState extends State<EditForm> {
   }
 
   NotusDocument loadFormDescription() {
-    Delta delta = converter.decode(form.description);
+    Delta delta;
+    try {
+      form.description = form.description.replaceAll('<p>', '');
+      form.description = form.description.replaceAll('</p>', '');
+      form.description = form.description.replaceAll('<b><b>', '<br>');
+      form.description = form.description.replaceAll('<br />', '');
+      delta = converter.decode(form.description);
+    } catch ($e) {
+      delta = converter.decode('<p><\/p>');
+    }
     return NotusDocument.fromDelta(delta);
   }
 
+  convertToHtml() {
+    var htmlText = converter.encode(_controller.document.toDelta());
+    return htmlText.replaceAll('<br><br>', '<br>');
+  }
+
   updateFormSetting() async {
-    form.description = converter.encode(_controller.document.toDelta());
+    form.description = convertToHtml();
     form.formColor = backgroundColor.toHex();
     form.bannerVideoLink = videoLink.text.isEmpty ? '' : videoLink.text;
     form.name = formName.text;

@@ -214,7 +214,7 @@ class _ShippingSettingState extends State<ShippingSetting> {
 
   _showSnackBar(message) {
     key.currentState.showSnackBar(new SnackBar(
-      duration: Duration(milliseconds: 700),
+      duration: Duration(milliseconds: 300),
       content: new Text(AppLocalizations.of(context).translate(message)),
     ));
   }

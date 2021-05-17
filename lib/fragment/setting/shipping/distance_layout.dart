@@ -296,20 +296,21 @@ class _DistanceLayoutState extends State<DistanceLayout> {
                         shippingFee.text.isEmpty) {
                       widget.callBack('invalid_input');
                     } else {
-                      setState(() {
-                        double fee = double.parse(shippingFee.text);
-                        if (!isUpdate) {
-                          this.distance.add(new Distance(
-                              distanceOne: distanceOne.text,
-                              distanceTwo: distanceTwo.text,
-                              shippingFee: fee.toStringAsFixed(2)));
-                        } else {
-                          distance.shippingFee = fee.toStringAsFixed(2);
-                          distance.distanceOne = distanceOne.text;
-                          distance.distanceTwo = distanceTwo.text;
-                        }
-                        Navigator.of(context).pop();
-                      });
+                      if (checkInput(distanceOne.text, distanceTwo.text))
+                        setState(() {
+                          double fee = double.parse(shippingFee.text);
+                          if (!isUpdate) {
+                            this.distance.add(new Distance(
+                                distanceOne: distanceOne.text,
+                                distanceTwo: distanceTwo.text,
+                                shippingFee: fee.toStringAsFixed(2)));
+                          } else {
+                            distance.shippingFee = fee.toStringAsFixed(2);
+                            distance.distanceOne = distanceOne.text;
+                            distance.distanceTwo = distanceTwo.text;
+                          }
+                          Navigator.of(context).pop();
+                        });
                     }
                   },
                 ),
@@ -436,5 +437,28 @@ class _DistanceLayoutState extends State<DistanceLayout> {
         );
       },
     );
+  }
+
+  bool checkInput(fromDistance, toDistance) {
+    try {
+      int distance1 = int.parse(fromDistance);
+      int distance2 = int.parse(toDistance);
+      if (distance1 >= distance2) {
+        widget.callBack('invalid_distance');
+        return false;
+      }
+      for (int i = 0; i < distance.length; i++) {
+        if ((distance1 >= int.parse(distance[i].distanceOne) &&
+                distance1 < int.parse(distance[i].distanceTwo)) ||
+            (distance2 >= int.parse(distance[i].distanceOne) &&
+                distance2 < int.parse(distance[i].distanceTwo))) {
+          widget.callBack('overlay_distance');
+          return false;
+        }
+      }
+    } catch ($e) {
+      return false;
+    }
+    return true;
   }
 }

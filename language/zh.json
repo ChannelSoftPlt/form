@@ -466,7 +466,7 @@
   "form_description": "菜单说明",
   "color_setting": "颜色设定",
   "background_color": "背景颜色",
-  "product_layout": "产品布局",
+  "product_layout": "表格显示",
   "preview": "Preview",
   "save": "保存",
 
@@ -531,5 +531,16 @@
   "theme_color": "主题色",
   "primary_color": "主要颜色",
   "second_color": "次要颜色",
-  "color_description": "这些颜色设置将在您的E-Menu的按钮颜色和文本颜色上使用。"
+  "color_description": "这些颜色设置将在您的E-Menu的按钮颜色和文本颜色上使用。",
+
+  "invalid_postcode": "左邮编不能小于右邮编",
+  "overlay_postcode": "您的邮政编码已重叠。",
+  "invalid_distance": "左KM不能小于右KM",
+  "overlay_distance": "您的距离已重叠。",
+
+  "display_language": "显示语言",
+  "display_language_description": "所选语言将用于前台的默认语言。",
+  "english": "English",
+  "chinese": "Chinese",
+  "malay": "Malay"
 }

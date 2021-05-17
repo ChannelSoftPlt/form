@@ -798,7 +798,8 @@ class Domain {
       'form_banner': object.formBanner,
       'image_extension': extension,
       'product_view_phone': object.productViewPhone.toString(),
-      'color': '${jsonEncode(object.customColor)}'
+      'color': '${jsonEncode(object.customColor)}',
+      'default_language': object.defaultLanguage,
     });
     return jsonDecode(response.body);
   }
