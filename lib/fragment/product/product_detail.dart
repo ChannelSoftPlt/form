@@ -22,6 +22,7 @@ import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetailDialog extends StatefulWidget {
@@ -44,6 +45,8 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   var price = TextEditingController();
   var category = TextEditingController();
   var stock = TextEditingController();
+  var sequence = TextEditingController();
+
   int categoryId = 0;
   bool available = true;
   String variation = '';
@@ -77,7 +80,6 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     imageStateStream.add('display');
 
     if (widget.isUpdate == true) {
-      print(widget.product.name);
       name.text = widget.product.name;
       description.text = widget.product.description;
       price.text = widget.product.price;
@@ -87,6 +89,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       available = widget.product.status == 0;
       variation = widget.product.variation;
       stock.text = widget.product.stock;
+      sequence.text = widget.product.sequence;
 
       getUrl();
       getProductGallery();
@@ -195,7 +198,19 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                 color: Colors.blueGrey,
               ),
               onPressed: () {
-                launch(url);
+                launch('$url/${widget.product.productId}');
+              },
+            ),
+          ),
+          Visibility(
+            visible: widget.isUpdate,
+            child: IconButton(
+              icon: Icon(
+                Icons.share,
+                color: Colors.blueAccent,
+              ),
+              onPressed: () {
+                shareProduct();
               },
             ),
           ),
@@ -480,9 +495,37 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
                   child: TextField(
                     controller: stock,
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.black12)),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Card(
+              elevation: 2,
+              child: ListTile(
+                contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                title: Text(
+                  '${AppLocalizations.of(context).translate('sequence')}',
+                  style: TextStyle(fontSize: 14),
+                ),
+                subtitle: Text(
+                  '${AppLocalizations.of(context).translate('sequence_description')}',
+                  style: TextStyle(fontSize: 12),
+                ),
+                trailing: Container(
+                  width: 70,
+                  child: TextField(
+                    controller: sequence,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
                       border: new OutlineInputBorder(
@@ -782,6 +825,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
 
   Future getImage(isCamera) async {
     final pickedFile = await picker.getImage(
+        imageQuality: isCamera ? 50 : 70,
         source: isCamera ? ImageSource.camera : ImageSource.gallery);
     _image = File(pickedFile.path);
     _cropImage(_image);
@@ -883,19 +927,23 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     * */
     Map data = await Domain().createProduct(
       new Product(
-          name: name.text,
-          status: available ? 0 : 1,
-          description: description.text,
-          image: imageName,
-          price: price.text,
-          variation: variation,
-          categoryId: categoryId,
-          stock: stock.text),
+        name: name.text,
+        status: available ? 0 : 1,
+        description: description.text,
+        image: imageName,
+        price: price.text,
+        variation: variation,
+        categoryId: categoryId,
+        stock: stock.text,
+        sequence: sequence.text,
+      ),
       extension,
       imageCode.toString(),
       getImageGalleryName(),
       getImageGalleryFile(),
     );
+
+    print(data);
 
     if (data['status'] == '1') {
       _showSnackBar(
@@ -916,7 +964,6 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     /*
     * update product
     * */
-    print(getImageGalleryName());
     Map data = await Domain().updateProduct(widget.product, extension,
         imageCode.toString(), getImageGalleryName(), getImageGalleryFile());
 
@@ -1182,6 +1229,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     widget.product.price = price.text;
     widget.product.variation = variation;
     widget.product.stock = stock.text;
+    widget.product.sequence = sequence.text.isEmpty ? '0' : sequence.text;
   }
 
   reverseObject() {
@@ -1194,6 +1242,7 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
     widget.product.price = initialProduct.price;
     widget.product.variation = initialProduct.variation;
     widget.product.stock = initialProduct.stock;
+    widget.product.sequence = initialProduct.sequence;
   }
 
   setInitialObject() {
@@ -1206,6 +1255,14 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
         price: widget.product.price,
         variation: widget.product.variation,
         categoryId: widget.product.categoryId,
-        stock: widget.product.stock);
+        stock: widget.product.stock,
+        sequence: widget.product.sequence);
+  }
+
+  void shareProduct() {
+    var shareProduct =
+        'Product: ${widget.product.name}\nPrice: RM ${widget.product.price}${widget.product.stock == '' ? '' : '\nStock Available: ${widget.product.stock}'}'
+        '\n\n$url/${widget.product.productId}';
+    Share.share(shareProduct);
   }
 }

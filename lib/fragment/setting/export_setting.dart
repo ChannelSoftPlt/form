@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my/object/imageGallery/product_gallery.dart';
+import 'package:my/object/order.dart';
 import 'package:my/object/product.dart';
 import 'package:my/object/user.dart';
 import 'package:my/shareWidget/progress_bar.dart';
@@ -29,6 +30,8 @@ class ExportDialog extends StatefulWidget {
 class _ExportDialogState extends State<ExportDialog> {
   List<User> userList = [];
   List<Product> productList = [];
+  List<Order> salesList = [];
+
   var exportData = 'customer';
   var fromDate, toDate;
   var path, fileName;
@@ -99,6 +102,7 @@ class _ExportDialogState extends State<ExportDialog> {
   Widget mainContent() {
     return Container(
       height: 150,
+      width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -188,19 +192,41 @@ class _ExportDialogState extends State<ExportDialog> {
   }
 
   Widget resultPage() {
-    return ButtonBar(
-      children: [
-        RaisedButton.icon(
-            onPressed: openFile,
-            color: Colors.green,
-            icon: Icon(Icons.launch),
-            label: Text(AppLocalizations.of(context).translate('open_file'))),
-        RaisedButton.icon(
-            onPressed: shareFile,
-            color: Colors.redAccent,
-            icon: Icon(Icons.share),
-            label: Text(AppLocalizations.of(context).translate('share_file')))
-      ],
+    return Container(
+      width: double.infinity,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: RaisedButton.icon(
+                onPressed: openFile,
+                color: Colors.green,
+                icon: Icon(
+                  Icons.launch,
+                  color: Colors.white,
+                ),
+                label: Text(AppLocalizations.of(context).translate('open_file'),
+                    style: TextStyle(fontSize: 12, color: Colors.white))),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            flex: 1,
+            child: RaisedButton.icon(
+                onPressed: shareFile,
+                color: Colors.redAccent,
+                icon: Icon(
+                  Icons.share,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  AppLocalizations.of(context).translate('share_file'),
+                  style: TextStyle(fontSize: 12, color: Colors.white),
+                )),
+          )
+        ],
+      ),
     );
   }
 
@@ -220,7 +246,7 @@ class _ExportDialogState extends State<ExportDialog> {
   }
 
   List getExportType(context) {
-    return <String>['customer', 'products'];
+    return <String>['customer', 'products', 'sales'];
   }
 
   checkPermission() async {
@@ -285,6 +311,64 @@ class _ExportDialogState extends State<ExportDialog> {
         row.add(productList[i].stock);
         rows.add(row);
       }
+    } else if (exportData == 'sales') {
+      var subTotal = 0.0,
+          tax = 0.0,
+          deliveryFee = 0.0,
+          discountAmount = 0.0,
+          couponDiscount = 0.0,
+          total = 0.0;
+      List<dynamic> row = [];
+      //fetch and check data
+      await fetchExportSales();
+      //fetch and check data
+      for (int i = 0; i < salesList.length; i++) {
+        row = [];
+        //add header
+        if (i == 0) {
+          row.add('Date');
+          row.add('Order No');
+          row.add('Subtotal');
+          row.add('Tax');
+          row.add('Delivery Fee');
+          row.add('Discount');
+          row.add('Coupon Discount');
+          row.add('Total Amount');
+          rows.add(row);
+          row = [];
+        }
+        row.add(salesList[i].date);
+        row.add(Order().orderPrefix(salesList[i].orderID));
+        row.add(salesList[i].total.toStringAsFixed(2));
+        row.add(double.parse(salesList[i].tax).toStringAsFixed(2));
+        row.add(double.parse(salesList[i].deliveryFee).toStringAsFixed(2));
+        row.add(
+            '-${double.parse(salesList[i].discountAmount).toStringAsFixed(2)}');
+        row.add(
+            '-${double.parse(salesList[i].couponDiscount).toStringAsFixed(2)}');
+        row.add(Order().countTotal(salesList[i]).toStringAsFixed(2));
+        rows.add(row);
+
+        subTotal += salesList[i].total;
+        tax += Order().convertToInt(salesList[i].tax);
+        deliveryFee += Order().convertToInt(salesList[i].deliveryFee);
+        discountAmount += Order().convertToInt(salesList[i].discountAmount);
+        couponDiscount += Order().convertToInt(salesList[i].couponDiscount);
+        total += Order().countTotal(salesList[i]);
+      }
+      /**
+       * count total
+       */
+      row = [];
+      row.add('Total');
+      row.add('');
+      row.add(subTotal.toStringAsFixed(2));
+      row.add(tax.toStringAsFixed(2));
+      row.add(deliveryFee.toStringAsFixed(2));
+      row.add(discountAmount.toStringAsFixed(2));
+      row.add(couponDiscount.toStringAsFixed(2));
+      row.add(total.toStringAsFixed(2));
+      rows.add(row);
     }
     return rows;
   }
@@ -307,6 +391,7 @@ class _ExportDialogState extends State<ExportDialog> {
   }
 
   Future fetchExportCustomer() async {
+    userList = [];
     Map data = await Domain().fetchExportCustomer(
         fromDate != null ? fromDate.toString() : '',
         toDate != null ? toDate.toString() : '');
@@ -319,6 +404,7 @@ class _ExportDialogState extends State<ExportDialog> {
   }
 
   Future fetchExportProduct() async {
+    productList = [];
     Map data = await Domain().fetchExportProduct(
         fromDate != null ? fromDate.toString() : '',
         toDate != null ? toDate.toString() : '');
@@ -327,6 +413,20 @@ class _ExportDialogState extends State<ExportDialog> {
       List responseJson = data['product_data'];
       productList.addAll(responseJson
           .map((jsonObject) => Product.fromJson(jsonObject))
+          .toList());
+    }
+  }
+
+  Future fetchExportSales() async {
+    salesList = [];
+    Map data = await Domain().fetchExportSales(
+        fromDate != null ? fromDate.toString() : '',
+        toDate != null ? toDate.toString() : '');
+
+    if (data['status'] == '1') {
+      List responseJson = data['export_sales'];
+      salesList.addAll(responseJson
+          .map((jsonObject) => Order.fromJson(jsonObject))
           .toList());
     }
   }
@@ -340,7 +440,8 @@ class _ExportDialogState extends State<ExportDialog> {
     if (rows.length > 0) {
       String csv = const ListToCsvConverter().convert(rows);
       String dir = (await getApplicationDocumentsDirectory()).path;
-      fileName = '${AppLocalizations.of(context).translate(exportData)} (${fileDateForm.format(DateTime.now())}).csv';
+      fileName =
+          '${AppLocalizations.of(context).translate(exportData)} (${fileDateForm.format(DateTime.now())}).csv';
       path = '$dir/$fileName';
 
       File file = new File(path);

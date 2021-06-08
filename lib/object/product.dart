@@ -6,7 +6,8 @@ class Product {
       name,
       categoryName,
       variation,
-      stock;
+      stock,
+      sequence;
   int productId, status, categoryId, formId;
 
   Product(
@@ -21,7 +22,8 @@ class Product {
       this.categoryId,
       this.variation,
       this.formId,
-      this.productId});
+      this.productId,
+      this.sequence});
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -37,6 +39,7 @@ class Product {
       formId: json['form_id'] as int,
       productId: json['product_id'] as int,
       stock: json['stock'] as String,
+      sequence: json['sequence'].toString(),
     );
   }
 

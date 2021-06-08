@@ -26,6 +26,7 @@ class _GroupOrderListState extends State<GroupOrderList> {
   * */
   int itemPerPage = 5, currentPage = 1;
   bool itemFinish = false;
+  bool isLoad = true;
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 

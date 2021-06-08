@@ -21,7 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'coupon/discount.dart';
 import 'edit_form.dart';
-import 'order_setting.dart';
+import 'orderSetting/order_setting.dart';
 
 class SettingFragment extends StatefulWidget {
   @override
@@ -644,6 +644,7 @@ class _SettingFragmentState extends State<SettingFragment> {
 
   getUrl() async {
     this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    if (url.length > 0) this.url = url.substring(8, url.length);
     setState(() {});
   }
 

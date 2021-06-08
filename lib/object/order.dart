@@ -158,9 +158,6 @@ class Order {
   }
 
   double countTotal(Order order) {
-    if (order.id == 8525) {
-      print('order total ${order.total}');
-    }
     return convertToInt(order.deliveryFee) +
         order.total +
         convertToInt(order.tax) -

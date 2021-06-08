@@ -31,7 +31,8 @@ class Domain {
   static Uri profile = Uri.parse(domain + 'mobile_api/profile/index.php');
   static Uri user = Uri.parse(domain + 'mobile_api/user/index.php');
   static Uri discount = Uri.parse(domain + 'mobile_api/coupon/index.php');
-  static Uri notification = Uri.parse(domain + 'mobile_api/notification/index.php');
+  static Uri notification =
+      Uri.parse(domain + 'mobile_api/notification/index.php');
   static Uri category = Uri.parse(domain + 'mobile_api/category/index.php');
   static Uri export = Uri.parse(domain + 'mobile_api/export/index.php');
   static Uri form = Uri.parse(domain + 'mobile_api/form/index.php');
@@ -195,6 +196,40 @@ class Domain {
   }
 
   /*
+  * read user order
+  * */
+  fetchUserOrder(
+      currentPage, itemPerPage, query, startDate, endDate, phone) async {
+    var response = await http.post(Domain.user, body: {
+      'read': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'start_date': startDate,
+      'end_date': endDate,
+      'query': query,
+      'phone': phone,
+      'page': currentPage.toString(),
+      'itemPerPage': itemPerPage.toString(),
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * read user total purchase amount
+  * */
+  fetchUserTotalAmount(phone) async {
+    var response = await http.post(Domain.user, body: {
+      'read_total_purchase': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'phone': phone,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * read discount coupon list
   * */
   fetchDiscount(currentPage, itemPerPage, query) async {
@@ -238,7 +273,7 @@ class Domain {
   }
 
   fetchProductWithPagination(
-      currentPage, itemPerPage, query, categoryName) async {
+      currentPage, itemPerPage, query, categoryName, orderType) async {
     var response = await http.post(Domain.product, body: {
       'read': '1',
       'merchant_id':
@@ -247,6 +282,7 @@ class Domain {
       'query': query,
       'category_name': categoryName,
       'page': currentPage.toString(),
+      'order_type': orderType.toString(),
       'itemPerPage': itemPerPage.toString()
     });
     return jsonDecode(response.body);
@@ -299,6 +335,21 @@ class Domain {
   fetchExportProduct($startDate, $endDate) async {
     var response = await http.post(Domain.export, body: {
       'export_product': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'start_date': $startDate,
+      'end_date': $endDate
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * export sales
+  * */
+  fetchExportSales($startDate, $endDate) async {
+    var response = await http.post(Domain.export, body: {
+      'export_sales': '1',
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
@@ -416,6 +467,19 @@ class Domain {
   readDistanceSetting() async {
     var response = await http.post(Domain.shipping, body: {
       'read_distance': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * read tng qr code
+  * */
+  readTngQrCode() async {
+    var response = await http.post(Domain.profile, body: {
+      'read_qr_code': '1',
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
@@ -626,13 +690,15 @@ class Domain {
   /*
   * update payment
   * */
-  updatePayment(bankDetail, bankTransfer, cod, fpayTransfer, taxPercent) async {
+  updatePayment(
+      bankDetail, bankTransfer, cod, fpayTransfer, allowTNG, taxPercent) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'bank_details': bankDetail,
       'cash_on_delivery': cod,
       'bank_transfer': bankTransfer,
       'fpay_transfer': fpayTransfer,
+      'tng_manual_payment': allowTNG,
       'tax_percent': taxPercent,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
@@ -660,8 +726,15 @@ class Domain {
   /*
   * update order setting
   * */
-  updateOrderSetting(emailOption, selfCollectOption, deliveryDateOption,
-      deliveryTimeOption, orderMinDay, workingDay) async {
+  updateOrderSetting(
+      emailOption,
+      selfCollectOption,
+      deliveryDateOption,
+      deliveryTimeOption,
+      orderMinDay,
+      workingDay,
+      workingTime,
+      minPurchase) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'self_collect': selfCollectOption,
@@ -670,6 +743,8 @@ class Domain {
       'email_option': emailOption,
       'order_min_day': orderMinDay,
       'working_day': workingDay,
+      'working_time': workingTime,
+      'order_min_purchase': minPurchase,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
@@ -708,6 +783,7 @@ class Domain {
       'image_name': product.image,
       'variation': product.variation,
       'stock': product.stock,
+      'sequence': product.sequence,
       'image_extension': extension,
       'image_code': imageCode,
       'image_gallery_name': imageGalleryName,
@@ -865,6 +941,20 @@ class Domain {
   }
 
   /*
+  * update tng qr code
+  * */
+  updateTngQrCode(qrCode) async {
+    var response = await http.post(Domain.profile, body: {
+      'update_qr_code': '1',
+      'tng_payment_qrcode': qrCode,
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * add order item
   * */
   addOrderItem(Product object, orderId, quantity, remark, totalAmount) async {
@@ -989,6 +1079,7 @@ class Domain {
       'image_gallery_file': imageGalleryFile,
       'variation': product.variation,
       'stock': product.stock,
+      'sequence': product.sequence,
       'form_id':
           Merchant.fromJson(await SharePreferences().read("merchant")).formId,
     });

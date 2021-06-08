@@ -7,6 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_quill/models/documents/document.dart';
+import 'package:flutter_quill/widgets/controller.dart';
+import 'package:flutter_quill/widgets/editor.dart';
+import 'package:flutter_quill/widgets/toolbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my/object/form.dart';
@@ -16,11 +20,11 @@ import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/HexColor.dart';
 import 'package:my/utils/domain.dart';
 import 'package:my/utils/sharePreference.dart';
-import 'package:notustohtml/notustohtml.dart';
-import 'package:quill_delta/quill_delta.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:zefyr/zefyr.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:markdown/markdown.dart' as md;
+import 'package:html2md/html2md.dart' as html2md;
+import 'package:delta_markdown/delta_markdown.dart';
 
 class EditForm extends StatefulWidget {
   @override
@@ -43,9 +47,8 @@ class _EditFormState extends State<EditForm> {
   var compressedFileSource;
 
   //description purpose
-  final converter = NotusHtmlCodec();
-  ZefyrController _controller;
   FocusNode _focusNode;
+  QuillController _controller = QuillController.basic();
 
   //background color
   Color backgroundColor = Colors.white;
@@ -142,7 +145,6 @@ class _EditFormState extends State<EditForm> {
 
   widgetDescription() {
     return Container(
-      height: 350,
       child: Card(
         margin: EdgeInsets.all(15),
         elevation: 5,
@@ -165,15 +167,39 @@ class _EditFormState extends State<EditForm> {
                   thickness: 1.0,
                 ),
               ),
-              Expanded(
-                child: ZefyrScaffold(
-                  child: ZefyrEditor(
-                    autofocus: false,
-                    controller: _controller,
-                    focusNode: _focusNode,
-                  ),
+              Container(
+                height: 270,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: QuillEditor(
+                        controller: _controller,
+                        scrollController: ScrollController(),
+                        scrollable: true,
+                        focusNode: _focusNode,
+                        autoFocus: false,
+                        readOnly: false,
+                        expands: false,
+                        padding: EdgeInsets.zero,
+                        // true for view only mode
+                      ),
+                    ),
+                    QuillToolbar.basic(
+                      toolbarIconSize: 20,
+                      controller: _controller,
+                      showCodeBlock: false,
+                      showListCheck: false,
+                      showIndent: false,
+                      showBackgroundColorButton: false,
+                      showColorButton: false,
+                      showUnderLineButton: false,
+                      showHeaderStyle: false,
+                      showQuote: false,
+                      showStrikeThrough: false,
+                    ),
+                  ],
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -743,36 +769,51 @@ class _EditFormState extends State<EditForm> {
 
         videoLink.text = form.bannerVideoLink;
         formName.text = form.name;
-        _controller = ZefyrController(loadFormDescription());
+        loadFormDescription(form.description);
         backgroundColor = HexColor(form.formColor);
       });
     }
   }
 
-  NotusDocument loadFormDescription() {
-    Delta delta;
+  loadFormDescription(description) {
+    var htmlData;
     try {
-      form.description = form.description.replaceAll('<p>', '');
-      form.description = form.description.replaceAll('</p>', '');
-      form.description = form.description.replaceAll('<b><b>', '<br>');
-      form.description = form.description.replaceAll('<br />', '');
-      delta = converter.decode(form.description);
+      if (description == '<br/>' || description == '')
+        description = 'Welcome To My Store';
+      description = html2md.convert(description);
+      htmlData = jsonDecode(markdownToDelta(description));
     } catch ($e) {
-      delta = converter.decode('<p><\/p>');
+      if (description == '<br/>' || description == '')
+        description = 'Welcome To My Store';
+      htmlData = jsonDecode(markdownToDelta(description));
     }
-    return NotusDocument.fromDelta(delta);
+
+    _controller = QuillController(
+        document: Document.fromJson(htmlData),
+        selection: TextSelection.collapsed(offset: 0));
   }
 
-  convertToHtml() {
-    var htmlText = converter.encode(_controller.document.toDelta());
-    return htmlText.replaceAll('<br><br>', '<br>');
+  String convertToHtml() {
+    try {
+      var markdown =
+          deltaToMarkdown(jsonEncode(_controller.document.toDelta()));
+      var html = md.markdownToHtml(markdown);
+      return html.replaceAll("\n", "<br/>");
+    } catch ($e) {
+      return 'format_not_support';
+    }
   }
 
   updateFormSetting() async {
-    form.description = convertToHtml();
     form.formColor = backgroundColor.toHex();
     form.bannerVideoLink = videoLink.text.isEmpty ? '' : videoLink.text;
     form.name = formName.text;
+
+    form.description = convertToHtml();
+    if (form.description == 'format_not_support') {
+      _showSnackBar('invalid_character');
+      return;
+    }
     /*
     * update form
     * */

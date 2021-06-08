@@ -539,5 +539,37 @@
   "display_language_description": "Selected language will apply to your visitor by default.",
   "english": "English",
   "chinese": "Chinese",
-  "malay": "Malay"
+  "malay": "Malay",
+
+  "working_time": "Working Time",
+  "working_time_description": "Your customer is not able to place order while out of your working time.",
+  "working_time_description_2": "Unless pre-order or delivery date is enable",
+  "add_working_time": "Add Working Time",
+  "edit_working_time": "Edit Working Time",
+  "start": "Start",
+  "end": "End",
+  "invalid_working_time": "Invalid Working Time!",
+
+  "customer_id": "Customer ID",
+  "order_number": "Order Times",
+
+  "sales": "Sales",
+
+  "min_purchase": "Minimum Purchase",
+  "min_purchase_description": "Customers must spend at least certain amount to be able to buy from you.",
+  "invalid_min_purchase": "Invalid Min Purchase",
+  "day": "Day",
+
+  "sequence": "Sequence Priority",
+  "sequence_description": "Higher number = Higher priority in product sequence.",
+  "order_sequence": "Product Sequence",
+  "create_time": "Created Date",
+  "tng": "Touch 'n GO",
+  "upload_qrcode": "Upload Qr Code",
+  "setup_tng": "Setup Touch 'n Go",
+  "tng_description": "Upload your Touch 'n Go QR Code here.",
+  "fpay_description": "Allow your customer to pay via FPX & E-Wallet online.",
+  "no_qr_code": "Must Upload QR Code Before active your Touch 'n Go",
+
+  "invalid_character": "Invalid Character Found!"
 }

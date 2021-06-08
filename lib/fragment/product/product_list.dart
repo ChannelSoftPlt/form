@@ -12,10 +12,15 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class ProductList extends StatefulWidget {
   final List<Product> products;
   final String query, categoryName;
+  final int orderType;
   final Function(bool, Product) openProductDetail;
 
   ProductList(
-      {this.products, this.query, this.categoryName, this.openProductDetail});
+      {this.products,
+      this.query,
+      this.categoryName,
+      this.orderType,
+      this.openProductDetail});
 
   @override
   _ProductListState createState() => _ProductListState();
@@ -127,8 +132,8 @@ class _ProductListState extends State<ProductList> {
   }
 
   Future fetchProduct() async {
-    Map data = await Domain().fetchProductWithPagination(
-        currentPage, itemPerPage, widget.query, widget.categoryName);
+    Map data = await Domain().fetchProductWithPagination(currentPage,
+        itemPerPage, widget.query, widget.categoryName, widget.orderType);
     print('data goes here: $data');
     setState(() {
       if (data['status'] == '1') {

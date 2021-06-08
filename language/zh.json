@@ -542,5 +542,35 @@
   "display_language_description": "所选语言将用于前台的默认语言。",
   "english": "English",
   "chinese": "Chinese",
-  "malay": "Malay"
+  "malay": "Malay",
+
+  "working_time": "工作时间",
+  "working_time_description": "客户无法在您工作时间以外下订单。",
+  "working_time_description_2": "除非您启用预购或交货日期",
+  "add_working_time": "增加工作时间",
+  "edit_working_time": "编辑工作时间",
+  "start": "开始",
+  "end": "结尾",
+  "invalid_working_time": "无效工作时间！",
+
+  "customer_id": "客户账号",
+  "order_number": "订购次数",
+
+  "sales": "销售量",
+
+  "min_purchase": "最低消费",
+  "min_purchase_description": "客户必须花费至少一定的金额才能向您下单。",
+  "invalid_min_purchase": "无效最低消费",
+  "day": "天",
+
+  "sequence": "优先顺序",
+  "sequence_description": "越高的数字 = 产品越优先的排列。",
+  "order_sequence": "排列顺序",
+  "create_time": "创建日期",
+  "tng": "Touch 'n GO",
+  "upload_qrcode": "上传二维码",
+  "setup_tng": "设置 Touch 'n Go",
+  "tng_description": "在此处上传您的 Touch 'n Go 二维码。",
+  "fpay_description": "让您的客户通过 FPX 和电子钱包在线支付。",
+  "no_qr_code": "在激活 Touch 'n Go 之前必须上传二维码"
 }

@@ -59,6 +59,10 @@ class _ListState extends State<HomePage> {
   * */
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
+  /*
+  * product sequence order
+  * */
+  int orderType = 0;
   var appLanguage;
 
   @override
@@ -66,9 +70,12 @@ class _ListState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     getUrl();
-    connectivity = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    connectivity = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
       setState(() {
-        networkConnection = (result == ConnectivityResult.mobile || result == ConnectivityResult.wifi);
+        networkConnection = (result == ConnectivityResult.mobile ||
+            result == ConnectivityResult.wifi);
       });
     });
 
@@ -77,7 +84,8 @@ class _ListState extends State<HomePage> {
 
   Future<void> setupNotification() async {
     //initialize
-    notificationPlugin.setListenerForLowerVersions(onNotificationInLowerVersions);
+    notificationPlugin
+        .setListenerForLowerVersions(onNotificationInLowerVersions);
 
     notificationPlugin.setOnNotificationClick(setOnNotificationClick);
 
@@ -89,7 +97,6 @@ class _ListState extends State<HomePage> {
       badge: true,
       sound: true,
     );
-
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('on message: $message');
@@ -103,7 +110,9 @@ class _ListState extends State<HomePage> {
       });
     });
 
-    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage message) {
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage message) {
       print('initialize message: $message');
       if (message != null) {}
     });
@@ -206,6 +215,7 @@ class _ListState extends State<HomePage> {
                 color: Colors.orange,
               ),
               onPressed: () {
+                print(url);
                 launch((url));
               },
             ),
@@ -310,6 +320,7 @@ class _ListState extends State<HomePage> {
       ),
       ProductPage(
         query: '',
+        orderType: orderType,
         categoryName: category != null ? category.name : '',
       ),
       SettingFragment()
@@ -337,7 +348,6 @@ class _ListState extends State<HomePage> {
 
   getUrl() async {
     this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
-
     shareContent.text =
         '${AppLocalizations.of(context).translate('welcome_visit_my_store')}\n$url';
     setState(() {});
@@ -469,11 +479,13 @@ class _ListState extends State<HomePage> {
           // return alert dialog object
           return ProductFilter(
             category: category,
-            onClick: (status, category) async {
+            orderType: orderType,
+            onClick: (status, category, orderType) async {
               await Future.delayed(Duration(milliseconds: 300));
               Navigator.pop(mainContext);
               setState(() {
                 this.category = category;
+                this.orderType = orderType;
               });
             },
           );

@@ -33,69 +33,68 @@ class _LoginFormState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Builder(builder: (BuildContext innerContext) {
-        return SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Column(
-                children: <Widget>[
-                  Image.asset('drawable/new_logo.jpg', height: 200),
-                  Text('E-Menu', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
-                  SizedBox(height: 20.0),
-                  Theme(
-                    child: customTextField(email, 'email', null),
-                    data: Theme.of(context).copyWith(
-                      primaryColor: Colors.orangeAccent,
+        return Theme(
+          data: new ThemeData(
+            primaryColor: Colors.orange,
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: <Widget>[
+                    Image.asset('drawable/new_logo.jpg', height: 200),
+                    Text(
+                      'E-Menu',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                     ),
-                  ),
-                  SizedBox(height: 20.0),
-                  Theme(
-                    child: customTextField(password, 'password', hidePassword),
-                    data: Theme.of(context).copyWith(
-                      primaryColor: Colors.orangeAccent,
-                    ),
-                  ),
-                  SizedBox(height: 5.0),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ForgotPassword(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Text(
-                        '${AppLocalizations.of(context).translate('forgot_password')}',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50.0,
-                    child: RaisedButton(
-                      elevation: 5,
-                      child: Text(
-                        '${AppLocalizations.of(context).translate('sign_in')}',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.orange,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      onPressed: () {
-                        login(innerContext);
+                    SizedBox(height: 20.0),
+                    customTextField(email, 'email', null),
+                    SizedBox(height: 20.0),
+                    customTextField(password, 'password', hidePassword),
+                    SizedBox(height: 5.0),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgotPassword(),
+                          ),
+                        );
                       },
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: Text(
+                          '${AppLocalizations.of(context).translate('forgot_password')}',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 20.0),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50.0,
+                      child: RaisedButton(
+                        elevation: 5,
+                        child: Text(
+                          '${AppLocalizations.of(context).translate('sign_in')}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        color: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        onPressed: () {
+                          login(innerContext);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -189,7 +188,7 @@ class _LoginFormState extends State<LoginPage> {
         return url;
       else
         return 'https://www.emenu.com.my/$url';
-    } catch(err) {
+    } catch (err) {
       return 'https://www.emenu.com.my/$url';
     }
   }

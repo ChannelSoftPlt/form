@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Merchant {
   String merchantId;
   String formId;
@@ -18,12 +20,14 @@ class Merchant {
   String fpaySecretKey;
   String minOrderDay;
   String workingDay;
+  WorkingTime workingTime;
   String taxPercent;
-
   String selfCollectOption;
   String emailOption;
   String dateOption;
   String timeOption;
+  String minPurchase;
+  String allowTNG;
   bool grouping = true;
 
   Merchant(
@@ -51,7 +55,10 @@ class Merchant {
       this.timeOption,
       this.minOrderDay,
       this.workingDay,
-      this.taxPercent});
+      this.workingTime,
+      this.taxPercent,
+      this.minPurchase,
+      this.allowTNG});
 
   Merchant.fromJson(Map<String, dynamic> json)
       : merchantId = json['merchantId'],
@@ -76,8 +83,11 @@ class Merchant {
         dateOption = json['delivery_date_option'].toString(),
         minOrderDay = json['order_min_day'].toString(),
         workingDay = json['working_day'].toString(),
+        workingTime = getWorkingTime(json['working_time']),
         timeOption = json['delivery_time_option'].toString(),
-        taxPercent = json['tax_percent'].toString();
+        minPurchase = json['order_min_purchase'].toString(),
+        taxPercent = json['tax_percent'].toString(),
+        allowTNG = json['tng_manual_payment'].toString();
 
   Map<String, dynamic> toJson() => {
         'merchantId': merchantId,
@@ -86,4 +96,25 @@ class Merchant {
         'url': url,
         'email': email
       };
+
+  static WorkingTime getWorkingTime(data) {
+    try {
+      return WorkingTime.fromJson(jsonDecode(data));
+    } catch ($e) {
+      return WorkingTime(startTime: '', endTime: '');
+    }
+  }
+}
+
+class WorkingTime {
+  String startTime, endTime;
+
+  WorkingTime({this.startTime, this.endTime});
+
+  Map toJson() => {'start': startTime.toString(), 'end': endTime.toString()};
+
+  factory WorkingTime.fromJson(Map<String, dynamic> json) {
+    return WorkingTime(
+        startTime: json['start'] as String, endTime: json['end'] as String);
+  }
 }

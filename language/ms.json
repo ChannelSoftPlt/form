@@ -542,5 +542,35 @@
   "display_language_description": "Bahasa yang dipilih akan digunakan untuk pengunjung anda secara lalai.",
   "english": "English",
   "chinese": "Chinese",
-  "malay": "Malay"
+  "malay": "Malay",
+
+  "working_time": "Waktu bekerja",
+  "working_time_description": "Pelanggan tidak dapat membuat pesanan semasa waktu tidak berkerja.",
+  "working_time_description_2": "Kecuali tarikh pra-pesanan atau penghantaran diaktifkan",
+  "add_working_time": "Tambah Waktu Kerja",
+  "edit_working_time": "Edit Waktu Kerja",
+  "start": "Mula",
+  "end": "Tamat",
+  "invalid_working_time": "Masa Kerja Tidak Sah!",
+
+  "customer_id": "ID pelanggan",
+  "order_number": "Bilangan Pesanan",
+
+  "sales": "Jualan",
+
+  "min_purchase": "Pembelian Minimum",
+  "min_purchase_description": "Pelanggan mesti membelanjakan sekurang-kurangnya jumlah tertentu untuk dapat membeli dari anda.",
+  "invalid_min_purchase": "Pembelian Min Tidak Sah",
+  "day": "Hari",
+
+  "sequence": "Keutamaan Urutan",
+  "sequence_description": "Nombor yang lebih tinggi = Keutamaan yang lebih tinggi dalam urutan produk.",
+  "order_sequence": "Urutan Produk",
+  "create_time": "Tarikh Dibuat",
+  "tng": "Touch 'n GO",
+  "upload_qrcode": "Upload Qr Code",
+  "setup_tng": "Setup Touch 'n Go",
+  "tng_description": "Muat naik Kod QR Touch 'n Go anda di sini.",
+  "fpay_description": "Benarkan pelanggan anda membayar melalui FPX & E-Wallet dalam talian.",
+  "no_qr_code": "Mesti Muat Naik Kod QR Sebelum aktifkan Touch 'n Go anda"
 }

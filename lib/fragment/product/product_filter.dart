@@ -5,10 +5,11 @@ import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 
 class ProductFilter extends StatefulWidget {
-  final Function(String, Category) onClick;
+  final Function(String, Category, int) onClick;
   final Category category;
+  final int orderType;
 
-  ProductFilter({this.onClick, this.category});
+  ProductFilter({this.onClick, this.category, this.orderType});
 
   @override
   _FilterDialogState createState() => _FilterDialogState();
@@ -16,11 +17,13 @@ class ProductFilter extends StatefulWidget {
 
 class _FilterDialogState extends State<ProductFilter> {
   Category category;
+  int orderType = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (orderType != null) orderType = widget.orderType;
   }
 
   @override
@@ -41,7 +44,7 @@ class _FilterDialogState extends State<ProductFilter> {
               style: TextStyle(color: Colors.red),
             ),
             onPressed: () {
-              widget.onClick('', category);
+              widget.onClick('', category, orderType);
             },
           ),
         ],
@@ -49,29 +52,71 @@ class _FilterDialogState extends State<ProductFilter> {
   }
 
   Widget mainContent(context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        chooseCategory(),
-      ],
+    return Container(
+      width: 300,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          chooseCategory(),
+        ],
+      ),
     );
   }
 
   Widget chooseCategory() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          '${AppLocalizations.of(context).translate('category')}',
-          style: TextStyle(color: Colors.black54),
-        ),
         SizedBox(
           height: 5,
         ),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                '${AppLocalizations.of(context).translate('order_sequence')}',
+                style: TextStyle(
+                    color: Colors.orangeAccent,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: DropdownButton(
+                  isExpanded: true,
+                  itemHeight: 50,
+                  value: orderType,
+                  style: TextStyle(fontSize: 15, color: Colors.black87),
+                  items: [
+                    DropdownMenuItem(
+                      child:
+                          Text(AppLocalizations.of(context).translate('create_time')),
+                      value: 0,
+                    ),
+                    DropdownMenuItem(
+                      child: Text(
+                        AppLocalizations.of(context).translate('sequence'),
+                        textAlign: TextAlign.center,
+                      ),
+                      value: 1,
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      orderType = value;
+                    });
+                  }),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
         DropdownSearch<Category>(
             mode: Mode.BOTTOM_SHEET,
-            label: '${AppLocalizations.of(context).translate('select_category')}',
-
+            label:
+                '${AppLocalizations.of(context).translate('select_category')}',
             popupTitle: Text(
               '${AppLocalizations.of(context).translate('existing_category')}',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -81,7 +126,8 @@ class _FilterDialogState extends State<ProductFilter> {
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
               prefixIcon: Icon(Icons.search),
-              labelText: '${AppLocalizations.of(context).translate('search_category')}',
+              labelText:
+                  '${AppLocalizations.of(context).translate('search_category')}',
             ),
             showSearchBox: true,
             showClearButton: true,

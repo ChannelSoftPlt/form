@@ -81,10 +81,7 @@ class _FilterDialogState extends State<FilterDialog> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          '${AppLocalizations.of(context).translate('date')}',
-          style: TextStyle(color: Colors.black54),
-        ),
+
         Row(
           children: <Widget>[
             FlatButton.icon(
@@ -92,7 +89,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   fromDate != null
                       ? displayDateFormat.format(fromDate).toString()
                       : '${AppLocalizations.of(context).translate('from_date')}',
-                  style: TextStyle(color: Colors.orangeAccent),
+                  style: TextStyle(color: Colors.blueGrey),
                 ),
                 icon: Icon(Icons.date_range),
                 onPressed: () {
@@ -111,7 +108,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   toDate != null
                       ? displayDateFormat.format(toDate).toString()
                       : '${AppLocalizations.of(context).translate('to_date')}',
-                  style: TextStyle(color: Colors.orangeAccent),
+                  style: TextStyle(color: Colors.blueGrey),
                 ),
                 icon: Icon(Icons.date_range),
                 onPressed: () {
@@ -143,7 +140,7 @@ class _FilterDialogState extends State<FilterDialog> {
           children: <Widget>[
             Text(
               '${AppLocalizations.of(context).translate('driver')}',
-              style: TextStyle(color: Colors.black54),
+              style: TextStyle(color: Colors.black87, fontSize: 14),
             ),
             SizedBox(
               height: 5,

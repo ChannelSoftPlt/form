@@ -12,8 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
   final String query, categoryName;
+  final orderType;
 
-  ProductPage({this.query, this.categoryName});
+  ProductPage({this.query, this.categoryName, this.orderType});
 
   @override
   _ProductPageState createState() => _ProductPageState();
@@ -53,8 +54,9 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: Domain().fetchProductWithPagination(currentPage, itemPerPage,
-            widget.query ?? '', widget.categoryName ?? ''),
+            widget.query ?? '', widget.categoryName ?? '', widget.orderType),
         builder: (context, object) {
+          print('order type: ${widget.orderType}');
           if (object.hasData) {
             if (object.connectionState == ConnectionState.done) {
               Map data = object.data;
@@ -89,11 +91,13 @@ class _ProductPageState extends State<ProductPage> {
               )
             : null,
         body: ProductList(
-            products: responseJson
-                .map((jsonObject) => Product.fromJson(jsonObject))
-                .toList(),
-            query: widget.query ?? '',
-            categoryName: widget.categoryName ?? ''),
+          products: responseJson
+              .map((jsonObject) => Product.fromJson(jsonObject))
+              .toList(),
+          orderType: widget.orderType,
+          query: widget.query ?? '',
+          categoryName: widget.categoryName ?? '',
+        ),
         floatingActionButton: FloatingActionButton(
           elevation: 5,
           backgroundColor: Colors.orange[300],

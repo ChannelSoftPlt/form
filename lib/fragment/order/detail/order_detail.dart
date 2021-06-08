@@ -1065,8 +1065,10 @@ class _OrderDetailState extends State<OrderDetail> {
       return AppLocalizations.of(context).translate('bank_transfer');
     else if (paymentMethod == '1')
       return AppLocalizations.of(context).translate('cash_on_delivery');
-    else
+    else if (paymentMethod == '2')
       return 'Fpay Amount Received RM ${order.fpayReceiveAmount != '' ? order.fpayReceiveAmount : '-'}';
+    else
+      return 'Touch \'n Go';
   }
 
 /*
