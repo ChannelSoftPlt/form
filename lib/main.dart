@@ -17,7 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  
+
   AppLanguage appLanguage = AppLanguage();
   await appLanguage.fetchLocale();
   runApp(MyApp(
@@ -70,11 +70,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   FlutterAppBadger.updateBadgeCount(1);
 }
 
-statusBarColor(){
+statusBarColor() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.white, // status bar color
-    statusBarBrightness: Brightness.dark,//status bar brigtness
-    statusBarIconBrightness:Brightness.dark ,
+    statusBarBrightness: Brightness.dark, //status bar brigtness
+    statusBarIconBrightness: Brightness.dark,
   ));
 }
-

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/models/documents/document.dart';
 import 'package:flutter_quill/widgets/controller.dart';
+import 'package:flutter_quill/widgets/default_styles.dart';
 import 'package:flutter_quill/widgets/editor.dart';
 import 'package:flutter_quill/widgets/toolbar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -391,21 +392,22 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                         child: Column(
                                           children: [
                                             Expanded(
-                                              child: Container(
-                                                child: QuillEditor(
-                                                  controller: _controller,
-                                                  scrollController:
-                                                      ScrollController(),
-                                                  scrollable: true,
-                                                  focusNode: _focusNode,
-                                                  autoFocus: false,
-                                                  readOnly: false,
-                                                  expands: false,
-                                                  padding: EdgeInsets.zero,
-                                                  // true for view only mode
+                                                child: Container(
+                                              child: QuillEditor(
+                                                controller: _controller,
+                                                scrollController:
+                                                    ScrollController(),
+                                                scrollable: true,
+                                                focusNode: _focusNode,
+                                                autoFocus: false,
+                                                readOnly: false,
+                                                expands: false,
+                                                padding: EdgeInsets.zero,
+                                                customStyles: DefaultStyles(
+                                                  color: Colors.green
                                                 ),
                                               ),
-                                            ),
+                                            )),
                                             QuillToolbar.basic(
                                               toolbarIconSize: 20,
                                               controller: _controller,

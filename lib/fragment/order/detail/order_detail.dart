@@ -15,6 +15,7 @@ import 'package:my/fragment/order/child/dialog/edit_customer_note_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
 import 'package:my/fragment/order/child/dialog/grouping_dialog.dart';
 import 'package:my/fragment/order/detail/proof_of_delivery.dart';
+import 'package:my/fragment/order/print/print_dialog.dart';
 import 'package:my/object/coupon.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_item.dart';
@@ -77,6 +78,12 @@ class _OrderDetailState extends State<OrderDetail> {
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),
         actions: <Widget>[
+          IconButton(
+            icon: Image.asset('drawable/printer.png'),
+            onPressed: () {
+              openPrintDialog();
+            },
+          ),
           IconButton(
             icon: Image.asset('drawable/location.png'),
             onPressed: () {
@@ -1815,6 +1822,15 @@ class _OrderDetailState extends State<OrderDetail> {
       showSnackBar(
           '${AppLocalizations.of(context).translate('invalid_address')}');
     }
+  }
+
+  openPrintDialog() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PrintDialog(),
+      ),
+    );
   }
 
   preChecking() async {
