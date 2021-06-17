@@ -26,7 +26,14 @@ class EditPaymentMethod extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<EditPaymentMethod> {
-  bool manualBankTransfer, cod, fpay, allowFpay, allowTNG;
+  bool manualBankTransfer,
+      cod,
+      fpay,
+      allowFpay,
+      allowTNG,
+      allowBoost,
+      allowDuit,
+      allowSarawak;
   StreamController refreshController;
 
   var taxPercent = TextEditingController();
@@ -90,6 +97,9 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                   fpay = merchant.fpayTransfer != '1';
                   allowFpay = merchant.allowfPay != '1';
                   allowTNG = merchant.allowTNG != '1';
+                  allowBoost = merchant.allowBoost != '1';
+                  allowDuit = merchant.allowDuit != '1';
+                  allowSarawak = merchant.allowSarawak != '1';
                   taxPercent.text = merchant.taxPercent;
 
                   return mainContent(context);
@@ -283,7 +293,8 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                     flex: 2,
                                     child: RaisedButton(
                                       elevation: 5,
-                                      onPressed: () => showTngQrCodeDialog(),
+                                      onPressed: () =>
+                                          showQrCodeDialog('Touch \'N Go'),
                                       child: Text(
                                         '${AppLocalizations.of(context).translate('upload_qrcode')}',
                                         style: TextStyle(color: Colors.white),
@@ -308,6 +319,165 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                               padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
                               child: Text(
                                 '${AppLocalizations.of(context).translate('tng_description')}',
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 12),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Image.asset(
+                                      'drawable/boost.png',
+                                      height: 55,
+                                    ),
+                                  )),
+                                  Expanded(
+                                    flex: 2,
+                                    child: RaisedButton(
+                                      elevation: 5,
+                                      onPressed: () =>
+                                          showQrCodeDialog('Boost'),
+                                      child: Text(
+                                        '${AppLocalizations.of(context).translate('upload_qrcode')}',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      color: Colors.green,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                    ),
+                                  ),
+                                  Checkbox(
+                                    value: allowBoost,
+                                    onChanged: (newValue) {
+                                      refreshController.add('');
+                                      allowBoost = newValue;
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
+                              child: Text(
+                                '${AppLocalizations.of(context).translate('boost_description')}',
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 12),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Image.asset(
+                                      'drawable/duit_now.png',
+                                      height: 55,
+                                    ),
+                                  )),
+                                  Expanded(
+                                    flex: 2,
+                                    child: RaisedButton(
+                                      elevation: 5,
+                                      onPressed: () =>
+                                          showQrCodeDialog('Duit Now'),
+                                      child: Text(
+                                        '${AppLocalizations.of(context).translate('upload_qrcode')}',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      color: Colors.green,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                    ),
+                                  ),
+                                  Checkbox(
+                                    value: allowDuit,
+                                    onChanged: (newValue) {
+                                      refreshController.add('');
+                                      allowDuit = newValue;
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
+                              child: Text(
+                                '${AppLocalizations.of(context).translate('duit_now_description')}',
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 12),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Image.asset(
+                                      'drawable/sarawak_pay.png',
+                                      height: 55,
+                                    ),
+                                  )),
+                                  Expanded(
+                                    flex: 2,
+                                    child: RaisedButton(
+                                      elevation: 5,
+                                      onPressed: () =>
+                                          showQrCodeDialog('Sarawak Pay'),
+                                      child: Text(
+                                        '${AppLocalizations.of(context).translate('upload_qrcode')}',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      color: Colors.green,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                    ),
+                                  ),
+                                  Checkbox(
+                                    value: allowSarawak,
+                                    onChanged: (newValue) {
+                                      refreshController.add('');
+                                      allowSarawak = newValue;
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 12, 0),
+                              child: Text(
+                                '${AppLocalizations.of(context).translate('sarawak_pay_description')}',
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 12),
                               ),
@@ -404,8 +574,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
                                                 expands: false,
                                                 padding: EdgeInsets.zero,
                                                 customStyles: DefaultStyles(
-                                                  color: Colors.green
-                                                ),
+                                                    color: Colors.green),
                                               ),
                                             )),
                                             QuillToolbar.basic(
@@ -480,43 +649,63 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
     );
   }
 
-  Future<void> showTngQrCodeDialog() async {
+  Future<void> showQrCodeDialog(type) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return TngQrCodeDialog();
+        return WalletQrCodeDialog(
+          type: type,
+        );
       },
     );
   }
 
-  Future<bool> qrCodeIsUploaded(context) async {
-    Map data = await Domain().readTngQrCode();
-    if (data['status'] == '1') {
-      if (data['qr_code'][0]['tng_payment_qrcode'] != '') {
-        return true;
-      }
-    }
-    return false;
-  }
-
   updatePayment(context) async {
+    Map qrCode = await Domain().checkQRCode();
     /**
      * if enable tng must upload qr code first
      */
     if (allowTNG) {
-      bool isQrCodeUpload = await qrCodeIsUploaded(context);
-      if (!isQrCodeUpload)
-        return CustomSnackBar.show(
-            context, '${AppLocalizations.of(context).translate('no_qr_code')}');
+      if (!qrCode['touch_n_go']) {
+        _showSnackBar('no_qr_code');
+        return;
+      }
+    }
+    /**
+     * if enable boost must upload qr code first
+     */
+    if (allowBoost) {
+      if (!qrCode['boost']) {
+        _showSnackBar('no_boost_qr_code');
+        return;
+      }
+    }
+    /**
+     * if enable duit now must upload qr code first
+     */
+    if (allowDuit) {
+      if (!qrCode['duit_now']) {
+        _showSnackBar('no_duit_now_qr_code');
+        return;
+      }
+    }
+    /**
+     * if enable sarawak must upload qr code first
+     */
+    if (allowSarawak) {
+      if (!qrCode['sarawak_pay']) {
+        _showSnackBar('no_sarawak_pay_qr_code');
+        return;
+      }
     }
     /**
      * if enable manual bank transfer must key in bank details
      */
     var bankDetails = getBankDetail();
     if (manualBankTransfer && bankDetails.length <= 0) {
-      return CustomSnackBar.show(context,
-          '${AppLocalizations.of(context).translate('bank_transfer_hint')}');
+      _showSnackBar('bank_transfer_hint');
+      return;
     }
     /**
      * invalid format
@@ -531,6 +720,9 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
         cod ? '0' : '1',
         fpay ? '0' : '1',
         allowTNG ? '0' : '1',
+        allowBoost ? '0' : '1',
+        allowDuit ? '0' : '1',
+        allowSarawak ? '0' : '1',
         taxPercent.text.isEmpty ? '0' : taxPercent.text);
 
     if (data['status'] == '1') {
@@ -540,8 +732,7 @@ class _ResetPasswordState extends State<EditPaymentMethod> {
   }
 
   _showSnackBar(message) {
-    key.currentState.showSnackBar(new SnackBar(
-      content: new Text(AppLocalizations.of(context).translate(message)),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context).translate(message))));
   }
 }

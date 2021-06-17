@@ -76,24 +76,19 @@ class _EditCouponDialogState extends State<EditCouponDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: TextField(
-                keyboardType: TextInputType.text,
-                controller: couponCode,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  labelText:
-                  '${AppLocalizations.of(context).translate('coupon_code')}',
-                  labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                  hintStyle: TextStyle(fontSize: 14),
-                  hintText: '${AppLocalizations.of(context).translate('code')}',
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                )),
-          ),
+          TextField(
+              keyboardType: TextInputType.text,
+              controller: couponCode,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                labelText:
+                '${AppLocalizations.of(context).translate('coupon_code')}',
+                labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                hintStyle: TextStyle(fontSize: 14),
+                hintText: '${AppLocalizations.of(context).translate('code')}',
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
+              )),
         ],
       ),
     );

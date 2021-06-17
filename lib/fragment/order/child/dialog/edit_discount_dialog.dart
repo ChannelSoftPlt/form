@@ -62,28 +62,23 @@ class _EditDiscountDialogState extends State<EditDiscountDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: TextField(
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
-                ],
-                controller: discountAmount,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  labelText:
-                      '${AppLocalizations.of(context).translate('discount_amount')}',
-                  labelStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blueGrey),
-                  hintText: '0.00',
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                )),
-          ),
+          TextField(
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+              ],
+              controller: discountAmount,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                labelText:
+                    '${AppLocalizations.of(context).translate('discount_amount')}',
+                labelStyle: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blueGrey),
+                hintText: '0.00',
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
+              )),
         ],
       ),
     );

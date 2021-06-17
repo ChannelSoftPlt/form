@@ -81,7 +81,7 @@ class _OrderDetailState extends State<OrderDetail> {
           IconButton(
             icon: Image.asset('drawable/printer.png'),
             onPressed: () {
-              openPrintDialog();
+              openPrintDialog(context);
             },
           ),
           IconButton(
@@ -1074,8 +1074,14 @@ class _OrderDetailState extends State<OrderDetail> {
       return AppLocalizations.of(context).translate('cash_on_delivery');
     else if (paymentMethod == '2')
       return 'Fpay Amount Received RM ${order.fpayReceiveAmount != '' ? order.fpayReceiveAmount : '-'}';
+    else if (paymentMethod == '3')
+      return 'Touch \'n Go E-Wallet';
+    else if (paymentMethod == '4')
+      return 'Boost E-Wallet';
+    else if (paymentMethod == '5')
+      return 'DuitNow QR';
     else
-      return 'Touch \'n Go';
+      return 'Sarawak Pay';
   }
 
 /*
@@ -1824,12 +1830,15 @@ class _OrderDetailState extends State<OrderDetail> {
     }
   }
 
-  openPrintDialog() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PrintDialog(),
-      ),
+  openPrintDialog(mainContext) {
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return PrintDialog(
+          orderId: widget.id,
+        );
+      },
     );
   }
 

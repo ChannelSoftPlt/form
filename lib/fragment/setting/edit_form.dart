@@ -120,26 +120,21 @@ class _EditFormState extends State<EditForm> {
 
   Widget mainContent() {
     return form != null
-        ? Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
+        ? Container(
+          color: backgroundColor,
+          child: SingleChildScrollView(
             child: Container(
-              color: backgroundColor,
-              child: SingleChildScrollView(
-                child: Container(
-                    color: backgroundColor,
-                    width: double.infinity,
-                    child: Column(children: [
-                      widgetStatus(),
-                      widgetBannerLayout(),
-                      widgetDescription(),
-                      widgetProductLayout(),
-                      widgetBackgroundColor()
-                    ])),
-              ),
-            ),
-          )
+                color: backgroundColor,
+                width: double.infinity,
+                child: Column(children: [
+                  widgetStatus(),
+                  widgetBannerLayout(),
+                  widgetDescription(),
+                  widgetProductLayout(),
+                  widgetBackgroundColor()
+                ])),
+          ),
+        )
         : CustomProgressBar();
   }
 

@@ -571,5 +571,30 @@
   "fpay_description": "Allow your customer to pay via FPX & E-Wallet online.",
   "no_qr_code": "Must Upload QR Code Before active your Touch 'n Go",
 
-  "invalid_character": "Invalid Character Found!"
+  "invalid_character": "Invalid Character Found!",
+
+  "select_printer": "Select Printer",
+  "print": "Print",
+  "print_success": "Print Successfully!",
+  "enable_bluetooth": "Please enable bluetooth to print..",
+  "no_device": "No Devices Found..",
+  "no_device_2": "Please make sure you have open your bluetooth connection.",
+  "select_a_device": "Please select a printer!",
+  "scan_device_around": "Nearby Device Scanning!",
+  "connection_timeout": "Printer connection timeout!",
+  "ticket_empty": "Ticket is empty!",
+  "print_in_progress": "Another print in progress!",
+  "scanning_in_progress": "Scanning in progress!",
+  "device_not_support": "This device is not supported!",
+  "format_error": "Character Format Error!",
+  "avoid_tol": "Avoid tolls",
+  "avoid_tol_description": "Choose this to avoid highways with Tolls.",
+  "paper_size": "Paper Size",
+
+  "boost_description": "Upload your Boost QR Code here.",
+  "duit_now_description": "Upload your DuitNow QR Code here.",
+  "sarawak_pay_description": "Upload your Sarawak Pay QR Code here.",
+  "no_boost_qr_code": "Must Upload QR Code Before active your Boost",
+  "no_duit_now_qr_code": "Must Upload QR Code Before active your DuitNow QR",
+  "no_sarawak_pay_qr_code": "Must Upload QR Code Before active your Sarawak Pay"
 }

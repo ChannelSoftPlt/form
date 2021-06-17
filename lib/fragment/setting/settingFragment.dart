@@ -103,7 +103,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                   child: Row(
                     children: [
                       Expanded(
-                          flex: 3,
+                          flex: 2,
                           child: Text(
                               '${AppLocalizations.of(context).translate('payment_due')} $expiredDate',
                               style: TextStyle(
@@ -112,9 +112,10 @@ class _SettingFragmentState extends State<SettingFragment> {
                           flex: 1,
                           child: Text(
                               '$dayLeft ${AppLocalizations.of(context).translate('days')}',
+                              textAlign: TextAlign.right,
                               style: TextStyle(
                                   color: Colors.orange,
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold)))
                     ],
                   ),

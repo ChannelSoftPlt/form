@@ -112,20 +112,15 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
 
   Widget mainContent() {
     return promotionDialog != null
-        ? Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: SingleChildScrollView(
-              child: Container(
-                  width: double.infinity,
-                  child: Column(children: [
-                    enableDialog(),
-                    contentLayout(),
-                    backgroundLayout()
-                  ])),
-            ),
-          )
+        ? SingleChildScrollView(
+          child: Container(
+              width: double.infinity,
+              child: Column(children: [
+                enableDialog(),
+                contentLayout(),
+                backgroundLayout()
+              ])),
+        )
         : CustomProgressBar();
   }
 

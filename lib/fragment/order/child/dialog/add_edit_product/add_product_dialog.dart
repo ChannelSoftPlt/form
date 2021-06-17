@@ -228,147 +228,141 @@ class _AddProductDialogState extends State<AddProductDialog> {
         Expanded(
           flex: 1,
           child: SingleChildScrollView(
-            child: Theme(
-              data: new ThemeData(
-                primaryColor: Colors.orange,
-              ),
-              child: Container(
-                width: 1000,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Visibility(
-                      visible: !widget.isUpdate,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: FadeInImage(
-                            height: 130,
-                            image: NetworkImage(
-                                '${Domain.imagePath}${product.image}'),
-                            placeholder: NetworkImage(
-                                '${Domain.imagePath}no-image-found.png')),
+            child: Container(
+              width: 1000,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Visibility(
+                    visible: !widget.isUpdate,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: FadeInImage(
+                          height: 130,
+                          image: NetworkImage(
+                              '${Domain.imagePath}${product.image}'),
+                          placeholder: NetworkImage(
+                              '${Domain.imagePath}no-image-found.png')),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  TextField(
+                      enabled: false,
+                      controller: name,
+                      textAlign: TextAlign.start,
+                      decoration: InputDecoration(
+                        labelText:
+                            '${AppLocalizations.of(context).translate('name')}',
+                        labelStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.bold),
+                        border: new OutlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.teal)),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: TextField(
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r"^\d*\.?\d*")),
+                            ],
+                            controller: price,
+                            onChanged: (text) => totalPrice(),
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration(
+                              labelText:
+                                  '${AppLocalizations.of(context).translate('price')}',
+                              labelStyle: TextStyle(
+                                  fontSize: 14, color: Colors.blueGrey),
+                              hintText: '0.00',
+                              border: new OutlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Colors.teal)),
+                            )),
                       ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: quantity,
+                            onChanged: (text) => totalPrice(),
+                            decoration: InputDecoration(
+                              labelText:
+                                  '${AppLocalizations.of(context).translate('quantity')}',
+                              labelStyle: TextStyle(
+                                  fontSize: 14, color: Colors.blueGrey),
+                              hintText: '0',
+                              border: new OutlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Colors.teal)),
+                            )),
+                      )
+                    ],
+                  ),
+                  Visibility(
+                    visible: widget.isUpdate,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                            '${AppLocalizations.of(context).translate('product_available')}'),
+                        Switch(
+                          value: status,
+                          onChanged: (value) {
+                            setState(() {
+                              print(value);
+                              status = value;
+                            });
+                          },
+                          activeTrackColor: Colors.orangeAccent,
+                          activeColor: Colors.deepOrangeAccent,
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    TextField(
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                        controller: name,
-                        textAlign: TextAlign.start,
+                  ),
+                  SizedBox(
+                    height: 7,
+                  ),
+                  addOnLayout(),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: TextField(
+                        minLines: 3,
+                        maxLines: 4,
+                        keyboardType: TextInputType.text,
+                        controller: remark,
+                        textAlign: TextAlign.left,
                         decoration: InputDecoration(
                           labelText:
-                              '${AppLocalizations.of(context).translate('name')}',
-                          labelStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.blueGrey,
-                              fontWeight: FontWeight.bold),
+                              '${AppLocalizations.of(context).translate('remark')}',
+                          labelStyle:
+                              TextStyle(fontSize: 14, color: Colors.blueGrey),
+                          alignLabelWithHint: true,
+                          hintText:
+                              '${AppLocalizations.of(context).translate('remark_hint')}',
                           border: new OutlineInputBorder(
                               borderSide: new BorderSide(color: Colors.teal)),
                         )),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 1,
-                          child: TextField(
-                              keyboardType: TextInputType.numberWithOptions(
-                                  decimal: true),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp(r"^\d*\.?\d*")),
-                              ],
-                              controller: price,
-                              onChanged: (text) => totalPrice(),
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                labelText:
-                                    '${AppLocalizations.of(context).translate('price')}',
-                                labelStyle: TextStyle(
-                                    fontSize: 14, color: Colors.blueGrey),
-                                hintText: '0.00',
-                                border: new OutlineInputBorder(
-                                    borderSide:
-                                        new BorderSide(color: Colors.teal)),
-                              )),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: TextField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              controller: quantity,
-                              onChanged: (text) => totalPrice(),
-                              decoration: InputDecoration(
-                                labelText:
-                                    '${AppLocalizations.of(context).translate('quantity')}',
-                                labelStyle: TextStyle(
-                                    fontSize: 14, color: Colors.blueGrey),
-                                hintText: '0',
-                                border: new OutlineInputBorder(
-                                    borderSide:
-                                        new BorderSide(color: Colors.teal)),
-                              )),
-                        )
-                      ],
-                    ),
-                    Visibility(
-                      visible: widget.isUpdate,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                              '${AppLocalizations.of(context).translate('product_available')}'),
-                          Switch(
-                            value: status,
-                            onChanged: (value) {
-                              setState(() {
-                                print(value);
-                                status = value;
-                              });
-                            },
-                            activeTrackColor: Colors.orangeAccent,
-                            activeColor: Colors.deepOrangeAccent,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 7,
-                    ),
-                    addOnLayout(),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: TextField(
-                          minLines: 3,
-                          maxLines: 4,
-                          keyboardType: TextInputType.text,
-                          controller: remark,
-                          textAlign: TextAlign.left,
-                          decoration: InputDecoration(
-                            labelText:
-                                '${AppLocalizations.of(context).translate('remark')}',
-                            labelStyle:
-                                TextStyle(fontSize: 14, color: Colors.blueGrey),
-                            alignLabelWithHint: true,
-                            hintText:
-                                '${AppLocalizations.of(context).translate('remark_hint')}',
-                            border: new OutlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.teal)),
-                          )),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

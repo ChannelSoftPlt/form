@@ -53,6 +53,24 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primaryColor: Colors.white,
             accentColor: Colors.orange,
+            inputDecorationTheme: InputDecorationTheme(
+              focusColor: Colors.black,
+              labelStyle: TextStyle(
+                color: Colors.black54,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black26,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.orangeAccent,
+                  width: 2.0,
+                ),
+              ),
+            ),
+            primarySwatch: Colors.orange,
           ),
           routes: {
             '/': (context) => LoadingPage(),

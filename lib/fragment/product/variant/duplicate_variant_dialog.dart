@@ -133,7 +133,8 @@ class _DuplicateDialogState extends State<DuplicateDialog> {
             decoration: InputDecoration(
               hintText:
                   '${AppLocalizations.of(context).translate('search_by')}',
-              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
               suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
                   color: Colors.orangeAccent,

@@ -72,104 +72,85 @@ class _EditAddressDialogState extends State<EditAddressDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Theme(
-              data: new ThemeData(
-                primaryColor: Colors.orange,
-              ),
-              child: TextField(
-                  keyboardType: TextInputType.multiline,
-                  controller: address,
-                  textAlign: TextAlign.center,
-                  minLines: 3,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    labelText: '${AppLocalizations.of(context).translate('address')}',
-                    labelStyle: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.bold),
-                    hintText: '${AppLocalizations.of(context).translate('delivery_address')}',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
-                  )),
-            ),
+            TextField(
+                keyboardType: TextInputType.multiline,
+                controller: address,
+                textAlign: TextAlign.center,
+                minLines: 3,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  labelText: '${AppLocalizations.of(context).translate('address')}',
+                  labelStyle: TextStyle(
+                      fontSize: 14,
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.bold),
+                  hintText: '${AppLocalizations.of(context).translate('delivery_address')}',
+                  border: new OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.teal)),
+                )),
             SizedBox(
               height: 10,
             ),
-            Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  controller: postcode,
-                  maxLength: 5,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    labelText: '${AppLocalizations.of(context).translate('postcode')}',
-                    labelStyle: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.bold),
-                    hintText: '81100',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
-                  ),
-                  onChanged: (text) {
-                    if (text.length >= 5) {
-                      fetchPostcodeDetails(text);
-                    }
-                  },
-                )),
+            TextField(
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              controller: postcode,
+              maxLength: 5,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                labelText: '${AppLocalizations.of(context).translate('postcode')}',
+                labelStyle: TextStyle(
+                    fontSize: 14,
+                    color: Colors.blueGrey,
+                    fontWeight: FontWeight.bold),
+                hintText: '81100',
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
+              ),
+              onChanged: (text) {
+                if (text.length >= 5) {
+                  fetchPostcodeDetails(text);
+                }
+              },
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
                   width: 100,
                   height: 50,
-                  child: Theme(
-                    data: new ThemeData(
-                      primaryColor: Colors.orange,
-                    ),
-                    child: TextField(
-                        enabled: false,
-                        style: TextStyle(fontSize: 12),
-                        keyboardType: TextInputType.text,
-                        controller: city,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          labelText: '${AppLocalizations.of(context).translate('city')}',
-                          labelStyle: TextStyle(
-                              fontSize: 13,
-                              color: Colors.blueGrey,
-                              fontWeight: FontWeight.bold),
-                          hintText: '81100',
-                        )),
-                  ),
+                  child: TextField(
+                      enabled: false,
+                      style: TextStyle(fontSize: 12),
+                      keyboardType: TextInputType.text,
+                      controller: city,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        labelText: '${AppLocalizations.of(context).translate('city')}',
+                        labelStyle: TextStyle(
+                            fontSize: 13,
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.bold),
+                        hintText: '81100',
+                      )),
                 ),
                 Container(
                   width: 100,
                   height: 50,
-                  child: Theme(
-                    data: new ThemeData(
-                      primaryColor: Colors.orange,
-                    ),
-                    child: TextField(
-                        enabled: false,
-                        style: TextStyle(fontSize: 12),
-                        keyboardType: TextInputType.text,
-                        controller: state,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          labelText: '${AppLocalizations.of(context).translate('state')}',
-                          labelStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.blueGrey,
-                              fontWeight: FontWeight.bold),
-                          hintText: 'Johor',
-                        )),
-                  ),
+                  child: TextField(
+                      enabled: false,
+                      style: TextStyle(fontSize: 12),
+                      keyboardType: TextInputType.text,
+                      controller: state,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        labelText: '${AppLocalizations.of(context).translate('state')}',
+                        labelStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.bold),
+                        hintText: 'Johor',
+                      )),
                 ),
               ],
             ),

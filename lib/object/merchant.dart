@@ -28,6 +28,9 @@ class Merchant {
   String timeOption;
   String minPurchase;
   String allowTNG;
+  String allowBoost;
+  String allowDuit;
+  String allowSarawak;
   bool grouping = true;
 
   Merchant(
@@ -58,7 +61,10 @@ class Merchant {
       this.workingTime,
       this.taxPercent,
       this.minPurchase,
-      this.allowTNG});
+      this.allowTNG,
+      this.allowBoost,
+      this.allowDuit,
+      this.allowSarawak});
 
   Merchant.fromJson(Map<String, dynamic> json)
       : merchantId = json['merchantId'],
@@ -87,7 +93,10 @@ class Merchant {
         timeOption = json['delivery_time_option'].toString(),
         minPurchase = json['order_min_purchase'].toString(),
         taxPercent = json['tax_percent'].toString(),
-        allowTNG = json['tng_manual_payment'].toString();
+        allowTNG = json['tng_manual_payment'].toString(),
+        allowBoost = json['boost_manual_payment'].toString(),
+        allowDuit = json['duit_now_manual_payment'].toString(),
+        allowSarawak = json['sarawak_pay_manual_payment'].toString();
 
   Map<String, dynamic> toJson() => {
         'merchantId': merchantId,

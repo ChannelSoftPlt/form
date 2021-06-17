@@ -70,30 +70,25 @@ class _EditShippingTaxDialogState extends State<EditShippingTaxDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: TextField(
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
-                ],
-                controller: widget.type == 'delivery_fee' ? deliveryFree : tax,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  labelText: widget.type == 'delivery_fee'
-                      ? '${AppLocalizations.of(context).translate('delivery_fee')}'
-                      : '${AppLocalizations.of(context).translate('tax')}',
-                  labelStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blueGrey,
-                      fontWeight: FontWeight.bold),
-                  hintText: '0.00',
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                )),
-          ),
+          TextField(
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+              ],
+              controller: widget.type == 'delivery_fee' ? deliveryFree : tax,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                labelText: widget.type == 'delivery_fee'
+                    ? '${AppLocalizations.of(context).translate('delivery_fee')}'
+                    : '${AppLocalizations.of(context).translate('tax')}',
+                labelStyle: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blueGrey,
+                    fontWeight: FontWeight.bold),
+                hintText: '0.00',
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
+              )),
         ],
       ),
     );

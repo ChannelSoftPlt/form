@@ -373,28 +373,23 @@ class _ListState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
-                  ),
-                  child: TextField(
-                    keyboardType: TextInputType.multiline,
-                    controller: shareContent,
-                    textAlign: TextAlign.start,
-                    minLines: 1,
-                    maxLines: 5,
-                    maxLengthEnforced: true,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.textsms),
-                      labelText:
-                          '${AppLocalizations.of(context).translate('content')}',
-                      labelStyle:
-                          TextStyle(fontSize: 16, color: Colors.blueGrey),
-                      hintText:
-                          '${AppLocalizations.of(context).translate('write_share_content')}',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                    ),
+                TextField(
+                  keyboardType: TextInputType.multiline,
+                  controller: shareContent,
+                  textAlign: TextAlign.start,
+                  minLines: 1,
+                  maxLines: 5,
+                  maxLengthEnforced: true,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.textsms),
+                    labelText:
+                        '${AppLocalizations.of(context).translate('content')}',
+                    labelStyle:
+                        TextStyle(fontSize: 16, color: Colors.blueGrey),
+                    hintText:
+                        '${AppLocalizations.of(context).translate('write_share_content')}',
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.teal)),
                   ),
                 ),
               ],

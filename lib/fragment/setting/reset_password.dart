@@ -71,91 +71,76 @@ class _ResetPasswordState extends State<ResetPassword> {
                         padding: const EdgeInsets.fromLTRB(30, 10, 30, 20),
                         child: Column(
                           children: <Widget>[
-                            Theme(
-                              data: new ThemeData(
-                                primaryColor: Colors.orange,
+                            TextField(
+                              controller: currentPassword,
+                              obscureText: hideCurrentPassword,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.lock_outline),
+                                labelText: '${AppLocalizations.of(context).translate('current_password')}',
+                                labelStyle: TextStyle(
+                                    fontSize: 16, color: Colors.blueGrey),
+                                hintText: '${AppLocalizations.of(context).translate('current_password')}',
+                                border: new OutlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.teal)),
+                                suffixIcon: IconButton(
+                                    icon: Icon(Icons.remove_red_eye),
+                                    onPressed: () {
+                                      setState(() {
+                                        hideCurrentPassword =
+                                            !hideCurrentPassword;
+                                      });
+                                    }),
                               ),
-                              child: TextField(
-                                controller: currentPassword,
-                                obscureText: hideCurrentPassword,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.lock_outline),
-                                  labelText: '${AppLocalizations.of(context).translate('current_password')}',
-                                  labelStyle: TextStyle(
-                                      fontSize: 16, color: Colors.blueGrey),
-                                  hintText: '${AppLocalizations.of(context).translate('current_password')}',
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.teal)),
-                                  suffixIcon: IconButton(
-                                      icon: Icon(Icons.remove_red_eye),
-                                      onPressed: () {
-                                        setState(() {
-                                          hideCurrentPassword =
-                                              !hideCurrentPassword;
-                                        });
-                                      }),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              controller: newPassword,
+                              obscureText: hideNewPassword,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.lock_outline),
+                                labelText: '${AppLocalizations.of(context).translate('new_password')}',
+                                labelStyle: TextStyle(
+                                    fontSize: 16, color: Colors.blueGrey),
+                                hintText: '${AppLocalizations.of(context).translate('new_password')}',
+                                border: new OutlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.teal)),
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.remove_red_eye),
+                                  onPressed: () {
+                                    setState(() {
+                                      hideNewPassword = !hideNewPassword;
+                                    });
+                                  },
                                 ),
                               ),
                             ),
                             SizedBox(
                               height: 10,
                             ),
-                            Theme(
-                              data: new ThemeData(
-                                primaryColor: Colors.orange,
-                              ),
-                              child: TextField(
-                                controller: newPassword,
-                                obscureText: hideNewPassword,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.lock_outline),
-                                  labelText: '${AppLocalizations.of(context).translate('new_password')}',
-                                  labelStyle: TextStyle(
-                                      fontSize: 16, color: Colors.blueGrey),
-                                  hintText: '${AppLocalizations.of(context).translate('new_password')}',
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.teal)),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(Icons.remove_red_eye),
-                                    onPressed: () {
-                                      setState(() {
-                                        hideNewPassword = !hideNewPassword;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Theme(
-                              data: new ThemeData(
-                                primaryColor: Colors.orange,
-                              ),
-                              child: TextField(
-                                controller: confirmPassword,
-                                obscureText: hideConfirmPassword,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.lock_outline),
-                                  labelText: '${AppLocalizations.of(context).translate('confirm_password')}',
-                                  labelStyle: TextStyle(
-                                      fontSize: 16, color: Colors.blueGrey),
-                                  hintText: '${AppLocalizations.of(context).translate('confirm_password')}',
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.teal)),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(Icons.remove_red_eye),
-                                    onPressed: () {
-                                      setState(() {
-                                        hideConfirmPassword =
-                                            !hideConfirmPassword;
-                                      });
-                                    },
-                                  ),
+                            TextField(
+                              controller: confirmPassword,
+                              obscureText: hideConfirmPassword,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.lock_outline),
+                                labelText: '${AppLocalizations.of(context).translate('confirm_password')}',
+                                labelStyle: TextStyle(
+                                    fontSize: 16, color: Colors.blueGrey),
+                                hintText: '${AppLocalizations.of(context).translate('confirm_password')}',
+                                border: new OutlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.teal)),
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.remove_red_eye),
+                                  onPressed: () {
+                                    setState(() {
+                                      hideConfirmPassword =
+                                          !hideConfirmPassword;
+                                    });
+                                  },
                                 ),
                               ),
                             ),

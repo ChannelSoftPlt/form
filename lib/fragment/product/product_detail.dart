@@ -90,7 +90,6 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       variation = widget.product.variation;
       stock.text = widget.product.stock;
       sequence.text = widget.product.sequence;
-
       getUrl();
       getProductGallery();
       //for On Back Press checking purpose
@@ -250,35 +249,30 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
       ),
       body: WillPopScope(
         onWillPop: _onBackPressed,
-        child: Theme(
-          data: new ThemeData(
-            primaryColor: Colors.orange,
-          ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  imagePart(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  bottomPart(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  VariantLayout(
-                    variant: variation,
-                    onChange: (variation) {
-                      print('on change variation: $variation');
-                      setState(() {
-                        this.variation = variation;
-                      });
-                    },
-                  ),
-                ],
-              ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                imagePart(),
+                SizedBox(
+                  height: 10,
+                ),
+                bottomPart(),
+                SizedBox(
+                  height: 10,
+                ),
+                VariantLayout(
+                  variant: variation,
+                  onChange: (variation) {
+                    print('on change variation: $variation');
+                    setState(() {
+                      this.variation = variation;
+                    });
+                  },
+                ),
+              ],
             ),
           ),
         ),
@@ -453,26 +447,20 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             ),
             InkWell(
               onTap: () => showCategoryDialog(context),
-              child: Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: TextField(
-                  enabled: false,
-                  controller: category,
-                  textAlign: TextAlign.start,
-                  decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 14),
-                      labelText:
-                          '${AppLocalizations.of(context).translate('category')}',
-                      labelStyle:
-                          TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      hintText:
-                          '${AppLocalizations.of(context).translate('product_category')}',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                      suffixIcon: Icon(Icons.arrow_drop_down)),
-                ),
+              child: TextField(
+                enabled: false,
+                controller: category,
+                textAlign: TextAlign.start,
+                decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 14),
+                    labelText:
+                        '${AppLocalizations.of(context).translate('category')}',
+                    labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                    hintText:
+                        '${AppLocalizations.of(context).translate('product_category')}',
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.teal)),
+                    suffixIcon: Icon(Icons.arrow_drop_down)),
               ),
             ),
             SizedBox(
@@ -632,6 +620,17 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
             width: 120,
             image: NetworkImage(
                 Domain.imagePath.toString() + '${imageGallery.imageName}'),
+            imageErrorBuilder: (BuildContext context, Object exception,
+                StackTrace stackTrace) {
+              return Container(
+                  width: 120,
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.error_outline,
+                    color: Colors.redAccent,
+                    size: 40,
+                  ));
+            },
             placeholder: NetworkImage('${Domain.imagePath}no-image-found.png'));
       } else
         return Container(

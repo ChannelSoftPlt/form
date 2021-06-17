@@ -114,79 +114,64 @@ class _PaymentGatewayDialogState extends State<PaymentGatewayDialog> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: TextField(
-                  controller: merchantName,
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.account_box),
-                      labelText:
-                          '${AppLocalizations.of(context).translate('merchant_name')}',
-                      labelStyle:
-                          TextStyle(fontSize: 16, color: Colors.blueGrey),
-                      hintText:
-                          '${AppLocalizations.of(context).translate('merchant_name')}',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal))),
-                ),
+              TextField(
+                controller: merchantName,
+                decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.account_box),
+                    labelText:
+                        '${AppLocalizations.of(context).translate('merchant_name')}',
+                    labelStyle:
+                        TextStyle(fontSize: 16, color: Colors.blueGrey),
+                    hintText:
+                        '${AppLocalizations.of(context).translate('merchant_name')}',
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.teal))),
               ),
               SizedBox(
                 height: 20,
               ),
-              Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: TextField(
-                  controller: apiKey,
-                  obscureText: hideApiKey,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.vpn_lock),
-                    labelText:
-                        '${AppLocalizations.of(context).translate('api_key')}',
-                    labelStyle: TextStyle(fontSize: 16, color: Colors.blueGrey),
-                    hintText:
-                        '${AppLocalizations.of(context).translate('api_key')}',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.remove_red_eye),
-                      onPressed: () {
-                        hideApiKey = !hideApiKey;
-                        refreshController.add('update');
-                      },
-                    ),
+              TextField(
+                controller: apiKey,
+                obscureText: hideApiKey,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.vpn_lock),
+                  labelText:
+                      '${AppLocalizations.of(context).translate('api_key')}',
+                  labelStyle: TextStyle(fontSize: 16, color: Colors.blueGrey),
+                  hintText:
+                      '${AppLocalizations.of(context).translate('api_key')}',
+                  border: new OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.teal)),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.remove_red_eye),
+                    onPressed: () {
+                      hideApiKey = !hideApiKey;
+                      refreshController.add('update');
+                    },
                   ),
                 ),
               ),
               SizedBox(
                 height: 20,
               ),
-              Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: TextField(
-                  controller: secretKey,
-                  obscureText: hideSecretKey,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.vpn_key),
-                    labelText:
-                        '${AppLocalizations.of(context).translate('secret_key')}',
-                    labelStyle: TextStyle(fontSize: 16, color: Colors.blueGrey),
-                    hintText:
-                        '${AppLocalizations.of(context).translate('secret_key')}',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.remove_red_eye),
-                      onPressed: () {
-                        hideSecretKey = !hideSecretKey;
-                        refreshController.add('update');
-                      },
-                    ),
+              TextField(
+                controller: secretKey,
+                obscureText: hideSecretKey,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.vpn_key),
+                  labelText:
+                      '${AppLocalizations.of(context).translate('secret_key')}',
+                  labelStyle: TextStyle(fontSize: 16, color: Colors.blueGrey),
+                  hintText:
+                      '${AppLocalizations.of(context).translate('secret_key')}',
+                  border: new OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.teal)),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.remove_red_eye),
+                    onPressed: () {
+                      hideSecretKey = !hideSecretKey;
+                      refreshController.add('update');
+                    },
                   ),
                 ),
               ),

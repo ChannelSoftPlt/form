@@ -41,73 +41,68 @@ class _PostcodeLayoutState extends State<PostcodeLayout> {
   @override
   Widget build(BuildContext context) {
     return postcode != null
-        ? Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  height: countHeight(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+        ? Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+              height: countHeight(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: postcode.length,
+                      itemBuilder: (context, position) {
+                        return listViewItem(postcode[position], position);
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: postcode.length <= 0,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${AppLocalizations.of(context).translate(
+                          'no_postcode_found',
+                        )}',
+                        style: TextStyle(color: Colors.blueGrey),
+                      ),
+                    ),
+                  ),
+                  ButtonBar(
                     children: [
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: postcode.length,
-                          itemBuilder: (context, position) {
-                            return listViewItem(postcode[position], position);
-                          },
+                      RaisedButton(
+                        elevation: 5,
+                        onPressed: () =>
+                            _showAddPostcodeDialog(context, false, null),
+                        child: Text(
+                          '${AppLocalizations.of(context).translate('add_postcode')}',
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 12),
                         ),
+                        color: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
                       ),
-                      Visibility(
-                        visible: postcode.length <= 0,
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          alignment: Alignment.center,
-                          child: Text(
-                            '${AppLocalizations.of(context).translate(
-                              'no_postcode_found',
-                            )}',
-                            style: TextStyle(color: Colors.blueGrey),
-                          ),
+                      RaisedButton(
+                        elevation: 5,
+                        onPressed: () => updatePostcodeSetting(),
+                        child: Text(
+                          '${AppLocalizations.of(context).translate('save')}',
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 12),
                         ),
+                        color: Colors.green,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
                       ),
-                      ButtonBar(
-                        children: [
-                          RaisedButton(
-                            elevation: 5,
-                            onPressed: () =>
-                                _showAddPostcodeDialog(context, false, null),
-                            child: Text(
-                              '${AppLocalizations.of(context).translate('add_postcode')}',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                            color: Colors.orange,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                          ),
-                          RaisedButton(
-                            elevation: 5,
-                            onPressed: () => updatePostcodeSetting(),
-                            child: Text(
-                              '${AppLocalizations.of(context).translate('save')}',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                            color: Colors.green,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                          ),
-                        ],
-                      )
                     ],
-                  )),
-            ),
-          )
+                  )
+                ],
+              )),
+        )
         : Center(child: CustomProgressBar());
   }
 
@@ -263,106 +258,101 @@ class _PostcodeLayoutState extends State<PostcodeLayout> {
                   },
                 ),
               ],
-              content: Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: Container(
-                    width: 2000,
-                    height: 170,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: TextField(
-                                controller: postcodeOne,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: false),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r"^\d*\.?\d*")),
-                                ],
-                                maxLength: 5,
-                                textAlign: TextAlign.start,
-                                decoration: InputDecoration(
-                                  hintStyle: TextStyle(fontSize: 14),
-                                  labelText:
-                                      '${AppLocalizations.of(context).translate('postcode')}',
-                                  labelStyle: TextStyle(
-                                      fontSize: 14, color: Colors.blueGrey),
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.teal)),
-                                ),
+              content: Container(
+                  width: 2000,
+                  height: 170,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                              controller: postcodeOne,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: false),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r"^\d*\.?\d*")),
+                              ],
+                              maxLength: 5,
+                              textAlign: TextAlign.start,
+                              decoration: InputDecoration(
+                                hintStyle: TextStyle(fontSize: 14),
+                                labelText:
+                                    '${AppLocalizations.of(context).translate('postcode')}',
+                                labelStyle: TextStyle(
+                                    fontSize: 14, color: Colors.blueGrey),
+                                border: new OutlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.teal)),
                               ),
                             ),
-                            Expanded(
-                                flex: 1,
-                                child: Text(
-                                  AppLocalizations.of(context).translate('to'),
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                )),
-                            Expanded(
-                              flex: 3,
-                              child: TextField(
-                                maxLength: 5,
-                                controller: postcodeTwo,
-                                textAlign: TextAlign.start,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: false),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r"^\d*\.?\d*")),
-                                ],
-                                decoration: InputDecoration(
-                                  hintStyle: TextStyle(fontSize: 14),
-                                  labelText:
-                                      '${AppLocalizations.of(context).translate('postcode')}',
-                                  labelStyle: TextStyle(
-                                      fontSize: 14, color: Colors.blueGrey),
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.teal)),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-                          controller: shippingFee,
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r"^\d*\.?\d*")),
-                          ],
-                          textAlign: TextAlign.start,
-                          decoration: InputDecoration(
-                            hintStyle: TextStyle(fontSize: 14),
-                            labelText:
-                                '${AppLocalizations.of(context).translate('shipping_fee')}',
-                            labelStyle:
-                                TextStyle(fontSize: 14, color: Colors.blueGrey),
-                            prefixText: 'RM',
-                            prefixStyle:
-                                TextStyle(fontSize: 14, color: Colors.black87),
-                            border: new OutlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.teal)),
                           ),
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                AppLocalizations.of(context).translate('to'),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              )),
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                              maxLength: 5,
+                              controller: postcodeTwo,
+                              textAlign: TextAlign.start,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: false),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r"^\d*\.?\d*")),
+                              ],
+                              decoration: InputDecoration(
+                                hintStyle: TextStyle(fontSize: 14),
+                                labelText:
+                                    '${AppLocalizations.of(context).translate('postcode')}',
+                                labelStyle: TextStyle(
+                                    fontSize: 14, color: Colors.blueGrey),
+                                border: new OutlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.teal)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        controller: shippingFee,
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d*\.?\d*")),
+                        ],
+                        textAlign: TextAlign.start,
+                        decoration: InputDecoration(
+                          hintStyle: TextStyle(fontSize: 14),
+                          labelText:
+                              '${AppLocalizations.of(context).translate('shipping_fee')}',
+                          labelStyle:
+                              TextStyle(fontSize: 14, color: Colors.blueGrey),
+                          prefixText: 'RM',
+                          prefixStyle:
+                              TextStyle(fontSize: 14, color: Colors.black87),
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
                         ),
-                      ],
-                    )),
-              ));
+                      ),
+                    ],
+                  )));
         });
   }
 

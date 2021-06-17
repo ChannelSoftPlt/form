@@ -35,28 +35,23 @@ class _EastWestLayoutState extends State<EastWestLayout> {
   @override
   Widget build(BuildContext context) {
     return eastWest != null
-        ? Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: Container(
-                height: 750,
-                child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: eastWest.length,
-                  itemBuilder: (context, position) {
-                    flatRate1s.add(new TextEditingController());
-                    flatRate2s.add(new TextEditingController());
-                    breakPoints.add(new TextEditingController());
+        ? Container(
+            height: 750,
+            child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: eastWest.length,
+              itemBuilder: (context, position) {
+                flatRate1s.add(new TextEditingController());
+                flatRate2s.add(new TextEditingController());
+                breakPoints.add(new TextEditingController());
 
-                    flatRate1s[position].text = eastWest[position].firstFee;
-                    flatRate2s[position].text = eastWest[position].secondFee;
-                    breakPoints[position].text = eastWest[position].pricePoint;
+                flatRate1s[position].text = eastWest[position].firstFee;
+                flatRate2s[position].text = eastWest[position].secondFee;
+                breakPoints[position].text = eastWest[position].pricePoint;
 
-                    return listViewItem(eastWest[position], position);
-                  },
-                )),
-          )
+                return listViewItem(eastWest[position], position);
+              },
+            ))
         : Center(child: CustomProgressBar());
   }
 

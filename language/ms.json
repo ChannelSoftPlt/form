@@ -572,5 +572,32 @@
   "setup_tng": "Setup Touch 'n Go",
   "tng_description": "Muat naik Kod QR Touch 'n Go anda di sini.",
   "fpay_description": "Benarkan pelanggan anda membayar melalui FPX & E-Wallet dalam talian.",
-  "no_qr_code": "Mesti Muat Naik Kod QR Sebelum aktifkan Touch 'n Go anda"
+  "no_qr_code": "Mesti Muat Naik Kod QR Sebelum aktifkan Touch 'n Go anda",
+
+  "invalid_character": "Invalid Character Found!",
+
+  "select_printer": "Pilih Pencetak",
+  "print": "Cetak",
+  "print_success": "Cetak Berjaya!",
+  "enable_bluetooth": "Sila aktifkan bluetooth untuk mencetak ..",
+  "no_device": "Tiada Peranti Dijumpai ..",
+  "no_device_2": "Pastikan anda telah membuka sambungan bluetooth anda.",
+  "select_a_device": "Sila pilih pencetak!",
+  "scan_device_around": "Nearby Device Scanning!",
+  "connection_timeout": "Printer connection timeout!",
+  "ticket_empty": "Tiket kosong!",
+  "print_in_progress": "Cetakan lain sedang dijalankan!",
+  "scanning_in_progress": "Pengimbasan sedang dijalankan!",
+  "device_not_support": "Peranti ini tidak disokong!",
+  "format_error": "Character Format Error!",
+  "avoid_tol": "Elakkan tol",
+  "avoid_tol_description": "Pilih ini untuk mengelakkan lebuh raya dengan Tol.",
+  "paper_size": "Saiz Kertas",
+
+  "boost_description": "Muat naik Kod QR Boost anda di sini.",
+  "duit_now_description": "Muat naik Kod QR DuitNow anda di sini.",
+  "sarawak_pay_description": "Muat naik Kod QR Bayar Sarawak anda di sini.",
+  "no_boost_qr_code": "Mesti Muat Naik Kod QR Sebelum aktifkan Boost anda",
+  "no_duit_now_qr_code": "Mesti Muat Naik Kod QR Sebelum aktifkan DuitNow QR anda",
+  "no_sarawak_pay_qr_code": "Mesti Muat Naik Kod QR Sebelum aktifkan Sarawak Pay anda"
 }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:my/fragment/order/detail/order_detail.dart';
+import 'package:my/fragment/order/print/print_dialog.dart';
 import 'package:my/object/order.dart';
 import 'package:flutter/material.dart';
 import 'package:my/shareWidget/snack_bar.dart';
@@ -196,12 +197,15 @@ class _CardViewState extends State<CardView> {
           child: Text(
               '${AppLocalizations.of(context).translate('update_status')}'),
         ),
-        if (widget.orders.paymentStatus != '0')
-          PopupMenuItem(
-            value: 'payment_status',
-            child: Text(
-                '${AppLocalizations.of(context).translate('change_payment_status')}'),
-          ),
+        PopupMenuItem(
+          value: 'payment_status',
+          child: Text(
+              '${AppLocalizations.of(context).translate('change_payment_status')}'),
+        ),
+        PopupMenuItem(
+          value: 'print',
+          child: Text('${AppLocalizations.of(context).translate('print')}'),
+        ),
         PopupMenuItem(
           value: 'delete',
           child: Text('${AppLocalizations.of(context).translate('delete')}'),
@@ -225,13 +229,13 @@ class _CardViewState extends State<CardView> {
             launch(('tel://+${Order.getPhoneNumber(widget.orders.phone)}'));
             break;
           case 'status':
-            if (widget.orders.status == '1')
-              showGroupingDialog(context);
-            else
               _showDialog(context);
             break;
           case 'payment_status':
             showPaymentStatusDialog(context);
+            break;
+          case 'print':
+            openPrintDialog(context);
             break;
           case 'delete':
             showDeleteOrderDialog(context);
@@ -294,6 +298,17 @@ class _CardViewState extends State<CardView> {
                   '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             }
           },
+        );
+      },
+    );
+  }
+
+  openPrintDialog(mainContext) {
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        return PrintDialog(
+          orderId: widget.orders.id.toString(),
         );
       },
     );

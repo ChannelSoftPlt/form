@@ -13,12 +13,12 @@ import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
 
 class Domain {
-  static var domain = 'https://www.mobile.emenu.com.my/';
-  static var webDomain = 'https://www.cp.emenu.com.my/';
+//  static var domain = 'https://www.mobile.emenu.com.my/';
+//  static var webDomain = 'https://www.cp.emenu.com.my/';
 
   //testing server
-//  static var domain = 'https://emenumobile.lkmng.com/';
-//  static var webDomain = 'https://www.formtest.lkmng.com/';
+  static var domain = 'https://emenumobile.lkmng.com/';
+  static var webDomain = 'https://www.formtest.lkmng.com/';
 
   static Uri order = Uri.parse(domain + 'mobile_api/order/index.php');
   static Uri product = Uri.parse(domain + 'mobile_api/product/index.php');
@@ -39,6 +39,7 @@ class Domain {
   static Uri shipping = Uri.parse(domain + 'mobile_api/shipping/index.php');
   static Uri promotionDialog =
       Uri.parse(domain + 'mobile_api/promotion_dialog/index.php');
+  static Uri printer = Uri.parse(domain + 'mobile_api/printer/index.php');
 
   /*
   * Web Domain
@@ -360,6 +361,20 @@ class Domain {
   }
 
   /*
+  * print data
+  * */
+  fetchPrintData($orderId) async {
+    var response = await http.post(Domain.printer, body: {
+      'read': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'order_id': $orderId
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * update category sequence
   * */
   updateCategorySequence(sequence) async {
@@ -477,12 +492,26 @@ class Domain {
   /*
   * read tng qr code
   * */
-  readTngQrCode() async {
+  readWalletQrCode(type) async {
     var response = await http.post(Domain.profile, body: {
       'read_qr_code': '1',
+      'type': type,
       'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      Merchant.fromJson(await SharePreferences().read("merchant"))
+          .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * read tng qr code
+  * */
+  checkQRCode() async {
+    var response = await http.post(Domain.profile, body: {
+      'read_availability': '1',
+      'merchant_id':
+      Merchant.fromJson(await SharePreferences().read("merchant"))
+          .merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -690,8 +719,8 @@ class Domain {
   /*
   * update payment
   * */
-  updatePayment(
-      bankDetail, bankTransfer, cod, fpayTransfer, allowTNG, taxPercent) async {
+  updatePayment(bankDetail, bankTransfer, cod, fpayTransfer, allowTNG,
+      allowBoost, allowDuit, allowSarawak, taxPercent) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'bank_details': bankDetail,
@@ -699,6 +728,9 @@ class Domain {
       'bank_transfer': bankTransfer,
       'fpay_transfer': fpayTransfer,
       'tng_manual_payment': allowTNG,
+      'boost_manual_payment': allowBoost,
+      'duit_now_manual_payment': allowDuit,
+      'sarawak_manual_payment': allowSarawak,
       'tax_percent': taxPercent,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
@@ -912,7 +944,8 @@ class Domain {
   /*
   * update distance shipping
   * */
-  updateDistanceShipping(distance, address, longitude, latitude) async {
+  updateDistanceShipping(
+      distance, address, longitude, latitude, avoidToll) async {
     var response = await http.post(Domain.shipping, body: {
       'update_distance': '1',
       'merchant_id':
@@ -922,6 +955,7 @@ class Domain {
       'address_long_lat': address,
       'longitude': longitude,
       'latitude': latitude,
+      'avoid_toll': avoidToll,
     });
     return jsonDecode(response.body);
   }
@@ -943,10 +977,11 @@ class Domain {
   /*
   * update tng qr code
   * */
-  updateTngQrCode(qrCode) async {
+  updateWalletQrCode(qrCode, type) async {
     var response = await http.post(Domain.profile, body: {
       'update_qr_code': '1',
-      'tng_payment_qrcode': qrCode,
+      'qr_code': qrCode,
+      'type': type,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId

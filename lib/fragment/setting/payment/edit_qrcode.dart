@@ -13,14 +13,16 @@ import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
-class TngQrCodeDialog extends StatefulWidget {
-  TngQrCodeDialog();
+class WalletQrCodeDialog extends StatefulWidget {
+  final String type;
+
+  WalletQrCodeDialog({this.type});
 
   @override
-  _TngQrCodeDialogState createState() => _TngQrCodeDialogState();
+  _WalletQrCodeDialogState createState() => _WalletQrCodeDialogState();
 }
 
-class _TngQrCodeDialogState extends State<TngQrCodeDialog> {
+class _WalletQrCodeDialogState extends State<WalletQrCodeDialog> {
   ImageProvider provider;
   File _image;
   final picker = ImagePicker();
@@ -39,8 +41,8 @@ class _TngQrCodeDialogState extends State<TngQrCodeDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title:
-            new Text('${AppLocalizations.of(context).translate('setup_tng')}'),
+        title: new Text(
+            '${AppLocalizations.of(context).translate('setup')} ${widget.type}'),
         actions: <Widget>[
           FlatButton(
             child: Text('${AppLocalizations.of(context).translate('cancel')}'),
@@ -102,13 +104,26 @@ class _TngQrCodeDialogState extends State<TngQrCodeDialog> {
             : CustomProgressBar());
   }
 
+  getWalletType() {
+    switch (widget.type) {
+      case 'Touch \'N Go':
+        return 'tng';
+      case 'Boost':
+        return 'boost';
+      case 'Duit Now':
+        return 'duit_now';
+      default:
+        return 'sarawak_pay';
+    }
+  }
+
   readQrCode(context) async {
-    Map data = await Domain().readTngQrCode();
+    Map data = await Domain().readWalletQrCode(getWalletType());
     setState(() {
       if (data['status'] == '1') {
-        if (data['qr_code'][0]['tng_payment_qrcode'] != '') {
-          compressedFileSource = base64Decode(base64Data(
-              data['qr_code'][0]['tng_payment_qrcode'].split(',').last));
+        if (data['qr_code'][0]['qr_code'] != '') {
+          compressedFileSource = base64Decode(
+              base64Data(data['qr_code'][0]['qr_code'].split(',').last));
         }
       } else
         CustomToast(
@@ -124,7 +139,7 @@ class _TngQrCodeDialogState extends State<TngQrCodeDialog> {
         ? 'data:image/jpeg;base64,${base64Encode(compressedFileSource).toString()}'
         : '';
 
-    Map data = await Domain().updateTngQrCode(qrCode);
+    Map data = await Domain().updateWalletQrCode(qrCode, getWalletType());
 
     if (data['status'] == '1') {
       CustomToast('${AppLocalizations.of(context).translate('update_success')}',

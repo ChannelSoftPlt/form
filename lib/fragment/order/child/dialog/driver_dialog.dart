@@ -117,27 +117,22 @@ class _DriverDialogState extends State<DriverDialog> {
   Widget createNewGroup() {
     return Visibility(
         visible: showAddNew,
-        child: Theme(
-          data: new ThemeData(
-            primaryColor: Colors.orange,
-          ),
-          child: TextField(
-              keyboardType: TextInputType.text,
-              controller: newDriver,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                labelText:
-                    '${AppLocalizations.of(context).translate('new_driver')}',
-                labelStyle: TextStyle(
-                    fontSize: 14,
-                    color: Colors.blueGrey,
-                    fontWeight: FontWeight.bold),
-                hintText:
-                    '${AppLocalizations.of(context).translate('driver_name')}',
-                border: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.teal)),
-              )),
-        ));
+        child: TextField(
+            keyboardType: TextInputType.text,
+            controller: newDriver,
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              labelText:
+                  '${AppLocalizations.of(context).translate('new_driver')}',
+              labelStyle: TextStyle(
+                  fontSize: 14,
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.bold),
+              hintText:
+                  '${AppLocalizations.of(context).translate('driver_name')}',
+              border: new OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.teal)),
+            )));
   }
 
   Widget chooseExistingGroup() {

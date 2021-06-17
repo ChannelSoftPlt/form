@@ -38,45 +38,40 @@ class _WorkingTimeLayoutState extends State<WorkingTimeLayout> {
   @override
   Widget build(BuildContext context) {
     return widget.workingTime != null
-        ? Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  height: countHeight(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: widget.workingTime.length,
-                          itemBuilder: (context, position) {
-                            return listViewItem(
-                                widget.workingTime[position], position);
-                          },
-                        ),
+        ? Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+              height: countHeight(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: widget.workingTime.length,
+                      itemBuilder: (context, position) {
+                        return listViewItem(
+                            widget.workingTime[position], position);
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () =>
+                          _showAddWorkingTimeDialog(context, false, null),
+                      child: Text(
+                        '${AppLocalizations.of(context).translate('add_working_time')}',
+                        style:
+                            TextStyle(color: Colors.black54, fontSize: 12),
                       ),
-                      Container(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () =>
-                              _showAddWorkingTimeDialog(context, false, null),
-                          child: Text(
-                            '${AppLocalizations.of(context).translate('add_working_time')}',
-                            style:
-                                TextStyle(color: Colors.black54, fontSize: 12),
-                          ),
-                          style: OutlinedButton.styleFrom(),
-                        ),
-                      )
-                    ],
-                  )),
-            ),
-          )
+                      style: OutlinedButton.styleFrom(),
+                    ),
+                  )
+                ],
+              )),
+        )
         : Center(child: CustomProgressBar());
   }
 
@@ -183,75 +178,70 @@ class _WorkingTimeLayoutState extends State<WorkingTimeLayout> {
                   },
                 ),
               ],
-              content: Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: Container(
-                    width: 2000,
-                    height: 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: TextField(
-                                readOnly: true,
-                                controller: startTime,
-                                onTap: () => selectTime(
-                                    workingTime != null
-                                        ? workingTime.startTime
-                                        : '',
-                                    startTime),
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.black87),
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  labelText:
-                                      '${AppLocalizations.of(context).translate('start')}',
-                                  labelStyle: TextStyle(
-                                      fontSize: 14, color: Colors.black54),
-                                ),
+              content: Container(
+                  width: 2000,
+                  height: 80,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                              readOnly: true,
+                              controller: startTime,
+                              onTap: () => selectTime(
+                                  workingTime != null
+                                      ? workingTime.startTime
+                                      : '',
+                                  startTime),
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.black87),
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                labelText:
+                                    '${AppLocalizations.of(context).translate('start')}',
+                                labelStyle: TextStyle(
+                                    fontSize: 14, color: Colors.black54),
                               ),
                             ),
-                            Expanded(
-                                flex: 1,
-                                child: Text(
-                                  AppLocalizations.of(context).translate('to'),
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                )),
-                            Expanded(
-                              flex: 3,
-                              child: TextField(
-                                readOnly: true,
-                                controller: endTime,
-                                onTap: () => selectTime(
-                                    workingTime != null
-                                        ? workingTime.endTime
-                                        : '',
-                                    endTime),
+                          ),
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                AppLocalizations.of(context).translate('to'),
                                 style: TextStyle(
-                                    fontSize: 12, color: Colors.black87),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  labelText:
-                                      '${AppLocalizations.of(context).translate('end')}',
-                                  labelStyle: TextStyle(
-                                      fontSize: 14, color: Colors.black54),
-                                ),
+                              )),
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                              readOnly: true,
+                              controller: endTime,
+                              onTap: () => selectTime(
+                                  workingTime != null
+                                      ? workingTime.endTime
+                                      : '',
+                                  endTime),
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.black87),
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                labelText:
+                                    '${AppLocalizations.of(context).translate('end')}',
+                                labelStyle: TextStyle(
+                                    fontSize: 14, color: Colors.black54),
                               ),
                             ),
-                          ],
-                        )
-                      ],
-                    )),
-              ));
+                          ),
+                        ],
+                      )
+                    ],
+                  )));
         });
   }
 

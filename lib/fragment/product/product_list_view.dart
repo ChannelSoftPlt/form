@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:my/fragment/product/product_detail.dart';
 import 'package:my/object/product.dart';
@@ -17,7 +19,6 @@ class ProductListView extends StatefulWidget {
 class _ProductListViewState extends State<ProductListView> {
   @override
   Widget build(BuildContext context) {
-    print(widget.product.variation);
     return Card(
       elevation: 5,
       margin: EdgeInsets.all(10.0),
@@ -33,9 +34,22 @@ class _ProductListViewState extends State<ProductListView> {
                   width: 120,
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                      '${Domain.imagePath}${widget.product.image}'),
-                  placeholder:
-                      NetworkImage('${Domain.imagePath}no-image-found.png')),
+                    '${Domain.imagePath}${widget.product.image}',
+                  ),
+                  imageErrorBuilder: (BuildContext context, Object exception,
+                      StackTrace stackTrace) {
+                    return Container(
+                        width: 120,
+                        height: 100,
+                        color: Colors.black12,
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.error_outline,
+                          color: Colors.redAccent,
+                          size: 40,
+                        ));
+                  },
+                  placeholder: NetworkImage('${Domain.imagePath}no-image-found.png')),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -96,7 +110,7 @@ class _ProductListViewState extends State<ProductListView> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   ),
                   Visibility(
-                    visible: widget.product.variation != '[]',
+                    visible: showVariation(widget.product.variation),
                     child: Text(
                       AppLocalizations.of(context)
                           .translate('add_on_available'),
@@ -126,6 +140,15 @@ class _ProductListViewState extends State<ProductListView> {
         ),
       ),
     );
+  }
+
+  bool showVariation(variation) {
+    try {
+      List variant = jsonDecode(variation);
+      return variant.length > 0;
+    } catch ($e) {
+      return false;
+    }
   }
 
   stockStatus(stock) {

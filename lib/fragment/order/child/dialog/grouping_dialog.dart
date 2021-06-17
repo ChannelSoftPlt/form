@@ -113,25 +113,20 @@ class _GroupingDialogState extends State<GroupingDialog> {
   Widget createNewGroup() {
     return Visibility(
         visible: showAddNew,
-        child: Theme(
-          data: new ThemeData(
-            primaryColor: Colors.orange,
-          ),
-          child: TextField(
-              keyboardType: TextInputType.text,
-              controller: newGroup,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                labelText: '${AppLocalizations.of(context).translate('new_group')}',
-                labelStyle: TextStyle(
-                    fontSize: 14,
-                    color: Colors.blueGrey,
-                    fontWeight: FontWeight.bold),
-                hintText: '${AppLocalizations.of(context).translate('group_name')}',
-                border: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.teal)),
-              )),
-        ));
+        child: TextField(
+            keyboardType: TextInputType.text,
+            controller: newGroup,
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              labelText: '${AppLocalizations.of(context).translate('new_group')}',
+              labelStyle: TextStyle(
+                  fontSize: 14,
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.bold),
+              hintText: '${AppLocalizations.of(context).translate('group_name')}',
+              border: new OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.teal)),
+            )));
   }
 
   Widget chooseExistingGroup() {

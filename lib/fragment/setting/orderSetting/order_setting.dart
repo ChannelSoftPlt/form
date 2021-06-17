@@ -108,424 +108,419 @@ class _OrderSettingState extends State<OrderSetting> {
   }
 
   Widget mainContent(context) {
-    return Theme(
-      data: new ThemeData(
-        primaryColor: Colors.orange,
-      ),
-      child: StreamBuilder<Object>(
-          stream: refreshController.stream,
-          builder: (context, result) {
-            return SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    elevation: 5,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10, 15, 10, 35),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.date_range,
-                                    color: Colors.grey,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 16),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                              text:
-                                                  '${AppLocalizations.of(context).translate('optional_fields')}',
-                                              style: TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      89, 100, 109, 1),
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(text: '\n'),
-                                          TextSpan(
+    return StreamBuilder<Object>(
+        stream: refreshController.stream,
+        builder: (context, result) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  elevation: 5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(10, 15, 10, 35),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.date_range,
+                                  color: Colors.grey,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                      children: <TextSpan>[
+                                        TextSpan(
                                             text:
-                                                '${AppLocalizations.of(context).translate('field_will_show_in_emenu')}',
+                                                '${AppLocalizations.of(context).translate('optional_fields')}',
                                             style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              CheckboxListTile(
-                                title: Text(
-                                    '${AppLocalizations.of(context).translate('email')}'),
-                                subtitle: Text(
-                                  '${AppLocalizations.of(context).translate('email_required_hint')}',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                                value: email,
-                                onChanged: (newValue) {
-                                  email = newValue;
-                                  refreshController.add('');
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .trailing, //  <-- leading Checkbox
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                                child: Divider(
-                                  color: Colors.teal.shade100,
-                                  thickness: 1.0,
-                                ),
-                              ),
-                              CheckboxListTile(
-                                title: Text(
-                                    '${AppLocalizations.of(context).translate('self_collect')}'),
-                                subtitle: RichText(
-                                  text: TextSpan(
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 16),
-                                    children: <TextSpan>[
-                                      TextSpan(
+                                                color: Color.fromRGBO(
+                                                    89, 100, 109, 1),
+                                                fontWeight: FontWeight.bold)),
+                                        TextSpan(text: '\n'),
+                                        TextSpan(
                                           text:
-                                              '${AppLocalizations.of(context).translate('self_collect_enable_hint')}',
+                                              '${AppLocalizations.of(context).translate('field_will_show_in_emenu')}',
                                           style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey)),
-                                      TextSpan(text: '\n'),
-                                      TextSpan(
-                                        text:
-                                            '${AppLocalizations.of(context).translate('self_collect_enable_hint_2')}',
-                                        style: TextStyle(
-                                            color: Colors.red, fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                value: selfCollect,
-                                onChanged: (newValue) {
-                                  selfCollect = newValue;
-                                  refreshController.add('');
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .trailing, //  <-- leading Checkbox
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                                child: Divider(
-                                  color: Colors.teal.shade100,
-                                  thickness: 1.0,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                    '${AppLocalizations.of(context).translate('min_purchase')}'),
-                                subtitle: Text(
-                                  '${AppLocalizations.of(context).translate('min_purchase_description')}',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                                trailing: Container(
-                                    width: 80,
-                                    height: 50,
-                                    child: TextField(
-                                      controller: minPurchase,
-                                      textAlign: TextAlign.center,
-                                      keyboardType:
-                                          TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r"^\d*\.?\d*")),
+                                              color: Colors.grey,
+                                              fontSize: 12),
+                                        ),
                                       ],
-                                      decoration: InputDecoration(
-                                          labelText: 'RM',
-                                          counterText: '',
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.orangeAccent,
-                                                width: 1.0),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black45,
-                                                width: 1.0),
-                                          )),
-                                    )),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                                child: Divider(
-                                  color: Colors.teal.shade100,
-                                  thickness: 1.0,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.date_range,
-                                    color: Colors.grey,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 16),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                              text:
-                                                  '${AppLocalizations.of(context).translate('date_time_setting')}',
-                                              style: TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      89, 100, 109, 1),
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(text: '\n'),
-                                          TextSpan(
-                                            text:
-                                                '${AppLocalizations.of(context).translate('date_time_setting_description')}',
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
                                     ),
                                   ),
-                                ],
+                                ),
+                              ],
+                            ),
+                            CheckboxListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('email')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('email_required_hint')}',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.grey),
                               ),
-                              CheckboxListTile(
-                                title: Text(
-                                    "${AppLocalizations.of(context).translate('delivery_date')}"),
-                                subtitle: Text(
-                                  '${AppLocalizations.of(context).translate('delivery_date_hint')}',
+                              value: email,
+                              onChanged: (newValue) {
+                                email = newValue;
+                                refreshController.add('');
+                              },
+                              controlAffinity: ListTileControlAffinity
+                                  .trailing, //  <-- leading Checkbox
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            CheckboxListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('self_collect')}'),
+                              subtitle: RichText(
+                                text: TextSpan(
                                   style: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                                value: deliveryDate,
-                                onChanged: (newValue) {
-                                  deliveryDate = newValue;
-                                  refreshController.add('');
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .trailing, //  <-- leading Checkbox
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                                child: Divider(
-                                  color: Colors.teal.shade100,
-                                  thickness: 1.0,
-                                ),
-                              ),
-                              CheckboxListTile(
-                                title: Text(
-                                    '${AppLocalizations.of(context).translate('delivery_time')}'),
-                                subtitle: Text(
-                                  '${AppLocalizations.of(context).translate('delivery_time_hint')}',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                                value: deliveryTime,
-                                onChanged: (newValue) {
-                                  deliveryTime = newValue;
-                                  refreshController.add('');
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .trailing, //  <-- leading Checkbox
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                                child: Divider(
-                                  color: Colors.teal.shade100,
-                                  thickness: 1.0,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                    '${AppLocalizations.of(context).translate('min_order_day')}'),
-                                subtitle: Text(
-                                  '${AppLocalizations.of(context).translate('min_order_day_description')}',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                                trailing: Container(
-                                    width: 80,
-                                    height: 50,
-                                    child: TextField(
-                                      controller: minOrderDays,
-                                      textAlign: TextAlign.center,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r"^\d*\.?\d*")),
-                                      ],
-                                      maxLength: 2,
-                                      decoration: InputDecoration(
-                                          labelText:
-                                              AppLocalizations.of(context)
-                                                  .translate('day'),
-                                          counterText: '',
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.orangeAccent,
-                                                width: 1.0),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black45,
-                                                width: 1.0),
-                                          )),
-                                    )),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                                child: Divider(
-                                  color: Colors.teal.shade100,
-                                  thickness: 1.0,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                    '${AppLocalizations.of(context).translate('working_day')}'),
-                                subtitle: Text(
-                                  '${AppLocalizations.of(context).translate('working_day_description')}',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                              ),
-                              Column(
-                                children: [workingDayList()],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                                child: Divider(
-                                  color: Colors.teal.shade100,
-                                  thickness: 1.0,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                    '${AppLocalizations.of(context).translate('working_time')}'),
-                                subtitle: RichText(
-                                  text: TextSpan(
-                                    children: <TextSpan>[
-                                      TextSpan(
+                                      color: Colors.black, fontSize: 16),
+                                  children: <TextSpan>[
+                                    TextSpan(
                                         text:
-                                            '${AppLocalizations.of(context).translate('working_time_description')}',
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.grey),
-                                      ),
-                                      TextSpan(text: '\n'),
-                                      TextSpan(
-                                        text:
-                                            '${AppLocalizations.of(context).translate('working_time_description_2')}',
-                                        style: TextStyle(
-                                            color: Colors.red, fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: TextField(
-                                        readOnly: true,
-                                        controller: startTime,
-                                        onTap: () => selectTime(
-                                            startTime.text, startTime),
+                                            '${AppLocalizations.of(context).translate('self_collect_enable_hint')}',
                                         style: TextStyle(
                                             fontSize: 12,
-                                            color: Colors.black87),
-                                        textAlign: TextAlign.center,
-                                        decoration: InputDecoration(
-                                          labelText:
-                                              '${AppLocalizations.of(context).translate('start')}',
-                                          labelStyle: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black54),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          AppLocalizations.of(context)
-                                              .translate('to'),
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center,
-                                        )),
-                                    Expanded(
-                                      flex: 3,
-                                      child: TextField(
-                                        readOnly: true,
-                                        controller: endTime,
-                                        onTap: () =>
-                                            selectTime(endTime.text, endTime),
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.black87),
-                                        textAlign: TextAlign.center,
-                                        decoration: InputDecoration(
-                                          labelText:
-                                              '${AppLocalizations.of(context).translate('end')}',
-                                          labelStyle: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black54),
-                                        ),
-                                      ),
+                                            color: Colors.grey)),
+                                    TextSpan(text: '\n'),
+                                    TextSpan(
+                                      text:
+                                          '${AppLocalizations.of(context).translate('self_collect_enable_hint_2')}',
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 12),
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(
-                                height: 40,
+                              value: selfCollect,
+                              onChanged: (newValue) {
+                                selfCollect = newValue;
+                                refreshController.add('');
+                              },
+                              controlAffinity: ListTileControlAffinity
+                                  .trailing, //  <-- leading Checkbox
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
                               ),
-                              SizedBox(
-                                width: double.infinity,
-                                height: 50.0,
-                                child: RaisedButton(
-                                  elevation: 5,
-                                  onPressed: () => updateOrderSetting(context),
-                                  child: Text(
-                                    '${AppLocalizations.of(context).translate('update_setting')}',
-                                    style: TextStyle(color: Colors.white),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('min_purchase')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('min_purchase_description')}',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.grey),
+                              ),
+                              trailing: Container(
+                                  width: 80,
+                                  height: 50,
+                                  child: TextField(
+                                    controller: minPurchase,
+                                    textAlign: TextAlign.center,
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r"^\d*\.?\d*")),
+                                    ],
+                                    decoration: InputDecoration(
+                                        labelText: 'RM',
+                                        counterText: '',
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.orangeAccent,
+                                              width: 1.0),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black45,
+                                              width: 1.0),
+                                        )),
+                                  )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.date_range,
+                                  color: Colors.grey,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text:
+                                                '${AppLocalizations.of(context).translate('date_time_setting')}',
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    89, 100, 109, 1),
+                                                fontWeight: FontWeight.bold)),
+                                        TextSpan(text: '\n'),
+                                        TextSpan(
+                                          text:
+                                              '${AppLocalizations.of(context).translate('date_time_setting_description')}',
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  color: Colors.orange,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
+                                ),
+                              ],
+                            ),
+                            CheckboxListTile(
+                              title: Text(
+                                  "${AppLocalizations.of(context).translate('delivery_date')}"),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('delivery_date_hint')}',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.grey),
+                              ),
+                              value: deliveryDate,
+                              onChanged: (newValue) {
+                                deliveryDate = newValue;
+                                refreshController.add('');
+                              },
+                              controlAffinity: ListTileControlAffinity
+                                  .trailing, //  <-- leading Checkbox
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            CheckboxListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('delivery_time')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('delivery_time_hint')}',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.grey),
+                              ),
+                              value: deliveryTime,
+                              onChanged: (newValue) {
+                                deliveryTime = newValue;
+                                refreshController.add('');
+                              },
+                              controlAffinity: ListTileControlAffinity
+                                  .trailing, //  <-- leading Checkbox
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('min_order_day')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('min_order_day_description')}',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.grey),
+                              ),
+                              trailing: Container(
+                                  width: 80,
+                                  height: 50,
+                                  child: TextField(
+                                    controller: minOrderDays,
+                                    textAlign: TextAlign.center,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r"^\d*\.?\d*")),
+                                    ],
+                                    maxLength: 2,
+                                    decoration: InputDecoration(
+                                        labelText:
+                                            AppLocalizations.of(context)
+                                                .translate('day'),
+                                        counterText: '',
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.orangeAccent,
+                                              width: 1.0),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black45,
+                                              width: 1.0),
+                                        )),
+                                  )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('working_day')}'),
+                              subtitle: Text(
+                                '${AppLocalizations.of(context).translate('working_day_description')}',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.grey),
+                              ),
+                            ),
+                            Column(
+                              children: [workingDayList()],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                                thickness: 1.0,
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  '${AppLocalizations.of(context).translate('working_time')}'),
+                              subtitle: RichText(
+                                text: TextSpan(
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          '${AppLocalizations.of(context).translate('working_time_description')}',
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.grey),
+                                    ),
+                                    TextSpan(text: '\n'),
+                                    TextSpan(
+                                      text:
+                                          '${AppLocalizations.of(context).translate('working_time_description_2')}',
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 12),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: TextField(
+                                      readOnly: true,
+                                      controller: startTime,
+                                      onTap: () => selectTime(
+                                          startTime.text, startTime),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black87),
+                                      textAlign: TextAlign.center,
+                                      decoration: InputDecoration(
+                                        labelText:
+                                            '${AppLocalizations.of(context).translate('start')}',
+                                        labelStyle: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        AppLocalizations.of(context)
+                                            .translate('to'),
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                  Expanded(
+                                    flex: 3,
+                                    child: TextField(
+                                      readOnly: true,
+                                      controller: endTime,
+                                      onTap: () =>
+                                          selectTime(endTime.text, endTime),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black87),
+                                      textAlign: TextAlign.center,
+                                      decoration: InputDecoration(
+                                        labelText:
+                                            '${AppLocalizations.of(context).translate('end')}',
+                                        labelStyle: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50.0,
+                              child: RaisedButton(
+                                elevation: 5,
+                                onPressed: () => updateOrderSetting(context),
+                                child: Text(
+                                  '${AppLocalizations.of(context).translate('update_setting')}',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                color: Colors.orange,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            );
-          }),
-    );
+            ),
+          );
+        });
   }
 
   Widget workingDayList() {

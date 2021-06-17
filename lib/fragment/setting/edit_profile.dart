@@ -88,143 +88,113 @@ class _ResetPasswordState extends State<EditProfile> {
                   padding: const EdgeInsets.fromLTRB(20, 35, 20, 35),
                   child: Column(
                     children: <Widget>[
-                      Theme(
-                        data: new ThemeData(
-                          primaryColor: Colors.orange,
-                        ),
-                        child: TextField(
-                            keyboardType: TextInputType.text,
-                            controller: companyName,
-                            textAlign: TextAlign.start,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.home),
-                              labelText: '${AppLocalizations.of(context).translate('company')}',
-                              labelStyle: TextStyle(
-                                  fontSize: 16, color: Colors.blueGrey),
-                              hintText: '${AppLocalizations.of(context).translate('company_hint')}',
-                              border: new OutlineInputBorder(
-                                  borderSide:
-                                      new BorderSide(color: Colors.teal)),
-                            )),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Theme(
-                        data: new ThemeData(
-                          primaryColor: Colors.orange,
-                        ),
-                        child: TextField(
-                          keyboardType: TextInputType.multiline,
-                          controller: companyAddress,
-                          textAlign: TextAlign.start,
-                          minLines: 1,
-                          maxLines: 5,
-                          maxLengthEnforced: true,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.location_on),
-                            labelText: '${AppLocalizations.of(context).translate('address')}',
-                            labelStyle:
-                                TextStyle(fontSize: 16, color: Colors.blueGrey),
-                            hintText: '${AppLocalizations.of(context).translate('address_hint')}',
-                            border: new OutlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.teal)),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Theme(
-                        data: new ThemeData(
-                          primaryColor: Colors.orange,
-                        ),
-                        child: TextField(
-                          keyboardType: TextInputType.phone,
-                          controller: contactNumber,
-                          textAlign: TextAlign.start,
-                          maxLengthEnforced: true,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.phone_android),
-                            labelText: '${AppLocalizations.of(context).translate('contact_number')}',
-                            labelStyle:
-                                TextStyle(fontSize: 16, color: Colors.blueGrey),
-                            hintText: '${AppLocalizations.of(context).translate('contact_number_hint')}',
-                            border: new OutlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.teal)),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Theme(
-                        data: new ThemeData(
-                          primaryColor: Colors.orange,
-                        ),
-                        child: TextField(
+                      TextField(
                           keyboardType: TextInputType.text,
-                          controller: personInCharge,
+                          controller: companyName,
                           textAlign: TextAlign.start,
-                          maxLengthEnforced: true,
                           decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.person),
-                            labelText: '${AppLocalizations.of(context).translate('person_in_charge')}',
-                            labelStyle:
-                                TextStyle(fontSize: 16, color: Colors.blueGrey),
-                            hintText: '',
+                            prefixIcon: Icon(Icons.home),
+                            labelText: '${AppLocalizations.of(context).translate('company')}',
+                            labelStyle: TextStyle(
+                                fontSize: 16, color: Colors.blueGrey),
+                            hintText: '${AppLocalizations.of(context).translate('company_hint')}',
                             border: new OutlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.teal)),
-                          ),
+                                borderSide:
+                                    new BorderSide(color: Colors.teal)),
+                          )),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.multiline,
+                        controller: companyAddress,
+                        textAlign: TextAlign.start,
+                        minLines: 1,
+                        maxLines: 5,
+                        maxLengthEnforced: true,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.location_on),
+                          labelText: '${AppLocalizations.of(context).translate('address')}',
+                          labelStyle:
+                              TextStyle(fontSize: 16, color: Colors.blueGrey),
+                          hintText: '${AppLocalizations.of(context).translate('address_hint')}',
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
                         ),
                       ),
                       SizedBox(
                         height: 15,
                       ),
-                      Theme(
-                        data: new ThemeData(
-                          primaryColor: Colors.orange,
-                        ),
-                        child: TextField(
-                          keyboardType: TextInputType.phone,
-                          controller: whatsAppNumber,
-                          textAlign: TextAlign.start,
-                          maxLengthEnforced: true,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.phone_android),
-                            labelText: '${AppLocalizations.of(context).translate('whatsapp_number')}',
-                            labelStyle:
-                                TextStyle(fontSize: 16, color: Colors.blueGrey),
-                            hintText: '${AppLocalizations.of(context).translate('contact_number_hint')}',
-                            border: new OutlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.teal)),
-                          ),
+                      TextField(
+                        keyboardType: TextInputType.phone,
+                        controller: contactNumber,
+                        textAlign: TextAlign.start,
+                        maxLengthEnforced: true,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.phone_android),
+                          labelText: '${AppLocalizations.of(context).translate('contact_number')}',
+                          labelStyle:
+                              TextStyle(fontSize: 16, color: Colors.blueGrey),
+                          hintText: '${AppLocalizations.of(context).translate('contact_number_hint')}',
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
                         ),
                       ),
                       SizedBox(
                         height: 15,
                       ),
-                      Theme(
-                        data: new ThemeData(
-                          primaryColor: Colors.orange,
+                      TextField(
+                        keyboardType: TextInputType.text,
+                        controller: personInCharge,
+                        textAlign: TextAlign.start,
+                        maxLengthEnforced: true,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.person),
+                          labelText: '${AppLocalizations.of(context).translate('person_in_charge')}',
+                          labelStyle:
+                              TextStyle(fontSize: 16, color: Colors.blueGrey),
+                          hintText: '',
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
                         ),
-                        child: TextField(
-                          enabled: false,
-                          keyboardType: TextInputType.emailAddress,
-                          controller: email,
-                          textAlign: TextAlign.start,
-                          maxLengthEnforced: true,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.email),
-                            labelText: '${AppLocalizations.of(context).translate('email')}',
-                            labelStyle:
-                                TextStyle(fontSize: 16, color: Colors.blueGrey),
-                            hintText: '',
-                            border: new OutlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.teal)),
-                          ),
-                          style: TextStyle(color: Colors.grey),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.phone,
+                        controller: whatsAppNumber,
+                        textAlign: TextAlign.start,
+                        maxLengthEnforced: true,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.phone_android),
+                          labelText: '${AppLocalizations.of(context).translate('whatsapp_number')}',
+                          labelStyle:
+                              TextStyle(fontSize: 16, color: Colors.blueGrey),
+                          hintText: '${AppLocalizations.of(context).translate('contact_number_hint')}',
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
                         ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      TextField(
+                        enabled: false,
+                        keyboardType: TextInputType.emailAddress,
+                        controller: email,
+                        textAlign: TextAlign.start,
+                        maxLengthEnforced: true,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email),
+                          labelText: '${AppLocalizations.of(context).translate('email')}',
+                          labelStyle:
+                              TextStyle(fontSize: 16, color: Colors.blueGrey),
+                          hintText: '',
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
+                        ),
+                        style: TextStyle(color: Colors.grey),
                       ),
                       SizedBox(
                         height: 40,

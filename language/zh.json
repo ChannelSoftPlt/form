@@ -572,5 +572,32 @@
   "setup_tng": "设置 Touch 'n Go",
   "tng_description": "在此处上传您的 Touch 'n Go 二维码。",
   "fpay_description": "让您的客户通过 FPX 和电子钱包在线支付。",
-  "no_qr_code": "在激活 Touch 'n Go 之前必须上传二维码"
+  "no_qr_code": "在激活 Touch 'n Go 之前必须上传二维码",
+
+  "invalid_character": "字符格式不支持！",
+
+  "select_printer": "选择打印机",
+  "print": "打印",
+  "print_success": "打印成功！",
+  "enable_bluetooth": "请打开蓝牙以进行打印..",
+  "no_device": "未找到设备..",
+  "no_device_2": "请确保您已打开蓝牙连接。",
+  "select_a_device": "请选择打印机！",
+  "scan_device_around": "扫描附近设备！",
+  "connection_timeout": "连接超时！",
+  "ticket_empty": "打印纸以空！",
+  "print_in_progress": "另一个印刷正在进行中！",
+  "scanning_in_progress": "正在扫描！",
+  "device_not_support": "不支持此设备！",
+  "format_error": "字符格式不支持！",
+  "avoid_tol": "避免收费站",
+  "avoid_tol_description": "选择此项可避开收费公路。",
+  "paper_size": "纸张尺寸",
+
+  "boost_description": "在此处上传您的 Boost 二维码。",
+  "duit_now_description": "在此处上传您的 DuitNow 二维码。",
+  "sarawak_pay_description": "在此处上传您的 Sarawak Pay 二维码。",
+  "no_boost_qr_code": "在激活您的 Boost 之前必须上传二维码",
+  "no_duit_now_qr_code": "在激活您的 DuitNow 二维码之前必须上传二维码",
+  "no_sarawak_pay_qr_code": "在激活您的 Sarawak Pay 之前必须上传二维码"
 }

@@ -57,29 +57,24 @@ class _EditPhoneDialogState extends State<EditPhoneDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: TextField(
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
-                ],
-                controller: phone,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  labelText:
-                      '${AppLocalizations.of(context).translate('phone')}',
-                  labelStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blueGrey,
-                      fontWeight: FontWeight.bold),
-                  hintText: '60143157322',
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                )),
-          ),
+          TextField(
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+              ],
+              controller: phone,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                labelText:
+                    '${AppLocalizations.of(context).translate('phone')}',
+                labelStyle: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blueGrey,
+                    fontWeight: FontWeight.bold),
+                hintText: '60143157322',
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
+              )),
         ],
       ),
     );

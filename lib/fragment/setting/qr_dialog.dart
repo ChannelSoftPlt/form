@@ -37,50 +37,47 @@ class _QrDialogState extends State<QrDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: new ThemeData(
-        primaryColor: Colors.deepPurple,
-      ),
-      child: AlertDialog(
-          title:
-              new Text('${AppLocalizations.of(context).translate('qr_code')}'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('${AppLocalizations.of(context).translate('close')}'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+    return AlertDialog(
+        title:
+        new Text('${AppLocalizations.of(context).translate('qr_code')}'),
+        actions: <Widget>[
+          RaisedButton(
+            child: Text('${AppLocalizations.of(context).translate('close')}'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          RaisedButton(
+            color: Colors.orangeAccent,
+            child: Text(
+              '${AppLocalizations.of(context).translate('share')}',
+              style: TextStyle(color: Colors.white),
             ),
-            RaisedButton(
-              color: Colors.orangeAccent,
-              child: Text(
-                '${AppLocalizations.of(context).translate('share')}',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () async {
-                var shareImageSource = await _captureQrCode();
-                print(shareImageSource);
-                if (shareImageSource != null)
-                  await WcFlutterShare.share(
-                      sharePopupTitle: 'share',
-                      fileName: 'share.png',
-                      mimeType: 'image/png',
-                      bytesOfFile: shareImageSource);
-                else
-                  showToast('invalid_qr_code');
-              },
-            ),
-          ],
-          content: StreamBuilder(
-              stream: refreshStream.stream,
-              builder: (context, object) {
-                if (object.hasData && object.data.toString().length >= 1) {
-                  return mainContent();
-                }
-                return Container(
-                    height: 500, width: 1000, child: CustomProgressBar());
-              })),
-    );
+            onPressed: () async {
+              var shareImageSource = await _captureQrCode();
+              print(shareImageSource);
+              if (shareImageSource != null)
+                await WcFlutterShare.share(
+                    sharePopupTitle: 'share',
+                    fileName: 'share.png',
+                    mimeType: 'image/png',
+                    bytesOfFile: shareImageSource);
+              else
+                showToast('invalid_qr_code');
+            },
+          ),
+        ],
+        content: StreamBuilder(
+            stream: refreshStream.stream,
+            builder: (context, object) {
+              if (object.hasData && object.data
+                  .toString()
+                  .length >= 1) {
+                return mainContent();
+              }
+              return Container(
+                  height: 500, width: 1000, child: CustomProgressBar());
+            }));
   }
 
   Widget mainContent() {
@@ -124,7 +121,7 @@ class _QrDialogState extends State<QrDialog> {
                     gapless: true,
                     embeddedImage: AssetImage('drawable/new_logo.jpg'),
                     embeddedImageStyle: QrEmbeddedImageStyle(
-                      size: Size(40, 40),
+                      size: Size(30, 30),
                     ),
                   ),
                 ),
@@ -152,12 +149,12 @@ class _QrDialogState extends State<QrDialog> {
     try {
       print('inside');
       RenderRepaintBoundary boundary =
-          _globalKey.currentContext.findRenderObject();
+      _globalKey.currentContext.findRenderObject();
 
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
 
       ByteData byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      await image.toByteData(format: ui.ImageByteFormat.png);
 
       var pngBytes = byteData.buffer.asUint8List();
 
@@ -183,7 +180,9 @@ class _QrDialogState extends State<QrDialog> {
   }
 
   getURL() async {
-    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    this.url = Merchant
+        .fromJson(await SharePreferences().read("merchant"))
+        .url;
     refreshStream.add('display');
   }
 

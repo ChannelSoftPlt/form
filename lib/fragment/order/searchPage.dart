@@ -43,7 +43,7 @@ class _SearchPageState extends State<SearchPage> {
           decoration: InputDecoration(
             hintText:
                 '${AppLocalizations.of(context).translate('search_by')} ${AppLocalizations.of(context).translate(widget.type)}',
-            border: InputBorder.none,
+            focusedBorder: InputBorder.none,
             suffixIcon: IconButton(
                 icon: Icon(Icons.clear),
                 color: Colors.orangeAccent,

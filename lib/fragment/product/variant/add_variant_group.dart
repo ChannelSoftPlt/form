@@ -111,93 +111,88 @@ class _AddVariantGroupState extends State<AddVariantGroup> {
   }
 
   Widget mainContent(context) {
-    return Theme(
-      data: new ThemeData(
-        primaryColor: Colors.orange,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Card(
-          elevation: 2,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 30),
-            child: SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextField(
-                        keyboardType: TextInputType.text,
-                        controller: variantGroupLabel,
-                        textAlign: TextAlign.start,
-                        decoration: InputDecoration(
-                          labelText:
-                              '${AppLocalizations.of(context).translate('group_name')}',
-                          labelStyle:
-                              TextStyle(fontSize: 14, color: Colors.blueGrey),
-                          hintText:
-                              '${AppLocalizations.of(context).translate('size')}',
-                          hintStyle:
-                              TextStyle(fontSize: 14, color: Colors.blueGrey),
-                          border: new OutlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.teal)),
-                        )),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${AppLocalizations.of(context).translate('compulsory')}',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        Switch(
-                          value: isCompulsory,
-                          onChanged: (value) {
-                            setState(() {
-                              isCompulsory = value;
-                            });
-                          },
-                          activeTrackColor: Colors.orangeAccent,
-                          activeColor: Colors.deepOrangeAccent,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '${AppLocalizations.of(context).translate('compulsory_description')}',
-                      style: TextStyle(fontSize: 12, color: Colors.black54),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${AppLocalizations.of(context).translate('multiple_select')}',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        Switch(
-                          value: multipleChoose,
-                          onChanged: (value) {
-                            setState(() {
-                              multipleChoose = value;
-                            });
-                          },
-                          activeTrackColor: Colors.orangeAccent,
-                          activeColor: Colors.deepOrangeAccent,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '${AppLocalizations.of(context).translate('multiple_select_description')}',
-                      style: TextStyle(fontSize: 12, color: Colors.black54),
-                    ),
-                    SizedBox(
-                      height: 35,
-                    ),
-                    addVariantChild(),
-                  ],
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Card(
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 30),
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TextField(
+                      keyboardType: TextInputType.text,
+                      controller: variantGroupLabel,
+                      textAlign: TextAlign.start,
+                      decoration: InputDecoration(
+                        labelText:
+                            '${AppLocalizations.of(context).translate('group_name')}',
+                        labelStyle:
+                            TextStyle(fontSize: 14, color: Colors.blueGrey),
+                        hintText:
+                            '${AppLocalizations.of(context).translate('size')}',
+                        hintStyle:
+                            TextStyle(fontSize: 14, color: Colors.blueGrey),
+                        border: new OutlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.teal)),
+                      )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${AppLocalizations.of(context).translate('compulsory')}',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      Switch(
+                        value: isCompulsory,
+                        onChanged: (value) {
+                          setState(() {
+                            isCompulsory = value;
+                          });
+                        },
+                        activeTrackColor: Colors.orangeAccent,
+                        activeColor: Colors.deepOrangeAccent,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '${AppLocalizations.of(context).translate('compulsory_description')}',
+                    style: TextStyle(fontSize: 12, color: Colors.black54),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${AppLocalizations.of(context).translate('multiple_select')}',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      Switch(
+                        value: multipleChoose,
+                        onChanged: (value) {
+                          setState(() {
+                            multipleChoose = value;
+                          });
+                        },
+                        activeTrackColor: Colors.orangeAccent,
+                        activeColor: Colors.deepOrangeAccent,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '${AppLocalizations.of(context).translate('multiple_select_description')}',
+                    style: TextStyle(fontSize: 12, color: Colors.black54),
+                  ),
+                  SizedBox(
+                    height: 35,
+                  ),
+                  addVariantChild(),
+                ],
               ),
             ),
           ),

@@ -23,6 +23,7 @@ class _DistanceLayoutState extends State<DistanceLayout> {
   final key = new GlobalKey<ScaffoldState>();
   TextEditingController address = new TextEditingController();
   List<Distance> distance;
+  bool avoidToll = false;
 
   @override
   void initState() {
@@ -34,111 +35,127 @@ class _DistanceLayoutState extends State<DistanceLayout> {
   double countHeight() {
     switch (distance.length) {
       case 0:
-        return 205;
+        return 330;
       default:
-        return (205 + (distance.length * 82)).toDouble();
+        return (300 + (distance.length * 82)).toDouble();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return distance != null
-        ? Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  height: countHeight(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      TextField(
-                        keyboardType: TextInputType.multiline,
-                        controller: address,
-                        textAlign: TextAlign.start,
-                        minLines: 3,
-                        maxLines: 5,
-                        maxLengthEnforced: true,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.location_on),
-                          labelText:
-                              '${AppLocalizations.of(context).translate('merchant_address')}',
-                          labelStyle:
-                              TextStyle(fontSize: 16, color: Colors.blueGrey),
-                          hintText:
-                              '${AppLocalizations.of(context).translate('full_address')}',
-                          border: new OutlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.teal)),
+        ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                height: countHeight(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Card(
+                      elevation: 2,
+                      child: CheckboxListTile(
+                        title: Text(
+                          "${AppLocalizations.of(context).translate('avoid_tol')}",
+                          style: TextStyle(fontSize: 16),
                         ),
+                        subtitle: Text(
+                          '${AppLocalizations.of(context).translate('avoid_tol_description')}',
+                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                        ),
+                        value: avoidToll,
+                        onChanged: (newValue) {
+                          setState(() {
+                            avoidToll = newValue;
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity
+                            .trailing, //  <-- leading Checkbox
                       ),
-                      Container(
-                        alignment: Alignment.centerLeft,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextField(
+                      keyboardType: TextInputType.multiline,
+                      controller: address,
+                      textAlign: TextAlign.start,
+                      minLines: 3,
+                      maxLines: 5,
+                      maxLengthEnforced: true,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.location_on),
+                        labelText:
+                            '${AppLocalizations.of(context).translate('merchant_address')}',
+                        labelStyle:
+                            TextStyle(fontSize: 16, color: Colors.blueGrey),
+                        hintText:
+                            '${AppLocalizations.of(context).translate('full_address')}',
+                        border: new OutlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.teal)),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '${AppLocalizations.of(context).translate('merchant_address_description')}',
+                        style: TextStyle(color: Colors.blueGrey, fontSize: 13),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: distance.length,
+                        itemBuilder: (context, position) {
+                          return listViewItem(distance[position], position);
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: distance.length <= 0,
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        alignment: Alignment.center,
                         child: Text(
-                          '${AppLocalizations.of(context).translate('merchant_address_description')}',
-                          style:
-                              TextStyle(color: Colors.blueGrey, fontSize: 13),
+                          '${AppLocalizations.of(context).translate(
+                            'no_distance_found',
+                          )}',
+                          style: TextStyle(color: Colors.blueGrey),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: distance.length,
-                          itemBuilder: (context, position) {
-                            return listViewItem(distance[position], position);
-                          },
-                        ),
-                      ),
-                      Visibility(
-                        visible: distance.length <= 0,
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          alignment: Alignment.center,
+                    ),
+                    ButtonBar(
+                      children: [
+                        RaisedButton(
+                          elevation: 5,
+                          onPressed: () =>
+                              _showAddDistanceDialog(context, false, null),
                           child: Text(
-                            '${AppLocalizations.of(context).translate(
-                              'no_distance_found',
-                            )}',
-                            style: TextStyle(color: Colors.blueGrey),
+                            '${AppLocalizations.of(context).translate('add_distance')}',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
+                          color: Colors.orange,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
                         ),
-                      ),
-                      ButtonBar(
-                        children: [
-                          RaisedButton(
-                            elevation: 5,
-                            onPressed: () =>
-                                _showAddDistanceDialog(context, false, null),
-                            child: Text(
-                              '${AppLocalizations.of(context).translate('add_distance')}',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                            color: Colors.orange,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
+                        RaisedButton(
+                          elevation: 5,
+                          onPressed: () => updateDistanceSetting(),
+                          child: Text(
+                            '${AppLocalizations.of(context).translate('save')}',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
-                          RaisedButton(
-                            elevation: 5,
-                            onPressed: () => updateDistanceSetting(),
-                            child: Text(
-                              '${AppLocalizations.of(context).translate('save')}',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                            color: Colors.green,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                          ),
-                        ],
-                      )
-                    ],
-                  )),
-            ),
+                          color: Colors.green,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                        ),
+                      ],
+                    )
+                  ],
+                )),
           )
         : Center(child: CustomProgressBar());
   }
@@ -213,12 +230,21 @@ class _DistanceLayoutState extends State<DistanceLayout> {
       Map data = await Domain().readDistanceSetting();
       if (data['status'] == '1') {
         setState(() {
+          print(data);
+
           List responseJson =
               jsonDecode(data['distance'][0]['shipping_by_distance']);
 
           distance = responseJson
               .map((jsonObject) => Distance.fromJson(jsonObject))
               .toList();
+
+          print(data['distance'][0]['distance_shipping_avoid_tolls']);
+
+          avoidToll =
+              data['distance'][0]['distance_shipping_avoid_tolls'].toString() == 'false'
+                  ? false
+                  : true;
 
           address.text = data['distance'][0]['address_long_lat'];
         });
@@ -243,18 +269,21 @@ class _DistanceLayoutState extends State<DistanceLayout> {
       String apiKey = await SharePreferences().read('google_api_key');
       var addresses =
           await Geocoder.google(apiKey).findAddressesFromQuery(address.text);
+
       var addressCoordinate = addresses.first;
 
       Map data = await Domain().updateDistanceShipping(
           jsonEncode(distance),
           address.text,
           addressCoordinate.coordinates.longitude.toString(),
-          addressCoordinate.coordinates.latitude.toString());
+          addressCoordinate.coordinates.latitude.toString(),
+          avoidToll.toString());
 
       if (data['status'] == '1') {
         widget.callBack('update_success');
       }
     } catch ($e) {
+      print($e);
       widget.callBack('invalid_address');
     }
   }
@@ -315,91 +344,85 @@ class _DistanceLayoutState extends State<DistanceLayout> {
                   },
                 ),
               ],
-              content: Theme(
-                data: new ThemeData(
-                  primaryColor: Colors.orange,
-                ),
-                child: Container(
-                    width: 2000,
-                    height: 150,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: TextField(
-                                controller: distanceOne,
-                                textAlign: TextAlign.start,
-                                decoration: InputDecoration(
-                                  hintStyle: TextStyle(fontSize: 14),
-                                  labelText:
-                                      '${AppLocalizations.of(context).translate('distance_label')}',
-                                  labelStyle: TextStyle(
-                                      fontSize: 14, color: Colors.blueGrey),
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.teal)),
-                                ),
+              content: Container(
+                  width: 2000,
+                  height: 150,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                              controller: distanceOne,
+                              textAlign: TextAlign.start,
+                              decoration: InputDecoration(
+                                hintStyle: TextStyle(fontSize: 14),
+                                labelText:
+                                    '${AppLocalizations.of(context).translate('distance_label')}',
+                                labelStyle: TextStyle(
+                                    fontSize: 14, color: Colors.blueGrey),
+                                border: new OutlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.teal)),
                               ),
                             ),
-                            Expanded(
-                                flex: 1,
-                                child: Text(
-                                  AppLocalizations.of(context).translate('to'),
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                )),
-                            Expanded(
-                              flex: 3,
-                              child: TextField(
-                                controller: distanceTwo,
-                                textAlign: TextAlign.start,
-                                decoration: InputDecoration(
-                                  hintStyle: TextStyle(fontSize: 14),
-                                  labelText:
-                                      '${AppLocalizations.of(context).translate('distance_label')}',
-                                  labelStyle: TextStyle(
-                                      fontSize: 14, color: Colors.blueGrey),
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.teal)),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-                          controller: shippingFee,
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r"^\d*\.?\d*")),
-                          ],
-                          textAlign: TextAlign.start,
-                          decoration: InputDecoration(
-                            hintStyle: TextStyle(fontSize: 14),
-                            labelText:
-                                '${AppLocalizations.of(context).translate('shipping_fee')}',
-                            labelStyle:
-                                TextStyle(fontSize: 14, color: Colors.blueGrey),
-                            prefixText: 'RM',
-                            prefixStyle:
-                                TextStyle(fontSize: 14, color: Colors.black87),
-                            border: new OutlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.teal)),
                           ),
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                AppLocalizations.of(context).translate('to'),
+                                style: TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              )),
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                              controller: distanceTwo,
+                              textAlign: TextAlign.start,
+                              decoration: InputDecoration(
+                                hintStyle: TextStyle(fontSize: 14),
+                                labelText:
+                                    '${AppLocalizations.of(context).translate('distance_label')}',
+                                labelStyle: TextStyle(
+                                    fontSize: 14, color: Colors.blueGrey),
+                                border: new OutlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.teal)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        controller: shippingFee,
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d*\.?\d*")),
+                        ],
+                        textAlign: TextAlign.start,
+                        decoration: InputDecoration(
+                          hintStyle: TextStyle(fontSize: 14),
+                          labelText:
+                              '${AppLocalizations.of(context).translate('shipping_fee')}',
+                          labelStyle:
+                              TextStyle(fontSize: 14, color: Colors.blueGrey),
+                          prefixText: 'RM',
+                          prefixStyle:
+                              TextStyle(fontSize: 14, color: Colors.black87),
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
                         ),
-                      ],
-                    )),
-              ));
+                      ),
+                    ],
+                  )));
         });
   }
 

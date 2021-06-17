@@ -60,26 +60,21 @@ class _EditGroupNameDialogState extends State<EditGroupNameDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Theme(
-            data: new ThemeData(
-              primaryColor: Colors.orange,
-            ),
-            child: TextField(
-                controller: groupName,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  labelText:
-                      '${AppLocalizations.of(context).translate('group_name')}',
-                  labelStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blueGrey,
-                      fontWeight: FontWeight.bold),
-                  hintText:
-                      '${AppLocalizations.of(context).translate('group_name_hint')}',
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                )),
-          ),
+          TextField(
+              controller: groupName,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                labelText:
+                    '${AppLocalizations.of(context).translate('group_name')}',
+                labelStyle: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blueGrey,
+                    fontWeight: FontWeight.bold),
+                hintText:
+                    '${AppLocalizations.of(context).translate('group_name_hint')}',
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
+              )),
         ],
       ),
     );

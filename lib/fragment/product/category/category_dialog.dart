@@ -259,23 +259,18 @@ class _GroupingDialogState extends State<CategoryDialog> {
   * */
   Widget createCategoryUI() {
     return Container(
-      child: Theme(
-        data: new ThemeData(
-          primaryColor: Colors.orange,
-        ),
-        child: TextField(
-          controller: categoryName,
-          textAlign: TextAlign.start,
-          decoration: InputDecoration(
-            hintStyle: TextStyle(fontSize: 14),
-            labelText:
-                '${AppLocalizations.of(context).translate('category_name')}',
-            labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-            hintText:
-                '${AppLocalizations.of(context).translate('category_name')}',
-            border: new OutlineInputBorder(
-                borderSide: new BorderSide(color: Colors.teal)),
-          ),
+      child: TextField(
+        controller: categoryName,
+        textAlign: TextAlign.start,
+        decoration: InputDecoration(
+          hintStyle: TextStyle(fontSize: 14),
+          labelText:
+              '${AppLocalizations.of(context).translate('category_name')}',
+          labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
+          hintText:
+              '${AppLocalizations.of(context).translate('category_name')}',
+          border: new OutlineInputBorder(
+              borderSide: new BorderSide(color: Colors.teal)),
         ),
       ),
     );

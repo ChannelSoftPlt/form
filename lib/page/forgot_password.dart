@@ -92,27 +92,22 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 SizedBox(
                   height: 15,
                 ),
-                Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
+                TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: email,
+                  textAlign: TextAlign.start,
+                  maxLengthEnforced: true,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.email),
+                    labelText:
+                        '${AppLocalizations.of(context).translate('email')}',
+                    labelStyle:
+                        TextStyle(fontSize: 16, color: Colors.blueGrey),
+                    hintText: '',
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.teal)),
                   ),
-                  child: TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    controller: email,
-                    textAlign: TextAlign.start,
-                    maxLengthEnforced: true,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
-                      labelText:
-                          '${AppLocalizations.of(context).translate('email')}',
-                      labelStyle:
-                          TextStyle(fontSize: 16, color: Colors.blueGrey),
-                      hintText: '',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                    ),
-                    style: TextStyle(color: Colors.black87),
-                  ),
+                  style: TextStyle(color: Colors.black87),
                 ),
                 SizedBox(
                   height: 20,
@@ -174,30 +169,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 SizedBox(
                   height: 15,
                 ),
-                Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
+                TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
+                  ],
+                  controller: pac,
+                  textAlign: TextAlign.start,
+                  maxLengthEnforced: true,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.verified_user),
+                    labelText:
+                        '${AppLocalizations.of(context).translate('pac_no')}',
+                    labelStyle:
+                        TextStyle(fontSize: 16, color: Colors.black54),
+                    hintText: '',
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.teal)),
                   ),
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
-                    ],
-                    controller: pac,
-                    textAlign: TextAlign.start,
-                    maxLengthEnforced: true,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.verified_user),
-                      labelText:
-                          '${AppLocalizations.of(context).translate('pac_no')}',
-                      labelStyle:
-                          TextStyle(fontSize: 16, color: Colors.black54),
-                      hintText: '',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                    ),
-                    style: TextStyle(color: Colors.black87),
-                  ),
+                  style: TextStyle(color: Colors.black87),
                 ),
                 Text(
                   "${AppLocalizations.of(context).translate('click_to_resend')}",
@@ -266,68 +256,58 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 SizedBox(
                   height: 15,
                 ),
-                Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
+                TextField(
+                  keyboardType: TextInputType.text,
+                  controller: newPassword,
+                  obscureText: hideNewPassword,
+                  textAlign: TextAlign.start,
+                  maxLengthEnforced: true,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.lock),
+                    labelText:
+                        '${AppLocalizations.of(context).translate('new_password')}',
+                    labelStyle:
+                        TextStyle(fontSize: 16, color: Colors.black54),
+                    hintText: '',
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.teal)),
+                    suffixIcon: IconButton(
+                        icon: Icon(Icons.remove_red_eye),
+                        onPressed: () {
+                          setState(() {
+                            hideNewPassword = !hideNewPassword;
+                          });
+                        }),
                   ),
-                  child: TextField(
-                    keyboardType: TextInputType.text,
-                    controller: newPassword,
-                    obscureText: hideNewPassword,
-                    textAlign: TextAlign.start,
-                    maxLengthEnforced: true,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      labelText:
-                          '${AppLocalizations.of(context).translate('new_password')}',
-                      labelStyle:
-                          TextStyle(fontSize: 16, color: Colors.black54),
-                      hintText: '',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                      suffixIcon: IconButton(
-                          icon: Icon(Icons.remove_red_eye),
-                          onPressed: () {
-                            setState(() {
-                              hideNewPassword = !hideNewPassword;
-                            });
-                          }),
-                    ),
-                    style: TextStyle(color: Colors.black87),
-                  ),
+                  style: TextStyle(color: Colors.black87),
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                Theme(
-                  data: new ThemeData(
-                    primaryColor: Colors.orange,
+                TextField(
+                  keyboardType: TextInputType.text,
+                  obscureText: hideConfirmPassword,
+                  controller: confirmPassword,
+                  textAlign: TextAlign.start,
+                  maxLengthEnforced: true,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.verified_user),
+                    labelText:
+                        '${AppLocalizations.of(context).translate('confirmation_password')}',
+                    labelStyle:
+                        TextStyle(fontSize: 16, color: Colors.black54),
+                    hintText: '',
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.teal)),
+                    suffixIcon: IconButton(
+                        icon: Icon(Icons.remove_red_eye),
+                        onPressed: () {
+                          setState(() {
+                            hideConfirmPassword = !hideConfirmPassword;
+                          });
+                        }),
                   ),
-                  child: TextField(
-                    keyboardType: TextInputType.text,
-                    obscureText: hideConfirmPassword,
-                    controller: confirmPassword,
-                    textAlign: TextAlign.start,
-                    maxLengthEnforced: true,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.verified_user),
-                      labelText:
-                          '${AppLocalizations.of(context).translate('confirmation_password')}',
-                      labelStyle:
-                          TextStyle(fontSize: 16, color: Colors.black54),
-                      hintText: '',
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal)),
-                      suffixIcon: IconButton(
-                          icon: Icon(Icons.remove_red_eye),
-                          onPressed: () {
-                            setState(() {
-                              hideConfirmPassword = !hideConfirmPassword;
-                            });
-                          }),
-                    ),
-                    style: TextStyle(color: Colors.black87),
-                  ),
+                  style: TextStyle(color: Colors.black87),
                 ),
                 SizedBox(
                   height: 20,
