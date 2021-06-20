@@ -96,16 +96,27 @@ class _LoadingPageState extends State<LoadingPage> {
 
       String latestVersion = data['version'][0]['version'].toString();
       String currentVersion = await getVersionNumber();
-      print('current: $currentVersion');
 
       var prefs = await SharedPreferences.getInstance();
-      print('product limit: ${data['user_preference'][0]['product_limit']}');
+      //discount features
       await prefs.setString('allow_discount',
           data['user_preference'][0]['allow_discount'].toString());
+      //product limit
       await prefs.setString('product_limit',
           data['user_preference'][0]['product_limit'].toString());
+      //take photo
       await prefs.setString('allow_take_photo',
           data['user_preference'][0]['allow_take_photo'].toString());
+
+      //url checking
+      var url = '';
+      if (data['user_preference'][0]['domain'].toString() != '') {
+        url = data['user_preference'][0]['domain'].toString();
+      } else {
+        url =
+            'https://www.emenu.com.my/${data['user_preference'][0]['url'].toString()}';
+      }
+      SharePreferences().save('url', url);
 
       if (latestVersion != currentVersion) {
         openUpdateDialog(data);
@@ -119,7 +130,8 @@ class _LoadingPageState extends State<LoadingPage> {
   checkMerchantStatus() async {
     String merchantStatus = status;
     if (merchantStatus == '1') {
-      Merchant merchant = Merchant.fromJson(await SharePreferences().read('merchant'));
+      Merchant merchant =
+          Merchant.fromJson(await SharePreferences().read('merchant'));
       merchant.merchantId != null
           ? Navigator.pushReplacementNamed(context, '/home')
           : Navigator.pushReplacementNamed(context, '/login');

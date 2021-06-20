@@ -1001,7 +1001,7 @@ class _EditFormState extends State<EditForm> {
   }
 
   getUrl() async {
-    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    this.url = await SharePreferences().read('url');
     setState(() {});
   }
 }

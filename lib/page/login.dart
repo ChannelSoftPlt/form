@@ -42,8 +42,7 @@ class _LoginFormState extends State<LoginPage> {
                   Image.asset('drawable/new_logo.jpg', height: 200),
                   Text(
                     'E-Menu',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   ),
                   SizedBox(height: 20.0),
                   customTextField(email, 'email', null),
@@ -168,23 +167,10 @@ class _LoginFormState extends State<LoginPage> {
               merchantId: data['merchant_id'].toString(),
               formId: data['form_id'].toString(),
               name: data['name'],
-              url: getUrl(data['url']),
               email: data['email']));
       Navigator.pushReplacementNamed(context, '/');
     } on Exception catch (e) {
       print('Error!! $e');
-    }
-  }
-
-  String getUrl(url) {
-    try {
-      String headerUrl = url.substring(0, 4);
-      if (headerUrl == 'http')
-        return url;
-      else
-        return 'https://www.emenu.com.my/$url';
-    } catch (err) {
-      return 'https://www.emenu.com.my/$url';
     }
   }
 

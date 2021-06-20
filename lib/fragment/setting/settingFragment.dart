@@ -10,7 +10,6 @@ import 'package:my/fragment/setting/promotion_dialog.dart';
 import 'package:my/fragment/setting/qr_dialog.dart';
 import 'package:my/fragment/setting/reset_password.dart';
 import 'package:my/fragment/setting/shipping/shipping_setting.dart';
-import 'package:my/object/merchant.dart';
 import 'package:my/page/loading.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
@@ -131,7 +130,7 @@ class _SettingFragmentState extends State<SettingFragment> {
                 title: Text(
                   url,
                   style: TextStyle(
-                      color: Color.fromRGBO(89, 100, 109, 1), fontSize: 14),
+                      color: Color.fromRGBO(89, 100, 109, 1), fontSize: 12),
                 ),
                 trailing: IconButton(
                     icon: Icon(
@@ -644,7 +643,7 @@ class _SettingFragmentState extends State<SettingFragment> {
   }
 
   getUrl() async {
-    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    this.url = await SharePreferences().read('url');
     if (url.length > 0) this.url = url.substring(8, url.length);
     setState(() {});
   }

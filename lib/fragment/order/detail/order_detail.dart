@@ -1100,18 +1100,14 @@ class _OrderDetailState extends State<OrderDetail> {
       itemBuilder: (context) => [
         _buildMenuItem('group',
             '${AppLocalizations.of(context).translate('assign_group')}', true),
-        _buildMenuItem(
-            'status',
-            '${AppLocalizations.of(context).translate('change_status')}',
-            order.status != '1'),
+        _buildMenuItem('status',
+            '${AppLocalizations.of(context).translate('change_status')}', true),
         _buildMenuItem(
             'payment_status',
             '${AppLocalizations.of(context).translate('change_payment_status')}',
-            order.paymentStatus != '0'),
-        _buildMenuItem(
-            'driver',
-            '${AppLocalizations.of(context).translate('assign_driver')}',
-            order.status != '1'),
+            true),
+        _buildMenuItem('driver',
+            '${AppLocalizations.of(context).translate('assign_driver')}', true),
         _buildMenuItem('delete',
             '${AppLocalizations.of(context).translate('delete_order')}', true)
       ],

@@ -13,6 +13,7 @@ import 'package:my/utils/statusControl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:my/utils/paymentStatus.dart';
 
+import 'dialog/driver_dialog.dart';
 import 'dialog/grouping_dialog.dart';
 import 'package:my/shareWidget/payment_status_dialog.dart';
 
@@ -203,6 +204,11 @@ class _CardViewState extends State<CardView> {
               '${AppLocalizations.of(context).translate('change_payment_status')}'),
         ),
         PopupMenuItem(
+          value: 'driver',
+          child: Text(
+              '${AppLocalizations.of(context).translate('assign_driver')}'),
+        ),
+        PopupMenuItem(
           value: 'print',
           child: Text('${AppLocalizations.of(context).translate('print')}'),
         ),
@@ -229,10 +235,13 @@ class _CardViewState extends State<CardView> {
             launch(('tel://+${Order.getPhoneNumber(widget.orders.phone)}'));
             break;
           case 'status':
-              _showDialog(context);
+            _showDialog(context);
             break;
           case 'payment_status':
             showPaymentStatusDialog(context);
+            break;
+          case 'driver':
+            showDriverDialog(context);
             break;
           case 'print':
             openPrintDialog(context);
@@ -406,6 +415,34 @@ class _CardViewState extends State<CardView> {
                 CustomSnackBar.show(mainContext,
                     '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             });
+      },
+    );
+  }
+
+  showDriverDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return DriverDialog(
+          onClick: (driverName, driverId) async {
+            await Future.delayed(Duration(milliseconds: 500));
+            Navigator.pop(mainContext);
+
+            Map data = await Domain()
+                .setDriver(driverName, widget.orders.id.toString(), driverId);
+
+            if (data['status'] == '1') {
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(mainContext).translate('update_success')}');
+              widget.refresh();
+            } else {
+              CustomSnackBar.show(mainContext,
+                  '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+            }
+          },
+        );
       },
     );
   }

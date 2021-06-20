@@ -15,7 +15,6 @@ import 'package:my/fragment/product/category/category_dialog.dart';
 import 'package:my/fragment/product/variant/variant_layout.dart';
 import 'package:my/object/imageGallery/image.dart';
 import 'package:my/object/imageGallery/product_gallery.dart';
-import 'package:my/object/merchant.dart';
 import 'package:my/object/product.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
@@ -1208,7 +1207,16 @@ class _ProductDetailDialogState extends State<ProductDetailDialog> {
   }
 
   getUrl() async {
-    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    try {
+      this.url = await SharePreferences().read('url');
+      if (url.length < 24 ||
+          url.substring(0, 24) != 'https://www.emenu.com.my') {
+        var subDomain = url.split('.')[1].trim();
+        url = '$url/$subDomain';
+      }
+    } catch ($e) {
+      this.url = await SharePreferences().read('url');
+    }
   }
 
   getGalleryLimit() async {

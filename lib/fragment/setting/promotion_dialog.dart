@@ -463,7 +463,7 @@ class _EditPromotionDialogState extends State<EditPromotionDialog> {
   }
 
   getUrl() async {
-    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    this.url = await SharePreferences().read('url');
     setState(() {});
   }
 

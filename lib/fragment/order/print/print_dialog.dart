@@ -140,6 +140,7 @@ class _PrintDialogState extends State<PrintDialog> {
                 return;
               }
               _startPrint(selectedDevice);
+              //print();
             },
           ),
         ],
@@ -154,7 +155,10 @@ class _PrintDialogState extends State<PrintDialog> {
             : deviceList()
         : Container(
             alignment: Alignment.center,
-            child: Text(AppLocalizations.of(context).translate(msg), style: TextStyle(fontSize: 13),),
+            child: Text(
+              AppLocalizations.of(context).translate(msg),
+              style: TextStyle(fontSize: 13),
+            ),
           );
   }
 
@@ -212,7 +216,7 @@ class _PrintDialogState extends State<PrintDialog> {
                       onTap: () {
                         setState(() {
                           selectedDevice = _devices[position];
-                          print(_devices[position].type);
+                          //print(_devices[position].type);
                           SharePreferences()
                               .save('default_printer', selectedDevice.address);
                         });
@@ -257,8 +261,10 @@ class _PrintDialogState extends State<PrintDialog> {
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                     onPressed: () {
-                      //printerManager.stopScan();
-                      initPrinter();
+                      setState(() {
+                        bluetoothScan = false;
+                        bluetoothChecking();
+                      });
                     },
                   )
                 ],
@@ -299,7 +305,7 @@ class _PrintDialogState extends State<PrintDialog> {
   printResult(result) {
     switch (result) {
       case 'Success':
-        //Navigator.of(context).pop();
+        Navigator.of(context).pop();
         CustomToast(
           '${AppLocalizations.of(context).translate('print_success')}',
           context,
@@ -338,7 +344,7 @@ class _PrintDialogState extends State<PrintDialog> {
       if (!mounted) return;
       setState(() {
         _devices = event;
-        print(_devices.length);
+        //print(_devices.length);
         if (selectedDevice == null) setDefaultPrinterSetting();
       });
 

@@ -347,7 +347,7 @@ class _ListState extends State<HomePage> {
   }
 
   getUrl() async {
-    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
+    this.url = await SharePreferences().read('url');
     shareContent.text =
         '${AppLocalizations.of(context).translate('welcome_visit_my_store')}\n$url';
     setState(() {});
@@ -384,8 +384,7 @@ class _ListState extends State<HomePage> {
                     prefixIcon: Icon(Icons.textsms),
                     labelText:
                         '${AppLocalizations.of(context).translate('content')}',
-                    labelStyle:
-                        TextStyle(fontSize: 16, color: Colors.blueGrey),
+                    labelStyle: TextStyle(fontSize: 16, color: Colors.blueGrey),
                     hintText:
                         '${AppLocalizations.of(context).translate('write_share_content')}',
                     border: new OutlineInputBorder(

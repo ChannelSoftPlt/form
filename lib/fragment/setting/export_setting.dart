@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:csv/csv.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,7 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my/object/imageGallery/product_gallery.dart';
 import 'package:my/object/order.dart';
+import 'package:my/object/order_group.dart';
+import 'package:my/object/order_item.dart';
 import 'package:my/object/product.dart';
+import 'package:my/object/productVariant/variantGroup.dart';
 import 'package:my/object/user.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/shareWidget/toast.dart';
@@ -31,10 +35,12 @@ class _ExportDialogState extends State<ExportDialog> {
   List<User> userList = [];
   List<Product> productList = [];
   List<Order> salesList = [];
+  List<OrderItem> orderItemList = [];
 
   var exportData = 'customer';
   var fromDate, toDate;
   var path, fileName;
+  String orderGroupId, orderGroup;
 
   final displayDateFormat = DateFormat("dd MMM");
   final selectedDateFormat = DateFormat("yyy-MM-dd");
@@ -101,7 +107,7 @@ class _ExportDialogState extends State<ExportDialog> {
 
   Widget mainContent() {
     return Container(
-      height: 150,
+      height: exportData == 'group' ? 230 : 150,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,6 +140,45 @@ class _ExportDialogState extends State<ExportDialog> {
                     }),
               ),
             ),
+          ),
+          Visibility(
+            visible: exportData == 'group',
+            child: Container(
+                height: 75,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 15,
+                    ),
+                    DropdownSearch<OrderGroup>(
+                        mode: Mode.BOTTOM_SHEET,
+                        label:
+                            '${AppLocalizations.of(context).translate('group_name')}',
+                        popupTitle: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '${AppLocalizations.of(context).translate('existing_group')}',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        searchBoxDecoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
+                          prefixIcon: Icon(Icons.search),
+                          labelText:
+                              "${AppLocalizations.of(context).translate('search_group')}",
+                        ),
+                        showSearchBox: true,
+                        onFind: (String filter) => getGroupDataData(filter),
+                        itemAsString: (OrderGroup u) => u.userAsString(),
+                        onChanged: (OrderGroup data) {
+                          orderGroupId = data.orderGroupId.toString();
+                          orderGroup = data.groupName;
+                        }),
+                  ],
+                )),
           ),
           SizedBox(
             height: 15,
@@ -246,12 +291,16 @@ class _ExportDialogState extends State<ExportDialog> {
   }
 
   List getExportType(context) {
-    return <String>['customer', 'products', 'sales'];
+    return <String>['customer', 'products', 'product_sold', 'sales', 'group'];
   }
 
   checkPermission() async {
     var readPermission = await Permission.storage.status;
     if (readPermission.isGranted) {
+      if (exportData == 'group' && orderGroupId == null) {
+        showToast('please_select_group');
+        return;
+      }
       generateCSV();
     } else {
       final status = await Permission.storage.request();
@@ -311,7 +360,7 @@ class _ExportDialogState extends State<ExportDialog> {
         row.add(productList[i].stock);
         rows.add(row);
       }
-    } else if (exportData == 'sales') {
+    } else if (exportData == 'sales' || exportData == 'group') {
       var subTotal = 0.0,
           tax = 0.0,
           deliveryFee = 0.0,
@@ -369,6 +418,33 @@ class _ExportDialogState extends State<ExportDialog> {
       row.add(couponDiscount.toStringAsFixed(2));
       row.add(total.toStringAsFixed(2));
       rows.add(row);
+    } else {
+      await fetchExportProductSold();
+      for (int i = 0; i < orderItemList.length; i++) {
+        List<dynamic> row = [];
+        //add header
+        if (i == 0) {
+          row.add('Name');
+          row.add('Add-ON');
+          row.add('Price');
+          row.add('Quantity');
+          row.add('Total Price');
+          rows.add(row);
+          row = [];
+        }
+        if (orderItemList[i].name == 'Pearl Burble Tea') {
+          print(orderItemList[i].variation);
+        }
+        row.add(orderItemList[i].name);
+        row.add(variantLabel(orderItemList[i].variation));
+        row.add(
+            calUnitPrice(orderItemList[i].price, orderItemList[i].variation));
+        row.add(orderItemList[i].quantity);
+        row.add(calProductSoldTotal(orderItemList[i].price,
+            orderItemList[i].quantity, orderItemList[i].variation));
+
+        rows.add(row);
+      }
     }
     return rows;
   }
@@ -420,8 +496,10 @@ class _ExportDialogState extends State<ExportDialog> {
   Future fetchExportSales() async {
     salesList = [];
     Map data = await Domain().fetchExportSales(
-        fromDate != null ? fromDate.toString() : '',
-        toDate != null ? toDate.toString() : '');
+      fromDate != null ? fromDate.toString() : '',
+      toDate != null ? toDate.toString() : '',
+      exportData == 'group' && orderGroupId != null ? orderGroupId : '',
+    );
 
     if (data['status'] == '1') {
       List responseJson = data['export_sales'];
@@ -429,6 +507,29 @@ class _ExportDialogState extends State<ExportDialog> {
           .map((jsonObject) => Order.fromJson(jsonObject))
           .toList());
     }
+  }
+
+  Future fetchExportProductSold() async {
+    orderItemList = [];
+    Map data = await Domain().fetchExportProductSold(
+        fromDate != null ? fromDate.toString() : '',
+        toDate != null ? toDate.toString() : '');
+
+    if (data['status'] == '1') {
+      List responseJson = data['export_product_sold'];
+      orderItemList.addAll(responseJson
+          .map((jsonObject) => OrderItem.fromJson(jsonObject))
+          .toList());
+    }
+  }
+
+  Future<List<OrderGroup>> getGroupDataData(filter) async {
+    Map data = await Domain().fetchGroup();
+    var models;
+    if (data['status'] == '1') {
+      models = OrderGroup.fromJsonList(data['order_group']);
+    }
+    return models;
   }
 
   generateCSV() async {
@@ -440,8 +541,7 @@ class _ExportDialogState extends State<ExportDialog> {
     if (rows.length > 0) {
       String csv = const ListToCsvConverter().convert(rows);
       String dir = (await getApplicationDocumentsDirectory()).path;
-      fileName =
-          '${AppLocalizations.of(context).translate(exportData)} (${fileDateForm.format(DateTime.now())}).csv';
+      fileName = getFileName();
       path = '$dir/$fileName';
 
       File file = new File(path);
@@ -460,8 +560,82 @@ class _ExportDialogState extends State<ExportDialog> {
     }
   }
 
+  getFileName() {
+    if (exportData == 'group')
+      return '${AppLocalizations.of(context).translate(exportData)} ($orderGroup).csv';
+    else {
+      return '${AppLocalizations.of(context).translate(exportData)} (${fileDateForm.format(DateTime.now())}).csv';
+    }
+  }
+
   showToast(message) {
     CustomToast('${AppLocalizations.of(context).translate(message)}', context)
         .show();
+  }
+
+  calProductSoldTotal(price, quantity, variation) {
+    return ((Order().convertToInt(price) + countVariantTotal(variation)) *
+            Order().convertToInt(quantity))
+        .toStringAsFixed(2);
+  }
+
+  calUnitPrice(price, variation) {
+    return (Order().convertToInt(price) + countVariantTotal(variation))
+        .toStringAsFixed(2);
+  }
+
+  variantLabel(variation) {
+    List<VariantGroup> variant = [];
+    String label = '';
+    try {
+      if (variation != '') {
+        List data = jsonDecode(variation);
+        variant.addAll(data
+            .map((jsonObject) => VariantGroup.fromJson(jsonObject))
+            .toList());
+
+        for (int i = 0; i < variant.length; i++)
+          for (int j = 0; j < variant[i].variantChild.length; j++)
+            if (variant[i].variantChild[j].quantity > 0) {
+              label = label +
+                  (label != '' ? '\n' : '') +
+                  '${variant[i].variantChild[j].name}';
+            }
+      }
+    } catch ($e) {}
+    return label;
+  }
+
+  bool isUsedVariant(List<VariantChild> data) {
+    for (int j = 0; j < data.length; j++) {
+      if (data[j].quantity > 0) return true;
+    }
+    return false;
+  }
+
+  countVariantTotal(variation) {
+    var totalVariant = 0.00;
+    if (variation != '') {
+      List<VariantGroup> variant = [];
+      List<VariantChild> variantChild = [];
+
+      try {
+        List data = jsonDecode(variation);
+        variant.addAll(data
+            .map((jsonObject) => VariantGroup.fromJson(jsonObject))
+            .toList());
+      } catch ($e) {}
+
+      for (int i = 0; i < variant.length; i++) {
+        variantChild = variant[i].variantChild;
+        for (int j = 0; j < variantChild.length; j++) {
+          if (variantChild[j].quantity > 0) {
+            totalVariant += (variantChild[j].quantity *
+                double.parse(variantChild[j].price));
+          }
+        }
+      }
+    }
+    return totalVariant;
   }
 }

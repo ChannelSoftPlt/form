@@ -31,9 +31,85 @@ class ReceiptLayout {
     }
   }
 
+  Future<Ticket> testing() async {
+    final profile = await CapabilityProfile.load();
+    final Ticket ticket = Ticket(PaperSize.mm58, profile);
+
+    for (int i = 0; i < orderItems.length; i++) {
+      ticket.reset();
+      ticket.row([
+        PosColumn(
+            text: orderItems[i].name,
+            width: 9,
+            containsChinese: true,
+            styles: PosStyles(align: PosAlign.left, bold: true)),
+        PosColumn(
+            text: 'x ${orderItems[i].quantity}',
+            width: 3,
+            styles: PosStyles(align: PosAlign.right)),
+      ]);
+      /*
+      * product add on
+      * */
+      var variation = orderItems[i].variation;
+      List<VariantGroup> variant = [];
+
+      if (variation != '') {
+        List data = jsonDecode(variation);
+        variant.addAll(data
+            .map((jsonObject) => VariantGroup.fromJson(jsonObject))
+            .toList());
+
+        for (int i = 0; i < variant.length; i++) {
+          if (isUsedVariant(variant[i].variantChild)) {
+            for (int j = 0; j < variant[i].variantChild.length; j++) {
+              if (variant[i].variantChild[j].quantity > 0) {
+                ticket.reset();
+                ticket.row([
+                  PosColumn(
+                    text: '-${variant[i].variantChild[j].name}',
+                    width: 10,
+                    containsChinese: true,
+                  ),
+                  PosColumn(
+                      text: '',
+                      width: 2,
+                      styles: PosStyles(align: PosAlign.right)),
+                ]);
+              }
+            }
+          }
+        }
+      }
+      //product remark
+      ticket.reset();
+      if (orderItems[i].remark != '') {
+        ticket.row([
+          PosColumn(
+              text: '**${orderItems[i].remark}',
+              width: 10,
+              containsChinese: true),
+          PosColumn(
+              text: '', width: 2, styles: PosStyles(align: PosAlign.right)),
+        ]);
+      }
+      //product price
+      ticket.reset();
+      ticket.text(
+          calEachTotal(orderItems[i].price, orderItems[i].quantity,
+              orderItems[i].variation),
+          styles: PosStyles(align: PosAlign.right));
+
+      ticket.feed(1);
+    }
+    ticket.cut();
+    return ticket;
+  }
+
   Future<Ticket> get80mmTicket() async {
     try {
-      final Ticket ticket = Ticket(PaperSize.mm80);
+      final profile = await CapabilityProfile.load();
+      final Ticket ticket = Ticket(PaperSize.mm80, profile);
       /*
       * header
       * */
@@ -59,7 +135,7 @@ class ReceiptLayout {
       ticket.hr();
       //receipt & date
       ticket.row([
-        PosColumn(text: 'RECEIPT: ', width: 2),
+        PosColumn(text: 'RECEIPT: ', width: 3),
         PosColumn(
             text: '${Order().orderPrefix(order.orderID)}',
             width: 4,
@@ -67,18 +143,18 @@ class ReceiptLayout {
         PosColumn(text: 'DATE: ', width: 2),
         PosColumn(
             text: '${formatDate(order.date, 'date')}',
-            width: 4,
+            width: 3,
             styles: PosStyles(align: PosAlign.left)),
       ]);
       //admin & time
       ticket.row([
-        PosColumn(text: 'CASHIER: ', width: 2),
+        PosColumn(text: 'CASHIER: ', width: 3),
         PosColumn(
             text: 'ADMIN', width: 4, styles: PosStyles(align: PosAlign.left)),
         PosColumn(text: 'TIME: ', width: 2),
         PosColumn(
             text: '${formatDate(order.date, 'time')}',
-            width: 4,
+            width: 3,
             styles: PosStyles(align: PosAlign.left)),
       ]);
       /*
@@ -105,7 +181,7 @@ class ReceiptLayout {
       for (int i = 0; i < orderItems.length; i++) {
         ticket.row([
           PosColumn(
-              text: '${calLineBreak(orderItems[i].name, PaperSize.mm80)}',
+              text: '${orderItems[i].name}',
               width: 6,
               containsChinese: true,
               styles: PosStyles(align: PosAlign.left)),
@@ -137,8 +213,7 @@ class ReceiptLayout {
                 if (variant[i].variantChild[j].quantity > 0) {
                   ticket.row([
                     PosColumn(
-                        text:
-                            '-${calLineBreak(variant[i].variantChild[j].name, PaperSize.mm80)}',
+                        text: '-${variant[i].variantChild[j].name}',
                         width: 6,
                         containsChinese: true),
                     PosColumn(
@@ -299,7 +374,8 @@ class ReceiptLayout {
 
   Future<Ticket> get58mmTicket() async {
     try {
-      final Ticket ticket = Ticket(PaperSize.mm58);
+      final profile = await CapabilityProfile.load();
+      final Ticket ticket = Ticket(PaperSize.mm58, profile);
       /*
       * header
       * */
@@ -375,17 +451,16 @@ class ReceiptLayout {
     * product row
     * */
       for (int i = 0; i < orderItems.length; i++) {
-        print(calLineBreak(orderItems[i].name, PaperSize.mm58));
         ticket.reset();
         ticket.row([
           PosColumn(
-              text: calLineBreak(orderItems[i].name, PaperSize.mm58),
-              width: 10,
+              text: orderItems[i].name,
+              width: 9,
               containsChinese: true,
-              styles: PosStyles(align: PosAlign.left)),
+              styles: PosStyles(align: PosAlign.left, bold: true)),
           PosColumn(
               text: 'x ${orderItems[i].quantity}',
-              width: 2,
+              width: 3,
               styles: PosStyles(align: PosAlign.right)),
         ]);
         /*
@@ -407,13 +482,13 @@ class ReceiptLayout {
                   ticket.reset();
                   ticket.row([
                     PosColumn(
-                        text:
-                            '-${calLineBreak(variant[i].variantChild[j].name, PaperSize.mm58)}',
-                        width: 10,
-                        containsChinese: true),
+                      text: '-${variant[i].variantChild[j].name}',
+                      width: 9,
+                      containsChinese: true,
+                    ),
                     PosColumn(
                         text: '',
-                        width: 2,
+                        width: 3,
                         styles: PosStyles(align: PosAlign.right)),
                   ]);
                 }
@@ -427,10 +502,10 @@ class ReceiptLayout {
           ticket.row([
             PosColumn(
                 text: '**${orderItems[i].remark}',
-                width: 10,
+                width: 9,
                 containsChinese: true),
             PosColumn(
-                text: '', width: 2, styles: PosStyles(align: PosAlign.right)),
+                text: '', width: 3, styles: PosStyles(align: PosAlign.right)),
           ]);
         }
         //product price
@@ -439,6 +514,7 @@ class ReceiptLayout {
             calEachTotal(orderItems[i].price, orderItems[i].quantity,
                 orderItems[i].variation),
             styles: PosStyles(align: PosAlign.right));
+        ticket.feed(1);
       }
       ticket.hr();
       ticket.reset();
@@ -547,6 +623,7 @@ class ReceiptLayout {
       ticket.feed(1);
 
       //qr code
+      ticket.reset();
       ticket.qrcode(url, align: PosAlign.center, size: QRSize.Size6);
       ticket.feed(1);
 
@@ -555,7 +632,6 @@ class ReceiptLayout {
           styles:
               PosStyles(align: PosAlign.center, fontType: PosFontType.fontB));
 
-      //ticket.feed(2);
       ticket.cut();
       return ticket;
     } catch ($e) {
@@ -579,54 +655,6 @@ class ReceiptLayout {
       return 'DuitNow QR';
     else
       return 'Sarawak Pay';
-  }
-
-  String calLineBreak(String text, PaperSize paperSize) {
-    RegExp engCharacter = RegExp('(^[^-\\s][a-zA-Z0-9_\\s-]+\$)');
-    /*
-    *  paper size 80 mm
-    * */
-    if (paperSize == PaperSize.mm80) {
-      //is english text
-      if (engCharacter.hasMatch(text)) {
-        if (text.length > 25) {
-          text = '  ' + text;
-          return text.replaceAllMapped(
-              RegExp(r".{25}"), (match) => "${match.group(0)}\n");
-        }
-      }
-      //other languages
-      else {
-        if (text.length > 16) {
-          text = '  ' + text;
-          return text.replaceAllMapped(
-              RegExp(r".{14}"), (match) => "${match.group(0)}\n");
-        }
-      }
-      return text;
-    }
-    /*
-    *  paper size 50 mm
-    * */
-    else {
-      //is english text
-      if (engCharacter.hasMatch(text)) {
-        if (text.length > 23) {
-          text = ' ' + text;
-          return text.replaceAllMapped(
-              RegExp(r".{23}"), (match) => "${match.group(0)}\n");
-        }
-      }
-      //other languages
-      else {
-        if (text.length > 16) {
-          text = ' ' + text;
-          return text.replaceAllMapped(
-              RegExp(r".{16}"), (match) => "${match.group(0)}\n");
-        }
-      }
-      return text;
-    }
   }
 
   bool isUsedVariant(List<VariantChild> data) {
@@ -682,8 +710,7 @@ class ReceiptLayout {
   }
 
   getUrl() async {
-    this.url = Merchant.fromJson(await SharePreferences().read("merchant")).url;
-    if (url.length > 0) this.url = url.substring(8, url.length);
+    this.url = await SharePreferences().read('url');
   }
 
   fetchPrintData() async {

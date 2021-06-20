@@ -180,9 +180,7 @@ class _QrDialogState extends State<QrDialog> {
   }
 
   getURL() async {
-    this.url = Merchant
-        .fromJson(await SharePreferences().read("merchant"))
-        .url;
+    this.url = await SharePreferences().read('url');
     refreshStream.add('display');
   }
 

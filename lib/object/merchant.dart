@@ -6,7 +6,6 @@ class Merchant {
   String name;
   String email;
   String companyName;
-  String url;
   String address;
   String phone;
   String whatsAppNumber;
@@ -40,7 +39,6 @@ class Merchant {
       this.email,
       this.grouping,
       this.companyName,
-      this.url,
       this.address,
       this.phone,
       this.whatsAppNumber,
@@ -72,7 +70,6 @@ class Merchant {
         name = json['name'],
         email = json['email'],
         companyName = json['company_name'],
-        url = json['url'],
         address = json['address'],
         phone = json['phone'],
         whatsAppNumber = json['whatsapp_number'],
@@ -102,7 +99,6 @@ class Merchant {
         'merchantId': merchantId,
         'formId': formId,
         'name': name,
-        'url': url,
         'email': email
       };
 

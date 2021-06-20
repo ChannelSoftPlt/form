@@ -197,14 +197,10 @@ class _OrderListState extends State<OrderList> {
       itemBuilder: (context) => [
         _buildMenuItem('group',
             '${AppLocalizations.of(context).translate('assign_group')}', true),
-        _buildMenuItem(
-            'status',
-            '${AppLocalizations.of(context).translate('change_status')}',
-            status != '1'),
-        _buildMenuItem(
-            'driver',
-            '${AppLocalizations.of(context).translate('assign_driver')}',
-            status != '1'),
+        _buildMenuItem('status',
+            '${AppLocalizations.of(context).translate('change_status')}', true),
+        _buildMenuItem('driver',
+            '${AppLocalizations.of(context).translate('assign_driver')}', true),
         _buildMenuItem('delete',
             '${AppLocalizations.of(context).translate('delete_order')}', true)
       ],
@@ -274,15 +270,8 @@ class _OrderListState extends State<OrderList> {
   }
 
   Future fetchOrder() async {
-    Map data = await Domain().fetchOrder(
-        currentPage,
-        itemPerPage,
-        status,
-        widget.query,
-        '',
-        widget.driverId,
-        widget.startDate,
-        widget.endDate);
+    Map data = await Domain().fetchOrder(currentPage, itemPerPage, status,
+        widget.query, '', widget.driverId, widget.startDate, widget.endDate);
 
     setState(() {
       if (data['status'] == '1') {
@@ -367,7 +356,8 @@ class _OrderListState extends State<OrderList> {
             onClick: (value) async {
               await Future.delayed(Duration(milliseconds: 500));
               Navigator.pop(mainContext);
-              Map data = await Domain().updateMultipleStatus(value, selectedList.join(','));
+              Map data = await Domain()
+                  .updateMultipleStatus(value, selectedList.join(','));
 
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext,

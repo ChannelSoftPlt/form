@@ -37,15 +37,26 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth is used to scan for printers and send the data</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Bluetooth is used to scan for printers and send the data</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to the Camera to capture product pictures.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Need Location permission</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Need Location permission</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need Location permission</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app requires access to the Microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to the photo library to select product pictures</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>remote-notification</string>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
@@ -68,24 +79,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-        <key>NSBluetoothPeripheralUsageDescription</key>
-        <string>Need BLE permission</string>
-        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-        <string>Need Location permission</string>
-        <key>NSLocationAlwaysUsageDescription</key>
-        <string>Need Location permission</string>
-        <key>NSLocationWhenInUseUsageDescription</key>
-        <string>Need Location permission</string>
-        <key>NSBluetoothAlwaysUsageDescription</key>
-        <string>Bluetooth is used to scan for printers and send the data</string>
-        <key>UIViewControllerBasedStatusBarAppearance</key>
-        	<false/>
-        <key>NSBluetoothPeripheralUsageDescription</key>
-        <string>Bluetooth is used to scan for printers and send the data</string>
-        <key>UIBackgroundModes</key>
-        <array>
-        	<string>bluetooth-central</string>
-        	<string>bluetooth-peripheral</string>
-        </array>
 </dict>
 </plist>

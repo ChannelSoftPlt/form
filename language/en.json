@@ -596,5 +596,8 @@
   "sarawak_pay_description": "Upload your Sarawak Pay QR Code here.",
   "no_boost_qr_code": "Must Upload QR Code Before active your Boost",
   "no_duit_now_qr_code": "Must Upload QR Code Before active your DuitNow QR",
-  "no_sarawak_pay_qr_code": "Must Upload QR Code Before active your Sarawak Pay"
+  "no_sarawak_pay_qr_code": "Must Upload QR Code Before active your Sarawak Pay",
+
+  "please_select_group": "Please select a group!",
+  "product_sold": "Product Sold"
 }

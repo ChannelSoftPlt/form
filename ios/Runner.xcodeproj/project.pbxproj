@@ -367,7 +367,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = YQRJR6MWAX;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -383,7 +383,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.check.notification;
 				PRODUCT_NAME = "E-Menu";
 				PROVISIONING_PROFILE_SPECIFIER = "notification check";
@@ -509,7 +509,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = YQRJR6MWAX;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -525,7 +525,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.check.notification;
 				PRODUCT_NAME = "E-Menu";
 				PROVISIONING_PROFILE_SPECIFIER = "notification check";
@@ -545,7 +545,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = YQRJR6MWAX;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -561,7 +561,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.check.notification;
 				PRODUCT_NAME = "E-Menu";
 				PROVISIONING_PROFILE_SPECIFIER = "notification check";

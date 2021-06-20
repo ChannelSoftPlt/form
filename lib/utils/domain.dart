@@ -348,9 +348,25 @@ class Domain {
   /*
   * export sales
   * */
-  fetchExportSales($startDate, $endDate) async {
+  fetchExportSales($startDate, $endDate, $groupId) async {
     var response = await http.post(Domain.export, body: {
       'export_sales': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+      'start_date': $startDate,
+      'end_date': $endDate,
+      'order_group_id': $groupId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * export product sold
+  * */
+  fetchExportProductSold($startDate, $endDate) async {
+    var response = await http.post(Domain.export, body: {
+      'export_product_sold': '1',
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
@@ -497,8 +513,8 @@ class Domain {
       'read_qr_code': '1',
       'type': type,
       'merchant_id':
-      Merchant.fromJson(await SharePreferences().read("merchant"))
-          .merchantId,
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -510,8 +526,8 @@ class Domain {
     var response = await http.post(Domain.profile, body: {
       'read_availability': '1',
       'merchant_id':
-      Merchant.fromJson(await SharePreferences().read("merchant"))
-          .merchantId,
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
     });
     return jsonDecode(response.body);
   }
