@@ -106,6 +106,7 @@ dependencies:
       url: https://github.com/ChannelSoftPlt/esc_pos_bluetooth.git
   flutter_bluetooth_basic: ^0.1.5
   flutter_blue: ^0.7.1+1
+  esc_pos_printer: ^3.2.9
 
 dependency_overrides:
   rxdart: ^0.27.1

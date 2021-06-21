@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
+import 'package:esc_pos_printer/esc_pos_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
@@ -22,34 +23,53 @@ class PrintDialog extends StatefulWidget {
   _PrintDialogState createState() => _PrintDialogState();
 }
 
-class _PrintDialogState extends State<PrintDialog> {
+class _PrintDialogState extends State<PrintDialog>
+    with SingleTickerProviderStateMixin {
   String msg = 'no_device';
   var key = new GlobalKey<ScaffoldState>();
+  TabController tabController;
+
   BluetoothManager bluetoothManager = BluetoothManager.instance;
-  PrinterBluetoothManager printerManager = PrinterBluetoothManager();
+  PrinterBluetoothManager bluePrintManager = PrinterBluetoothManager();
+  PrinterNetworkManager lanPrintManager = PrinterNetworkManager();
+
   FlutterBlue flutterBlue = FlutterBlue.instance;
   PrinterBluetooth printer;
   List<PrinterBluetooth> _devices = [];
 
   PrinterBluetooth selectedDevice;
   String defaultPrinter;
+  String selectedIP;
+  bool isBluetoothPrinter = true;
   bool isBluetoothOpen = false;
   bool bluetoothScan = false;
   bool isPrinting = false;
 
   int paperSize = 58;
+  int selectTab = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    bluetoothChecking();
+    tabController = new TabController(vsync: this, length: 2);
+    checkHistory();
   }
 
   @override
   dispose() {
     super.dispose();
-    printerManager.stopScan();
+    bluePrintManager.stopScan();
+    tabController.dispose();
+  }
+
+  checkHistory() async {
+    var position = await SharePreferences().read('default_printer_type') ?? 0;
+    setState(() {
+      selectTab = position;
+      tabController.animateTo(selectTab);
+      if (selectTab == 0) bluetoothChecking();
+    });
   }
 
   bluetoothChecking() {
@@ -149,6 +169,41 @@ class _PrintDialogState extends State<PrintDialog> {
   }
 
   Widget mainContent() {
+    return Column(
+      children: [
+        TabBar(
+          controller: tabController,
+          indicatorColor: Colors.orangeAccent,
+          labelColor: Colors.orangeAccent,
+          unselectedLabelColor: Colors.grey,
+          tabs: [
+            Tab(
+              text: AppLocalizations.of(context).translate('bluetooth'),
+            ),
+            Tab(
+              text: AppLocalizations.of(context).translate('lan'),
+            ),
+          ],
+          onTap: (position) {
+            SharePreferences().save('default_printer_type', position);
+            selectTab = position;
+            print(selectTab);
+          },
+        ),
+        Expanded(
+          child: Container(
+            child: TabBarView(controller: tabController, children: [
+              bluetoothPrinter(),
+              lanPrinter()
+              //Lan Printer
+            ]),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget bluetoothPrinter() {
     return isBluetoothOpen
         ? isPrinting
             ? printingLayout()
@@ -162,48 +217,17 @@ class _PrintDialogState extends State<PrintDialog> {
           );
   }
 
+  Widget lanPrinter() {
+    return Column(
+      children: [paperSizeLayout()],
+    );
+  }
+
   Widget deviceList() {
     return bluetoothScan
         ? _devices.length > 0
             ? Column(children: [
-                Row(
-                  children: [
-                    Expanded(
-                        flex: 2,
-                        child: Text(AppLocalizations.of(context)
-                            .translate('paper_size'))),
-                    Expanded(
-                      flex: 2,
-                      child: DropdownButton(
-                          isExpanded: true,
-                          itemHeight: 50,
-                          value: paperSize,
-                          style: TextStyle(fontSize: 15, color: Colors.black87),
-                          items: [
-                            DropdownMenuItem(
-                              child: Text(
-                                '58mm',
-                                textAlign: TextAlign.center,
-                              ),
-                              value: 58,
-                            ),
-                            DropdownMenuItem(
-                              child: Text(
-                                '80mm',
-                                textAlign: TextAlign.center,
-                              ),
-                              value: 80,
-                            ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              paperSize = value;
-                              SharePreferences().save('paper_size', paperSize);
-                            });
-                          }),
-                    ),
-                  ],
-                ),
+                paperSizeLayout(),
                 Container(
                   height: 350,
                   child: ListView.builder(
@@ -274,6 +298,46 @@ class _PrintDialogState extends State<PrintDialog> {
           );
   }
 
+  Widget paperSizeLayout() {
+    return Row(
+      children: [
+        Expanded(
+            flex: 2,
+            child: Text(AppLocalizations.of(context).translate('paper_size'))),
+        Expanded(
+          flex: 2,
+          child: DropdownButton(
+              isExpanded: true,
+              itemHeight: 50,
+              value: paperSize,
+              style: TextStyle(fontSize: 15, color: Colors.black87),
+              items: [
+                DropdownMenuItem(
+                  child: Text(
+                    '58mm',
+                    textAlign: TextAlign.center,
+                  ),
+                  value: 58,
+                ),
+                DropdownMenuItem(
+                  child: Text(
+                    '80mm',
+                    textAlign: TextAlign.center,
+                  ),
+                  value: 80,
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  paperSize = value;
+                  SharePreferences().save('paper_size', paperSize);
+                });
+              }),
+        ),
+      ],
+    );
+  }
+
   Widget printingLayout() {
     return Container(
         child: Column(
@@ -287,12 +351,20 @@ class _PrintDialogState extends State<PrintDialog> {
     setState(() {
       isPrinting = true;
     });
-    printerManager.selectPrinter(printer);
+    var result;
     final myTicket = await ReceiptLayout(widget.orderId)
         .ticket(paperSize == 58 ? PaperSize.mm58 : PaperSize.mm80);
-
     if (myTicket != null) {
-      final result = await printerManager.printTicket(myTicket);
+      //bluetooth printer
+      if (selectTab == 0) {
+        bluePrintManager.selectPrinter(printer);
+        result = await bluePrintManager.printTicket(myTicket);
+      }
+      //lan printer
+      else {
+        lanPrintManager.selectPrinter(selectedIP);
+        result = await lanPrintManager.printTicket(myTicket);
+      }
       printResult(result.msg);
     } else {
       setState(() {
@@ -339,8 +411,8 @@ class _PrintDialogState extends State<PrintDialog> {
     flutterBlue.scanResults.listen((results) {});
     flutterBlue.stopScan();
 
-    printerManager.startScan(Duration(seconds: 2));
-    printerManager.scanResults.listen((event) {
+    bluePrintManager.startScan(Duration(seconds: 2));
+    bluePrintManager.scanResults.listen((event) {
       if (!mounted) return;
       setState(() {
         _devices = event;

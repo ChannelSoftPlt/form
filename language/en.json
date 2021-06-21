@@ -599,5 +599,7 @@
   "no_sarawak_pay_qr_code": "Must Upload QR Code Before active your Sarawak Pay",
 
   "please_select_group": "Please select a group!",
-  "product_sold": "Product Sold"
+  "product_sold": "Product Sold",
+  "lan": "LAN",
+  "bluetooth": "Bluetooth"
 }
