@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:my/object/coupon.dart';
 import 'package:my/object/form.dart';
+import 'package:my/object/lan_printer.dart';
 import 'package:my/object/merchant.dart';
 import 'package:my/object/order.dart';
 import 'package:my/object/order_group.dart';
@@ -13,12 +14,12 @@ import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
 
 class Domain {
-//  static var domain = 'https://www.mobile.emenu.com.my/';
-//  static var webDomain = 'https://www.cp.emenu.com.my/';
+  static var domain = 'https://www.mobile.emenu.com.my/';
+  static var webDomain = 'https://www.cp.emenu.com.my/';
 
   //testing server
-  static var domain = 'https://emenumobile.lkmng.com/';
-  static var webDomain = 'https://www.formtest.lkmng.com/';
+//  static var domain = 'https://emenumobile.lkmng.com/';
+//  static var webDomain = 'https://www.formtest.lkmng.com/';
 
   static Uri order = Uri.parse(domain + 'mobile_api/order/index.php');
   static Uri product = Uri.parse(domain + 'mobile_api/product/index.php');
@@ -40,6 +41,8 @@ class Domain {
   static Uri promotionDialog =
       Uri.parse(domain + 'mobile_api/promotion_dialog/index.php');
   static Uri printer = Uri.parse(domain + 'mobile_api/printer/index.php');
+  static Uri lanPrinter =
+      Uri.parse(domain + 'mobile_api/printer/lanprinter/index.php');
 
   /*
   * Web Domain
@@ -546,6 +549,19 @@ class Domain {
   }
 
   /*
+  * read lan printer
+  * */
+  readLanPrinter() async {
+    var response = await http.post(Domain.lanPrinter, body: {
+      'read': '1',
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * update status
   * */
   updateStatus(status, orderId) async {
@@ -782,7 +798,9 @@ class Domain {
       orderMinDay,
       workingDay,
       workingTime,
-      minPurchase) async {
+      minPurchase,
+      allowEmail,
+      orderReminder) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'self_collect': selfCollectOption,
@@ -793,6 +811,8 @@ class Domain {
       'working_day': workingDay,
       'working_time': workingTime,
       'order_min_purchase': minPurchase,
+      'allow_send_email': allowEmail,
+      'order_reminder': orderReminder,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
               .merchantId,
@@ -1006,6 +1026,23 @@ class Domain {
   }
 
   /*
+  * update lan printer
+  * */
+  updateLanPrinter(LanPrinter object) async {
+    var response = await http.post(Domain.lanPrinter, body: {
+      'update': '1',
+      'port': object.port.toString(),
+      'ip': object.ip,
+      'name': object.name,
+      'printer_id': object.printerId.toString(),
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
   * add order item
   * */
   addOrderItem(Product object, orderId, quantity, remark, totalAmount) async {
@@ -1172,6 +1209,22 @@ class Domain {
     return jsonDecode(response.body);
   }
 
+  /*
+  * create lan printer
+  * */
+  createLanPrinter(LanPrinter lanPrinter) async {
+    var response = await http.post(Domain.lanPrinter, body: {
+      'create': '1',
+      'name': lanPrinter.name,
+      'ip': lanPrinter.ip,
+      'port': lanPrinter.port.toString(),
+      'merchant_id':
+          Merchant.fromJson(await SharePreferences().read("merchant"))
+              .merchantId,
+    });
+    return jsonDecode(response.body);
+  }
+
   /*--------------------------------------------------------------------delete part-------------------------------------------------------------------------------*/
   /*
   * delete order item
@@ -1290,6 +1343,15 @@ class Domain {
       'delete_coupon': '1',
       'coupon_usage_id': couponUsageId.toString()
     });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * delete printer
+  * */
+  deletePrinter(printerId) async {
+    var response = await http.post(Domain.lanPrinter,
+        body: {'delete': '1', 'printer_id': printerId.toString()});
     return jsonDecode(response.body);
   }
 }

@@ -601,5 +601,19 @@
   "please_select_group": "Please select a group!",
   "product_sold": "Product Sold",
   "lan": "LAN",
-  "bluetooth": "Bluetooth"
+  "bluetooth": "Bluetooth",
+  "edit_printer": "Edit Printer",
+  "add_printer": "Add Printer",
+  "printer_name": "Printer Name",
+  "printer_hint": "Cashier Printer",
+  "ip_address": "IP Address",
+  "port": "Port",
+  "ip_repeat": "This IP is repeated!",
+  "email_notification": "Email Notification (Beta version)",
+  "email_notification_hint": "Send email notification to customer when order is placed.",
+  "email_notification_hint_2": "*This will only send to customer who fill in the email",
+  "order_reminder": "Order Reminder",
+  "order_reminder_hint": "Any special or important reminder please mention here.",
+  "order_reminder_hint_2": "This reminder will show at the section where customer\nplace their order.",
+  "order_reminder_hint_3": "Preparation time is 15 minutes."
 }

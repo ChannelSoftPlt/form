@@ -561,9 +561,9 @@ class _ExportDialogState extends State<ExportDialog> {
   }
 
   getFileName() {
-    if (exportData == 'group')
-      return '${AppLocalizations.of(context).translate(exportData)} ($orderGroup).csv';
-    else {
+    if (exportData == 'group') {
+      return '${AppLocalizations.of(context).translate(exportData)} (${orderGroup.replaceAll(new RegExp(r'[^\w\s]+'), '-')}).csv';
+    } else {
       return '${AppLocalizations.of(context).translate(exportData)} (${fileDateForm.format(DateTime.now())}).csv';
     }
   }

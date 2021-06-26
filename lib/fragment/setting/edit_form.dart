@@ -14,7 +14,6 @@ import 'package:flutter_quill/widgets/toolbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my/object/form.dart';
-import 'package:my/object/merchant.dart';
 import 'package:my/shareWidget/progress_bar.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/HexColor.dart';
@@ -121,20 +120,20 @@ class _EditFormState extends State<EditForm> {
   Widget mainContent() {
     return form != null
         ? Container(
-          color: backgroundColor,
-          child: SingleChildScrollView(
-            child: Container(
-                color: backgroundColor,
-                width: double.infinity,
-                child: Column(children: [
-                  widgetStatus(),
-                  widgetBannerLayout(),
-                  widgetDescription(),
-                  widgetProductLayout(),
-                  widgetBackgroundColor()
-                ])),
-          ),
-        )
+            color: backgroundColor,
+            child: SingleChildScrollView(
+              child: Container(
+                  color: backgroundColor,
+                  width: double.infinity,
+                  child: Column(children: [
+                    widgetStatus(),
+                    widgetBannerLayout(),
+                    widgetDescription(),
+                    widgetProductLayout(),
+                    widgetBackgroundColor()
+                  ])),
+            ),
+          )
         : CustomProgressBar();
   }
 
@@ -814,6 +813,7 @@ class _EditFormState extends State<EditForm> {
     * */
     Map data =
         await Domain().updateFormSetting(form, imageCode.toString(), extension);
+    print('update data: $data');
 
     if (data['status'] == '1') {
       //for easy delete image purpose

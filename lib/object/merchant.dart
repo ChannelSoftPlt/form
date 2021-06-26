@@ -31,6 +31,8 @@ class Merchant {
   String allowDuit;
   String allowSarawak;
   bool grouping = true;
+  String orderReminder;
+  String allowEmail;
 
   Merchant(
       {this.merchantId,
@@ -62,7 +64,9 @@ class Merchant {
       this.allowTNG,
       this.allowBoost,
       this.allowDuit,
-      this.allowSarawak});
+      this.allowSarawak,
+      this.allowEmail,
+      this.orderReminder});
 
   Merchant.fromJson(Map<String, dynamic> json)
       : merchantId = json['merchantId'],
@@ -93,7 +97,9 @@ class Merchant {
         allowTNG = json['tng_manual_payment'].toString(),
         allowBoost = json['boost_manual_payment'].toString(),
         allowDuit = json['duit_now_manual_payment'].toString(),
-        allowSarawak = json['sarawak_pay_manual_payment'].toString();
+        allowSarawak = json['sarawak_pay_manual_payment'].toString(),
+        allowEmail = json['allow_send_email'].toString(),
+        orderReminder = json['order_reminder'].toString();
 
   Map<String, dynamic> toJson() => {
         'merchantId': merchantId,

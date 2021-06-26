@@ -113,7 +113,7 @@ class ReceiptLayout {
       /*
       * header
       * */
-      ticket.text(merchant.name,
+      ticket.text(merchant.companyName,
           containsChinese: true,
           styles: PosStyles(
               bold: true,
@@ -379,7 +379,7 @@ class ReceiptLayout {
       /*
       * header
       * */
-      ticket.text(merchant.name,
+      ticket.text(merchant.companyName,
           containsChinese: true,
           styles: PosStyles(
               bold: true,

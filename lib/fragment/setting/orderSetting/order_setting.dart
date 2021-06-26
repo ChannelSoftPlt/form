@@ -26,8 +26,9 @@ class _OrderSettingState extends State<OrderSetting> {
   var minPurchase = TextEditingController();
   var startTime = new TextEditingController();
   var endTime = new TextEditingController();
+  var orderReminder = new TextEditingController();
 
-  bool email, selfCollect, deliveryDate, deliveryTime;
+  bool email, selfCollect, deliveryDate, deliveryTime, allowEmailNotification;
   List<int> workingDays = [];
   WorkingTime workingTime;
   StreamController refreshController;
@@ -69,14 +70,17 @@ class _OrderSettingState extends State<OrderSetting> {
                   Merchant merchant = responseJson
                       .map((jsonObject) => Merchant.fromJson(jsonObject))
                       .toList()[0];
-
                   email = merchant.emailOption != '1';
                   selfCollect = merchant.selfCollectOption != '1';
                   deliveryTime = merchant.timeOption != '1';
                   deliveryDate = merchant.dateOption != '1';
 
+                  allowEmailNotification = merchant.allowEmail != '1';
+
                   minOrderDays.text = merchant.minOrderDay ?? 0;
                   minPurchase.text = merchant.minPurchase ?? '0';
+                  print(merchant.orderReminder);
+                  orderReminder.text = merchant.orderReminder;
 
                   var workingDay = jsonDecode(merchant.workingDay);
                   workingDays =
@@ -150,8 +154,7 @@ class _OrderSettingState extends State<OrderSetting> {
                                           text:
                                               '${AppLocalizations.of(context).translate('field_will_show_in_emenu')}',
                                           style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 12),
+                                              color: Colors.grey, fontSize: 12),
                                         ),
                                       ],
                                     ),
@@ -161,11 +164,13 @@ class _OrderSettingState extends State<OrderSetting> {
                             ),
                             CheckboxListTile(
                               title: Text(
-                                  '${AppLocalizations.of(context).translate('email')}'),
+                                '${AppLocalizations.of(context).translate('email')}',
+                                style: TextStyle(fontSize: 15),
+                              ),
                               subtitle: Text(
                                 '${AppLocalizations.of(context).translate('email_required_hint')}',
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey),
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
                               ),
                               value: email,
                               onChanged: (newValue) {
@@ -182,9 +187,61 @@ class _OrderSettingState extends State<OrderSetting> {
                                 thickness: 1.0,
                               ),
                             ),
+                            Visibility(
+                              visible: email,
+                              child: Column(
+                                children: [
+                                  CheckboxListTile(
+                                    title: Text(
+                                      '${AppLocalizations.of(context).translate('email_notification')}',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    subtitle: RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 16),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text:
+                                                  '${AppLocalizations.of(context).translate('email_notification_hint')}',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey)),
+                                          TextSpan(text: '\n'),
+                                          TextSpan(
+                                            text:
+                                                '${AppLocalizations.of(context).translate('email_notification_hint_2')}',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    value: allowEmailNotification,
+                                    onChanged: (newValue) {
+                                      allowEmailNotification = newValue;
+                                      refreshController.add('');
+                                    },
+                                    controlAffinity: ListTileControlAffinity
+                                        .trailing, //  <-- leading Checkbox
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                                    child: Divider(
+                                      color: Colors.teal.shade100,
+                                      thickness: 1.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             CheckboxListTile(
                               title: Text(
-                                  '${AppLocalizations.of(context).translate('self_collect')}'),
+                                '${AppLocalizations.of(context).translate('self_collect')}',
+                                style: TextStyle(fontSize: 15),
+                              ),
                               subtitle: RichText(
                                 text: TextSpan(
                                   style: TextStyle(
@@ -194,8 +251,7 @@ class _OrderSettingState extends State<OrderSetting> {
                                         text:
                                             '${AppLocalizations.of(context).translate('self_collect_enable_hint')}',
                                         style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey)),
+                                            fontSize: 12, color: Colors.grey)),
                                     TextSpan(text: '\n'),
                                     TextSpan(
                                       text:
@@ -223,11 +279,13 @@ class _OrderSettingState extends State<OrderSetting> {
                             ),
                             ListTile(
                               title: Text(
-                                  '${AppLocalizations.of(context).translate('min_purchase')}'),
+                                '${AppLocalizations.of(context).translate('min_purchase')}',
+                                style: TextStyle(fontSize: 15),
+                              ),
                               subtitle: Text(
                                 '${AppLocalizations.of(context).translate('min_purchase_description')}',
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey),
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
                               ),
                               trailing: Container(
                                   width: 80,
@@ -235,6 +293,7 @@ class _OrderSettingState extends State<OrderSetting> {
                                   child: TextField(
                                     controller: minPurchase,
                                     textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 14),
                                     keyboardType:
                                         TextInputType.numberWithOptions(
                                             decimal: true),
@@ -292,8 +351,7 @@ class _OrderSettingState extends State<OrderSetting> {
                                           text:
                                               '${AppLocalizations.of(context).translate('date_time_setting_description')}',
                                           style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 12),
+                                              color: Colors.grey, fontSize: 12),
                                         ),
                                       ],
                                     ),
@@ -303,11 +361,12 @@ class _OrderSettingState extends State<OrderSetting> {
                             ),
                             CheckboxListTile(
                               title: Text(
-                                  "${AppLocalizations.of(context).translate('delivery_date')}"),
+                                  "${AppLocalizations.of(context).translate('delivery_date')}",
+                                  style: TextStyle(fontSize: 15)),
                               subtitle: Text(
                                 '${AppLocalizations.of(context).translate('delivery_date_hint')}',
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey),
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
                               ),
                               value: deliveryDate,
                               onChanged: (newValue) {
@@ -326,11 +385,13 @@ class _OrderSettingState extends State<OrderSetting> {
                             ),
                             CheckboxListTile(
                               title: Text(
-                                  '${AppLocalizations.of(context).translate('delivery_time')}'),
+                                '${AppLocalizations.of(context).translate('delivery_time')}',
+                                style: TextStyle(fontSize: 15),
+                              ),
                               subtitle: Text(
                                 '${AppLocalizations.of(context).translate('delivery_time_hint')}',
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey),
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
                               ),
                               value: deliveryTime,
                               onChanged: (newValue) {
@@ -349,11 +410,13 @@ class _OrderSettingState extends State<OrderSetting> {
                             ),
                             ListTile(
                               title: Text(
-                                  '${AppLocalizations.of(context).translate('min_order_day')}'),
+                                '${AppLocalizations.of(context).translate('min_order_day')}',
+                                style: TextStyle(fontSize: 15),
+                              ),
                               subtitle: Text(
                                 '${AppLocalizations.of(context).translate('min_order_day_description')}',
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey),
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
                               ),
                               trailing: Container(
                                   width: 80,
@@ -361,6 +424,7 @@ class _OrderSettingState extends State<OrderSetting> {
                                   child: TextField(
                                     controller: minOrderDays,
                                     textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 14),
                                     keyboardType: TextInputType.number,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.allow(
@@ -368,9 +432,8 @@ class _OrderSettingState extends State<OrderSetting> {
                                     ],
                                     maxLength: 2,
                                     decoration: InputDecoration(
-                                        labelText:
-                                            AppLocalizations.of(context)
-                                                .translate('day'),
+                                        labelText: AppLocalizations.of(context)
+                                            .translate('day'),
                                         counterText: '',
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -393,11 +456,13 @@ class _OrderSettingState extends State<OrderSetting> {
                             ),
                             ListTile(
                               title: Text(
-                                  '${AppLocalizations.of(context).translate('working_day')}'),
+                                '${AppLocalizations.of(context).translate('working_day')}',
+                                style: TextStyle(fontSize: 15),
+                              ),
                               subtitle: Text(
                                 '${AppLocalizations.of(context).translate('working_day_description')}',
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey),
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
                               ),
                             ),
                             Column(
@@ -412,7 +477,9 @@ class _OrderSettingState extends State<OrderSetting> {
                             ),
                             ListTile(
                               title: Text(
-                                  '${AppLocalizations.of(context).translate('working_time')}'),
+                                '${AppLocalizations.of(context).translate('working_time')}',
+                                style: TextStyle(fontSize: 15),
+                              ),
                               subtitle: RichText(
                                 text: TextSpan(
                                   children: <TextSpan>[
@@ -434,8 +501,7 @@ class _OrderSettingState extends State<OrderSetting> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -445,11 +511,10 @@ class _OrderSettingState extends State<OrderSetting> {
                                     child: TextField(
                                       readOnly: true,
                                       controller: startTime,
-                                      onTap: () => selectTime(
-                                          startTime.text, startTime),
+                                      onTap: () =>
+                                          selectTime(startTime.text, startTime),
                                       style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black87),
+                                          fontSize: 12, color: Colors.black87),
                                       textAlign: TextAlign.center,
                                       decoration: InputDecoration(
                                         labelText:
@@ -478,8 +543,7 @@ class _OrderSettingState extends State<OrderSetting> {
                                       onTap: () =>
                                           selectTime(endTime.text, endTime),
                                       style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black87),
+                                          fontSize: 12, color: Colors.black87),
                                       textAlign: TextAlign.center,
                                       decoration: InputDecoration(
                                         labelText:
@@ -494,6 +558,60 @@ class _OrderSettingState extends State<OrderSetting> {
                               ),
                             ),
                             SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.notifications_active,
+                                  color: Colors.grey,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text:
+                                                '${AppLocalizations.of(context).translate('order_reminder')}',
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    89, 100, 109, 1),
+                                                fontWeight: FontWeight.bold)),
+                                        TextSpan(text: '\n'),
+                                        TextSpan(
+                                          text:
+                                              '${AppLocalizations.of(context).translate('order_reminder_hint')}',
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 12),
+                                        ),
+                                        TextSpan(text: '\n'),
+                                        TextSpan(
+                                          text:
+                                              '${AppLocalizations.of(context).translate('order_reminder_hint_2')}',
+                                          style: TextStyle(
+                                              color: Colors.red, fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TextField(
+                              controller: orderReminder,
+                              minLines: 3,
+                              maxLines: 5,
+                              maxLength: 100,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)
+                                      .translate('order_reminder_hint_3'),
+                                  hintStyle: TextStyle(fontSize: 14)),
+                            ),
+                            SizedBox(
                               height: 40,
                             ),
                             SizedBox(
@@ -504,7 +622,8 @@ class _OrderSettingState extends State<OrderSetting> {
                                 onPressed: () => updateOrderSetting(context),
                                 child: Text(
                                   '${AppLocalizations.of(context).translate('update_setting')}',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
                                 ),
                                 color: Colors.orange,
                                 shape: RoundedRectangleBorder(
@@ -541,7 +660,7 @@ class _OrderSettingState extends State<OrderSetting> {
                 workingDays[i] = workingDays[i] == 0 ? 1 : 0;
                 refreshController.add('');
               },
-              tileColor: workingDays[i] == 0 ? Colors.blueGrey : Colors.white,
+              tileColor: workingDays[i] == 0 ? Colors.green : Colors.white,
               title: Text(
                 '${AppLocalizations.of(context).translate('day${i + 1}')}',
                 textAlign: TextAlign.center,
@@ -605,14 +724,17 @@ class _OrderSettingState extends State<OrderSetting> {
     if (!checkingMinPurchase(context)) return;
 
     Map data = await Domain().updateOrderSetting(
-        email ? '0' : '1',
-        selfCollect ? '0' : '1',
-        deliveryDate ? '0' : '1',
-        deliveryTime ? '0' : '1',
-        minOrderDays.text.isEmpty ? '0' : minOrderDays.text,
-        workingDays.toString(),
-        jsonEncode(workingTime),
-        minPurchase.text.isEmpty ? '0.00' : minPurchase.text);
+      email ? '0' : '1',
+      selfCollect ? '0' : '1',
+      deliveryDate ? '0' : '1',
+      deliveryTime ? '0' : '1',
+      minOrderDays.text.isEmpty ? '0' : minOrderDays.text,
+      workingDays.toString(),
+      jsonEncode(workingTime),
+      minPurchase.text.isEmpty ? '0.00' : minPurchase.text,
+      allowEmailNotification ? '0' : '1',
+      orderReminder.text,
+    );
 
     if (data['status'] == '1') {
       CustomSnackBar.show(context,
