@@ -10,6 +10,7 @@ import 'package:my/fragment/order/child/dialog/driver_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_address_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_coupon_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_discount_dialog.dart';
+import 'package:my/fragment/order/child/dialog/edit_name_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_phone_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_customer_note_dialog.dart';
 import 'package:my/fragment/order/child/dialog/edit_shipping_tax_dialog.dart';
@@ -78,12 +79,7 @@ class _OrderDetailState extends State<OrderDetail> {
         ),
         iconTheme: IconThemeData(color: Colors.orangeAccent),
         actions: <Widget>[
-          IconButton(
-            icon: Image.asset('drawable/printer.png'),
-            onPressed: () {
-              openPrintDialog(context);
-            },
-          ),
+          printMenu(context),
           IconButton(
             icon: Image.asset('drawable/location.png'),
             onPressed: () {
@@ -679,78 +675,66 @@ class _OrderDetailState extends State<OrderDetail> {
                   SizedBox(
                     height: 10,
                   ),
-                  Visibility(
-                    visible: order.selfCollect == 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 6,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 6,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              order.name,
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 15),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            if (order.selfCollect == 1)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    order.address,
+                                    style: TextStyle(
+                                        color: Colors.grey[600], fontSize: 13),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    '${order.postcode} ${order.city}',
+                                    style: TextStyle(
+                                        color: Colors.grey[600], fontSize: 13),
+                                  ),
+                                ],
+                              )
+                            else
                               Text(
-                                order.name,
+                                '${AppLocalizations.of(context).translate('self_collect')}',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 13),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                order.address,
-                                style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 13),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                '${order.postcode} ${order.city}',
-                                style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 13),
-                              ),
-                            ],
-                          ),
+                                    color: Colors.grey[600], fontSize: 14),
+                              )
+                          ],
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: IconButton(
-                              icon: Icon(Icons.edit),
-                              color: Colors.grey,
-                              onPressed: () => showEditAddressDialog(context)),
-                        ),
-                        Expanded(
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: editCustomerDetailMenu(context),
+                      ),
+                      Visibility(
+                        visible: order.selfCollect == 1,
+                        child: Expanded(
                           flex: 1,
                           child: IconButton(
                               icon: Icon(Icons.navigation),
                               color: Colors.blueAccent,
                               onPressed: () => openMapsSheet(context)),
                         ),
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: order.selfCollect != 1,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          order.name,
-                          style:
-                              TextStyle(color: Colors.grey[600], fontSize: 13),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          '${AppLocalizations.of(context).translate('self_collect')}',
-                          textAlign: TextAlign.center,
-                          style:
-                              TextStyle(color: Colors.grey[600], fontSize: 14),
-                        )
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 10,
@@ -847,7 +831,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        '${orderItem.name}',
+                        '${orderItem.quantity} x ${orderItem.name}',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.bold),
@@ -867,13 +851,15 @@ class _OrderDetailState extends State<OrderDetail> {
                           Expanded(
                             flex: 1,
                             child: Text(
-                              'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)} x ${orderItem.quantity}',
+                              'RM ${Order().convertToInt(orderItem.price).toStringAsFixed(2)}',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 14),
                               textAlign: TextAlign.end,
                             ),
                           ),
-                          Spacer(),
+                          SizedBox(
+                            width: 10,
+                          )
                         ],
                       ),
                       Visibility(
@@ -981,7 +967,9 @@ class _OrderDetailState extends State<OrderDetail> {
                                   color: Colors.blueGrey, fontSize: 14),
                               textAlign: TextAlign.end),
                         ),
-                        Spacer()
+                        SizedBox(
+                          width: 10,
+                        )
                       ],
                     ),
               ],
@@ -1032,12 +1020,30 @@ class _OrderDetailState extends State<OrderDetail> {
     }
   }
 
+  Widget printMenu(context) {
+    return new PopupMenuButton(
+      icon: Image.asset('drawable/printer.png'),
+      offset: Offset(0, 10),
+      itemBuilder: (context) => [
+        _buildMenuItem('receipt',
+            '${AppLocalizations.of(context).translate('print_receipt')}', true),
+        _buildMenuItem('pdf',
+            '${AppLocalizations.of(context).translate('print_pdf')}', true),
+      ],
+      onCanceled: () {},
+      onSelected: (value) {
+        if (value == 'receipt')
+          openPrintDialog(context);
+        else
+          printInvoice();
+      },
+    );
+  }
+
   /*
-*
-*
-*  action bar part
-*
-* */
+  *
+  *  whatsApp menu
+  * */
   Widget whatsAppMenu(context) {
     return new PopupMenuButton(
       icon: Image.asset('drawable/whatsapp.png'),
@@ -1130,6 +1136,35 @@ class _OrderDetailState extends State<OrderDetail> {
             showDeleteOrderDialog(context);
             break;
         }
+      },
+    );
+  }
+
+  /*
+  *
+  *  edit customer details menu
+  * */
+  Widget editCustomerDetailMenu(context) {
+    return new PopupMenuButton(
+      icon: Icon(
+        Icons.edit,
+        color: Colors.grey,
+      ),
+      offset: Offset(0, 10),
+      itemBuilder: (context) => [
+        _buildMenuItem('name',
+            '${AppLocalizations.of(context).translate('edit_name')}', true),
+        _buildMenuItem(
+            'address',
+            '${AppLocalizations.of(context).translate('edit_address')}',
+            order.selfCollect == 1),
+      ],
+      onCanceled: () {},
+      onSelected: (value) {
+        if (value == 'name')
+          showEditNameDialog(context);
+        else
+          showEditAddressDialog(context);
       },
     );
   }
@@ -1384,6 +1419,36 @@ class _OrderDetailState extends State<OrderDetail> {
                 setState(() {
                   orderItems.clear();
                   order.status = value;
+                });
+              } else
+                CustomSnackBar.show(mainContext,
+                    '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+            });
+      },
+    );
+  }
+
+  /*
+  * update phone number
+  * */
+  showEditNameDialog(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return EditNameDialog(
+            order: order,
+            onClick: (name) async {
+              await Future.delayed(Duration(milliseconds: 500));
+              Navigator.pop(mainContext);
+              Map data = await Domain().updateName(name, order.id.toString());
+              if (data['status'] == '1') {
+                showSnackBar(
+                    '${AppLocalizations.of(mainContext).translate('update_success')}');
+                setState(() {
+                  orderItems.clear();
+                  order.name = name;
                 });
               } else
                 CustomSnackBar.show(mainContext,
@@ -1836,6 +1901,14 @@ class _OrderDetailState extends State<OrderDetail> {
         );
       },
     );
+  }
+
+  printInvoice() {
+    try {
+      launch('${Domain.invoiceLink}${order.publicUrl}');
+    } catch ($e) {
+      showSnackBar(AppLocalizations.of(context).translate('invalid_file'));
+    }
   }
 
   preChecking() async {

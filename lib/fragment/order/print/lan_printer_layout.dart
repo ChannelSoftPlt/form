@@ -433,65 +433,70 @@ class _LanPrinterLayoutState extends State<LanPrinterLayout>
         return AlertDialog(
           title: Text(
               "${AppLocalizations.of(context).translate(isUpdate ? 'edit_printer' : 'add_printer')}"),
-          content: Container(
-            height: 250,
-            child: Column(
-              children: [
-                TextField(
-                  keyboardType: TextInputType.text,
-                  controller: name,
-                  textAlign: TextAlign.start,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.print),
-                    labelText:
-                        '${AppLocalizations.of(context).translate('printer_name')}',
-                    labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                    hintText:
-                        '${AppLocalizations.of(context).translate('printer_hint')}',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
+          content: SingleChildScrollView(
+            child: Container(
+              height: 250,
+              child: Column(
+                children: [
+                  TextField(
+                    keyboardType: TextInputType.text,
+                    controller: name,
+                    textAlign: TextAlign.start,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.print),
+                      labelText:
+                          '${AppLocalizations.of(context).translate('printer_name')}',
+                      labelStyle:
+                          TextStyle(fontSize: 14, color: Colors.blueGrey),
+                      hintText:
+                          '${AppLocalizations.of(context).translate('printer_hint')}',
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  controller: ip,
-                  textAlign: TextAlign.start,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.wifi),
-                    labelText:
-                        '${AppLocalizations.of(context).translate('ip_address')}',
-                    labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                    hintText:
-                        '${AppLocalizations.of(context).translate('192.168.x.x')}',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  keyboardType: TextInputType.number,
-                  controller: port,
-                  textAlign: TextAlign.start,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.usb),
-                    labelText:
-                        '${AppLocalizations.of(context).translate('printer_name')}',
-                    labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                    hintText:
-                        '${AppLocalizations.of(context).translate('printer_hint')}',
-                    border: new OutlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.teal)),
+                  TextField(
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
+                    controller: ip,
+                    textAlign: TextAlign.start,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.wifi),
+                      labelText:
+                          '${AppLocalizations.of(context).translate('ip_address')}',
+                      labelStyle:
+                          TextStyle(fontSize: 14, color: Colors.blueGrey),
+                      hintText: '192.168.x.x',
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    controller: port,
+                    textAlign: TextAlign.start,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.usb),
+                      labelText:
+                          '${AppLocalizations.of(context).translate('printer_name')}',
+                      labelStyle:
+                          TextStyle(fontSize: 14, color: Colors.blueGrey),
+                      hintText:
+                          '${AppLocalizations.of(context).translate('printer_hint')}',
+                      border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.teal)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[

@@ -52,6 +52,8 @@ class Domain {
   static Uri whatsAppLink = Uri.parse(webDomain + 'order/view-order.php');
   static Uri imagePath = Uri.parse(webDomain + 'product/image/');
   static Uri proofImgPath = Uri.parse(webDomain + 'order/proof_img/');
+  static Uri invoiceLink =
+      Uri.parse(webDomain + 'order/print.php?print=true&&id=');
 
   fetchOrder(currentPage, itemPerPage, orderStatus, query, orderGroupId,
       driverId, startDate, endDate) async {
@@ -607,6 +609,15 @@ class Domain {
   updatePhone(phone, orderId) async {
     var response = await http.post(Domain.order,
         body: {'update_phone': '1', 'order_id': orderId, 'phone': phone});
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * update name
+  * */
+  updateName(name, orderId) async {
+    var response = await http.post(Domain.order,
+        body: {'update_name': '1', 'order_id': orderId, 'name': name});
     return jsonDecode(response.body);
   }
 

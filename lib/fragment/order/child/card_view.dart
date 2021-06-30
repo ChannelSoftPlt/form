@@ -209,8 +209,13 @@ class _CardViewState extends State<CardView> {
               '${AppLocalizations.of(context).translate('assign_driver')}'),
         ),
         PopupMenuItem(
-          value: 'print',
-          child: Text('${AppLocalizations.of(context).translate('print')}'),
+          value: 'receipt',
+          child: Text(
+              '${AppLocalizations.of(context).translate('print_receipt')}'),
+        ),
+        PopupMenuItem(
+          value: 'pdf',
+          child: Text('${AppLocalizations.of(context).translate('print_pdf')}'),
         ),
         PopupMenuItem(
           value: 'delete',
@@ -243,8 +248,11 @@ class _CardViewState extends State<CardView> {
           case 'driver':
             showDriverDialog(context);
             break;
-          case 'print':
+          case 'receipt':
             openPrintDialog(context);
+            break;
+          case 'pdf':
+            printInvoice(context);
             break;
           case 'delete':
             showDeleteOrderDialog(context);
@@ -321,6 +329,15 @@ class _CardViewState extends State<CardView> {
         );
       },
     );
+  }
+
+  printInvoice(context) {
+    try {
+      launch('${Domain.invoiceLink}${widget.orders.publicUrl}');
+    } catch ($e) {
+      showSnackBar(
+          context, AppLocalizations.of(context).translate('invalid_file'));
+    }
   }
 
   void showSnackBar(context, text) {

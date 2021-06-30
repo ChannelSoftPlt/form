@@ -49,6 +49,7 @@ class _PrintDialogState extends State<PrintDialog>
       backgroundColor: Colors.transparent,
       body: AlertDialog(
           contentPadding: EdgeInsets.fromLTRB(15, 15, 15, 0),
+          insetPadding: EdgeInsets.fromLTRB(30, 0, 30, 20),
           key: key,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

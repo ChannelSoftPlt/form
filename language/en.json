@@ -71,7 +71,7 @@
   "existing_driver": "Existing Driver",
   "search_driver": "Search a driver",
 
-  "edit_address": "Add New",
+  "edit_address": "Edit Address",
   "address": "Address",
   "delivery_address": "Delivery Address",
   "postcode": "Postcode",
@@ -615,5 +615,17 @@
   "order_reminder": "Order Reminder",
   "order_reminder_hint": "Any special or important reminder please mention here.",
   "order_reminder_hint_2": "This reminder will show at the section where customer\nplace their order.",
-  "order_reminder_hint_3": "Preparation time is 15 minutes."
+  "order_reminder_hint_3": "Preparation time is 15 minutes.",
+
+  "advance_setting": "Conditional Setting",
+  "default_fee": "Default Shipping Fee",
+  "add_condition": "Add Condition",
+  "edit_condition": "Edit Condition",
+  "no_condition": "No Condition Found...",
+  "condition_description": "These fee will not add up with the default shipping fee.",
+  "label_condition": "When customer purchase between",
+  "label_condition_2": "then shipping fee will be ",
+  "print_pdf": "Print Invoice",
+  "print_receipt": "Print Receipt",
+  "invalid_file": "Invalid File"
 }
