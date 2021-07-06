@@ -280,6 +280,7 @@ class _OrderListState extends State<OrderList> {
             .map((jsonObject) => Order.fromJson(jsonObject))
             .toList());
       } else {
+        print('final product length: ${list.length}');
         _refreshController.loadNoData();
         itemFinish = true;
       }
@@ -358,10 +359,16 @@ class _OrderListState extends State<OrderList> {
               Navigator.pop(mainContext);
               Map data = await Domain()
                   .updateMultipleStatus(value, selectedList.join(','));
-
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext,
                     '${AppLocalizations.of(mainContext).translate('update_success')}');
+                /*
+                * send whatsApp here
+                * */
+                var allowWhatsApp = await SharePreferences().read('allow_send_whatsapp');
+                if (allowWhatsApp == '0') {
+                  Domain().sendWhatsApp2Customer(selectedList.join(','));
+                }
                 _onRefresh();
               } else
                 CustomSnackBar.show(mainContext,

@@ -77,7 +77,14 @@ class _GroupListState extends State<GroupList> {
         crossAxisCount: 2,
         childAspectRatio: (100 / 110),
         children: List.generate(list.length, (index) {
-          return GroupGridView(orderGroup: list[index]);
+          return GroupGridView(
+            orderGroup: list[index],
+            delete: () {
+              setState(() {
+                list.removeAt(index);
+              });
+            },
+          );
         }));
   }
 
@@ -118,6 +125,7 @@ class _GroupListState extends State<GroupList> {
       } else {
         _refreshController.loadNoData();
         itemFinish = true;
+        print('total group length: ${list.length}');
       }
     });
   }

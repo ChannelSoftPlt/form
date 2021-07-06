@@ -627,5 +627,8 @@
   "label_condition_2": "then shipping fee will be ",
   "print_pdf": "Print Invoice",
   "print_receipt": "Print Receipt",
-  "invalid_file": "Invalid File"
+  "invalid_file": "Invalid File",
+
+  "whatsapp_notification": "WhatsApp Notification (Beta Version)",
+  "whatsapp_notification_hint": "Send WhatsApp notification to customer when order is placed or order's status is changed."
 }

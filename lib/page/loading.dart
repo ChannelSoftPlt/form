@@ -118,6 +118,10 @@ class _LoadingPageState extends State<LoadingPage> {
       }
       SharePreferences().save('url', url);
 
+      //allow send WhatsApp
+      SharePreferences().save('allow_send_whatsapp',
+          data['user_preference'][0]['allow_send_whatsapp'].toString());
+
       if (latestVersion != currentVersion) {
         openUpdateDialog(data);
         return;

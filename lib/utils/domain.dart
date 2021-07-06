@@ -14,12 +14,12 @@ import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
 
 class Domain {
-  static var domain = 'https://www.mobile.emenu.com.my/';
-  static var webDomain = 'https://www.cp.emenu.com.my/';
+//  static var domain = 'https://www.mobile.emenu.com.my/';
+//  static var webDomain = 'https://www.cp.emenu.com.my/';
 
   //testing server
-//  static var domain = 'https://emenumobile.lkmng.com/';
-//  static var webDomain = 'https://www.formtest.lkmng.com/';
+  static var domain = 'https://emenumobile.lkmng.com/';
+  static var webDomain = 'https://www.formtest.lkmng.com/';
 
   static Uri order = Uri.parse(domain + 'mobile_api/order/index.php');
   static Uri product = Uri.parse(domain + 'mobile_api/product/index.php');
@@ -54,6 +54,7 @@ class Domain {
   static Uri proofImgPath = Uri.parse(webDomain + 'order/proof_img/');
   static Uri invoiceLink =
       Uri.parse(webDomain + 'order/print.php?print=true&&id=');
+  static Uri whatsAppApi = Uri.parse(webDomain + 'whatsapp/index.php');
 
   fetchOrder(currentPage, itemPerPage, orderStatus, query, orderGroupId,
       driverId, startDate, endDate) async {
@@ -811,6 +812,7 @@ class Domain {
       workingTime,
       minPurchase,
       allowEmail,
+      allowWhatsApp,
       orderReminder) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
@@ -823,6 +825,7 @@ class Domain {
       'working_time': workingTime,
       'order_min_purchase': minPurchase,
       'allow_send_email': allowEmail,
+      'allow_send_whatsapp': allowWhatsApp,
       'order_reminder': orderReminder,
       'merchant_id':
           Merchant.fromJson(await SharePreferences().read("merchant"))
@@ -896,6 +899,17 @@ class Domain {
               .merchantId,
       'order_group_id': orderGroup.orderGroupId.toString(),
       'group_name': orderGroup.groupName,
+    });
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * delete group name
+  * */
+  deleteGroupName(OrderGroup orderGroup) async {
+    var response = await http.post(Domain.orderGroup, body: {
+      'delete': '1',
+      'order_group_id': orderGroup.orderGroupId.toString(),
     });
     return jsonDecode(response.body);
   }
@@ -1363,6 +1377,16 @@ class Domain {
   deletePrinter(printerId) async {
     var response = await http.post(Domain.lanPrinter,
         body: {'delete': '1', 'printer_id': printerId.toString()});
+    return jsonDecode(response.body);
+  }
+
+  /*
+  * send whatsApp api customer side
+  * */
+  sendWhatsApp2Customer(orderIds) async {
+    print(orderIds);
+    var response = await http.post(Domain.whatsAppApi,
+        body: {'message_customer': '1', 'id': orderIds});
     return jsonDecode(response.body);
   }
 }

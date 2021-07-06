@@ -40,7 +40,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
 
   //start and end date
   var startDate, endDate;
-  final selectedDateFormat = DateFormat("yyy-MM-dd hh:mm");
+  final selectedDateFormat = DateFormat("yyy-MM-dd HH:mm");
 
   //0 = reach certain amount, 1 = reach certain quantity
   int discountCondition = 0;
@@ -69,10 +69,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
           title: Text(
             '${AppLocalizations.of(context).translate(widget.isUpdate ? 'update_coupon' : 'create_coupon')}',
             style: GoogleFonts.cantoraOne(
-              textStyle: TextStyle(
-                  color: Colors.orangeAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
+              textStyle: TextStyle(color: Colors.orangeAccent, fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
           iconTheme: IconThemeData(color: Colors.orangeAccent),
@@ -139,8 +136,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.orange,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     ),
                   ),
                 ),
@@ -165,15 +161,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
                   style: TextStyle(color: Colors.black, fontSize: 16),
                   children: <TextSpan>[
                     TextSpan(
-                        text:
-                            '${AppLocalizations.of(context).translate('coupon_general_setting')}',
-                        style: TextStyle(
-                            color: Color.fromRGBO(89, 100, 109, 1),
-                            fontWeight: FontWeight.bold)),
+                        text: '${AppLocalizations.of(context).translate('coupon_general_setting')}',
+                        style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1), fontWeight: FontWeight.bold)),
                     TextSpan(text: '\n'),
                     TextSpan(
-                      text:
-                          '${AppLocalizations.of(context).translate('coupon_general_setting_description')}',
+                      text: '${AppLocalizations.of(context).translate('coupon_general_setting_description')}',
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                   ],
@@ -189,17 +181,12 @@ class _DiscountDetailState extends State<DiscountDetail> {
               maxLines: 1,
               style: TextStyle(fontSize: 14),
               decoration: InputDecoration(
-                errorText: couponCodeValidate
-                    ? '${AppLocalizations.of(context).translate('invalid_code')}'
-                    : null,
+                errorText: couponCodeValidate ? '${AppLocalizations.of(context).translate('invalid_code')}' : null,
                 prefixIcon: Icon(Icons.local_offer),
-                labelText:
-                    '${AppLocalizations.of(context).translate('coupon_code')}',
+                labelText: '${AppLocalizations.of(context).translate('coupon_code')}',
                 labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                hintText:
-                    '${AppLocalizations.of(context).translate('coupon_code')}',
-                border: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.teal)),
+                hintText: '${AppLocalizations.of(context).translate('coupon_code')}',
+                border: new OutlineInputBorder(borderSide: new BorderSide(color: Colors.teal)),
               ),
             ),
             SizedBox(
@@ -209,11 +196,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Text(
-                      '${AppLocalizations.of(context).translate('discount_type')}',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Color.fromRGBO(89, 100, 109, 1))),
+                  child: Text('${AppLocalizations.of(context).translate('discount_type')}',
+                      style: TextStyle(fontSize: 15, color: Color.fromRGBO(89, 100, 109, 1))),
                 ),
                 Expanded(
                   flex: 3,
@@ -222,18 +206,15 @@ class _DiscountDetailState extends State<DiscountDetail> {
                       style: TextStyle(fontSize: 15, color: Colors.black87),
                       items: [
                         DropdownMenuItem(
-                          child: Text(AppLocalizations.of(context)
-                              .translate('fix_cart_discount')),
+                          child: Text(AppLocalizations.of(context).translate('fix_cart_discount')),
                           value: 0,
                         ),
                         DropdownMenuItem(
-                          child: Text(AppLocalizations.of(context)
-                              .translate('percentage_discount')),
+                          child: Text(AppLocalizations.of(context).translate('percentage_discount')),
                           value: 1,
                         ),
                         DropdownMenuItem(
-                          child: Text(AppLocalizations.of(context)
-                              .translate('free_shipping')),
+                          child: Text(AppLocalizations.of(context).translate('free_shipping')),
                           value: 2,
                         ),
                       ],
@@ -257,30 +238,22 @@ class _DiscountDetailState extends State<DiscountDetail> {
                 children: [
                   Expanded(
                     child: TextField(
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r"^\d*\.?\d*")),
+                        FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                       ],
                       controller: discountAmount,
                       textAlign: TextAlign.start,
                       style: TextStyle(fontSize: 14),
                       maxLines: 1,
                       decoration: InputDecoration(
-                        errorText: discountAmountValidate
-                            ? '${AppLocalizations.of(context).translate('invalid_discount_amount')}'
-                            : null,
+                        errorText: discountAmountValidate ? '${AppLocalizations.of(context).translate('invalid_discount_amount')}' : null,
                         prefixIcon: Icon(Icons.monetization_on),
-                        labelText:
-                            '${AppLocalizations.of(context).translate(getDiscountLabel())}',
-                        labelStyle:
-                            TextStyle(fontSize: 14, color: Colors.blueGrey),
+                        labelText: '${AppLocalizations.of(context).translate(getDiscountLabel())}',
+                        labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
                         hintText: '20',
-                        hintStyle:
-                            TextStyle(fontSize: 14, color: Colors.grey),
-                        border: new OutlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.teal)),
+                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                        border: new OutlineInputBorder(borderSide: new BorderSide(color: Colors.teal)),
                       ),
                     ),
                   ),
@@ -294,30 +267,22 @@ class _DiscountDetailState extends State<DiscountDetail> {
                     visible: discountType == 1,
                     child: Expanded(
                       child: TextField(
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r"^\d*\.?\d*")),
+                          FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
                         ],
                         controller: maxDiscountAmount,
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 14),
                         maxLines: 1,
                         decoration: InputDecoration(
-                          errorText: discountAmountValidate
-                              ? '${AppLocalizations.of(context).translate('invalid_discount_amount')}'
-                              : null,
+                          errorText: discountAmountValidate ? '${AppLocalizations.of(context).translate('invalid_discount_amount')}' : null,
                           prefixIcon: Icon(Icons.monetization_on),
-                          labelText:
-                              '${AppLocalizations.of(context).translate('max_discount_amount')}',
-                          labelStyle:
-                              TextStyle(fontSize: 14, color: Colors.blueGrey),
+                          labelText: '${AppLocalizations.of(context).translate('max_discount_amount')}',
+                          labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
                           hintText: '20',
-                          hintStyle:
-                              TextStyle(fontSize: 14, color: Colors.grey),
-                          border: new OutlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.teal)),
+                          hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                          border: new OutlineInputBorder(borderSide: new BorderSide(color: Colors.teal)),
                         ),
                       ),
                     ),
@@ -335,42 +300,24 @@ class _DiscountDetailState extends State<DiscountDetail> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          '${AppLocalizations.of(context).translate('start_date')}',
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Color.fromRGBO(89, 100, 109, 1))),
+                      Text('${AppLocalizations.of(context).translate('start_date')}',
+                          style: TextStyle(fontSize: 14, color: Color.fromRGBO(89, 100, 109, 1))),
                       FlatButton.icon(
                           padding: EdgeInsets.zero,
                           label: Text(
                             startDate != null
-                                ? selectedDateFormat
-                                    .format(startDate)
-                                    .toString()
+                                ? selectedDateFormat.format(startDate).toString()
                                 : '${AppLocalizations.of(context).translate('select_date')}',
                             maxLines: 2,
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: startDate != null
-                                    ? Colors.black87
-                                    : Colors.grey),
+                            style: TextStyle(fontSize: 13, color: startDate != null ? Colors.black87 : Colors.grey),
                           ),
-                          icon: Icon(Icons.date_range,
-                              color: startDate != null
-                                  ? Colors.orangeAccent
-                                  : Colors.black54),
+                          icon: Icon(Icons.date_range, color: startDate != null ? Colors.orangeAccent : Colors.black54),
                           onPressed: () {
-                            DatePicker.showDateTimePicker(context,
-                                showTitleActions: true,
-                                onChanged: (date) {}, onConfirm: (date) {
+                            DatePicker.showDateTimePicker(context, showTitleActions: true, onChanged: (date) {}, onConfirm: (date) {
                               setState(() {
                                 startDate = date;
                               });
-                            },
-                                currentTime: startDate != null
-                                    ? startDate
-                                    : DateTime.now(),
-                                locale: LocaleType.zh);
+                            }, currentTime: startDate != null ? startDate : DateTime.now(), locale: LocaleType.zh);
                           }),
                     ],
                   ),
@@ -380,38 +327,23 @@ class _DiscountDetailState extends State<DiscountDetail> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          '${AppLocalizations.of(context).translate('end_date')}',
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Color.fromRGBO(89, 100, 109, 1))),
+                      Text('${AppLocalizations.of(context).translate('end_date')}',
+                          style: TextStyle(fontSize: 14, color: Color.fromRGBO(89, 100, 109, 1))),
                       FlatButton.icon(
                           padding: EdgeInsets.zero,
                           label: Text(
                             endDate != null
                                 ? selectedDateFormat.format(endDate).toString()
                                 : '${AppLocalizations.of(context).translate('select_date')}',
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: endDate != null
-                                    ? Colors.black87
-                                    : Colors.grey),
+                            style: TextStyle(fontSize: 13, color: endDate != null ? Colors.black87 : Colors.grey),
                           ),
-                          icon: Icon(Icons.date_range,
-                              color: endDate != null
-                                  ? Colors.orangeAccent
-                                  : Colors.black54),
+                          icon: Icon(Icons.date_range, color: endDate != null ? Colors.orangeAccent : Colors.black54),
                           onPressed: () {
-                            DatePicker.showDateTimePicker(context,
-                                showTitleActions: true,
-                                onChanged: (date) {}, onConfirm: (date) {
+                            DatePicker.showDateTimePicker(context, showTitleActions: true, onChanged: (date) {}, onConfirm: (date) {
                               setState(() {
                                 endDate = date;
                               });
-                            },
-                                currentTime:
-                                    endDate != null ? endDate : DateTime.now(),
-                                locale: LocaleType.zh);
+                            }, currentTime: endDate != null ? endDate : DateTime.now(), locale: LocaleType.zh);
                           })
                     ],
                   ),
@@ -439,15 +371,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
                   style: TextStyle(color: Colors.black, fontSize: 16),
                   children: <TextSpan>[
                     TextSpan(
-                        text:
-                            '${AppLocalizations.of(context).translate('usage_restriction')}',
-                        style: TextStyle(
-                            color: Color.fromRGBO(89, 100, 109, 1),
-                            fontWeight: FontWeight.bold)),
+                        text: '${AppLocalizations.of(context).translate('usage_restriction')}',
+                        style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1), fontWeight: FontWeight.bold)),
                     TextSpan(text: '\n'),
                     TextSpan(
-                      text:
-                          '${AppLocalizations.of(context).translate('usage_restriction_description')}',
+                      text: '${AppLocalizations.of(context).translate('usage_restriction_description')}',
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                   ],
@@ -461,11 +389,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Text(
-                      '${AppLocalizations.of(context).translate('when_can_use')}',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Color.fromRGBO(89, 100, 109, 1))),
+                  child: Text('${AppLocalizations.of(context).translate('when_can_use')}',
+                      style: TextStyle(fontSize: 15, color: Color.fromRGBO(89, 100, 109, 1))),
                 ),
                 Expanded(
                   flex: 3,
@@ -474,13 +399,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
                       style: TextStyle(fontSize: 15, color: Colors.black87),
                       items: [
                         DropdownMenuItem(
-                          child: Text(AppLocalizations.of(context)
-                              .translate('reach_certain_amount')),
+                          child: Text(AppLocalizations.of(context).translate('reach_certain_amount')),
                           value: 0,
                         ),
                         DropdownMenuItem(
-                          child: Text(AppLocalizations.of(context)
-                              .translate('reach_certain_quantity')),
+                          child: Text(AppLocalizations.of(context).translate('reach_certain_quantity')),
                           value: 1,
                         )
                       ],
@@ -497,9 +420,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
               height: 10,
             ),
             TextField(
-              keyboardType: discountCondition == 0
-                  ? TextInputType.numberWithOptions(decimal: true)
-                  : TextInputType.number,
+              keyboardType: discountCondition == 0 ? TextInputType.numberWithOptions(decimal: true) : TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r"^\d*\.?\d*")),
               ],
@@ -508,17 +429,12 @@ class _DiscountDetailState extends State<DiscountDetail> {
               style: TextStyle(fontSize: 14),
               maxLines: 1,
               decoration: InputDecoration(
-                prefixIcon: discountCondition == 0
-                    ? Icon(Icons.attach_money_outlined)
-                    : Icon(Icons.format_list_numbered),
-                labelText:
-                    '${AppLocalizations.of(context).translate(discountCondition == 0 ? 'amount' : 'quantity')}',
+                prefixIcon: discountCondition == 0 ? Icon(Icons.attach_money_outlined) : Icon(Icons.format_list_numbered),
+                labelText: '${AppLocalizations.of(context).translate(discountCondition == 0 ? 'amount' : 'quantity')}',
                 labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                hintText:
-                    '${AppLocalizations.of(context).translate(discountCondition == 0 ? 'any_amount' : 'any_quantity')}',
+                hintText: '${AppLocalizations.of(context).translate(discountCondition == 0 ? 'any_amount' : 'any_quantity')}',
                 hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                border: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.teal)),
+                border: new OutlineInputBorder(borderSide: new BorderSide(color: Colors.teal)),
               ),
             ),
           ],
@@ -542,15 +458,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
                   style: TextStyle(color: Colors.black, fontSize: 16),
                   children: <TextSpan>[
                     TextSpan(
-                        text:
-                            '${AppLocalizations.of(context).translate('usage_limit')}',
-                        style: TextStyle(
-                            color: Color.fromRGBO(89, 100, 109, 1),
-                            fontWeight: FontWeight.bold)),
+                        text: '${AppLocalizations.of(context).translate('usage_limit')}',
+                        style: TextStyle(color: Color.fromRGBO(89, 100, 109, 1), fontWeight: FontWeight.bold)),
                     TextSpan(text: '\n'),
                     TextSpan(
-                      text:
-                          '${AppLocalizations.of(context).translate('usage_limit_description')}',
+                      text: '${AppLocalizations.of(context).translate('usage_limit_description')}',
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                   ],
@@ -568,14 +480,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
               maxLines: 1,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.data_usage),
-                labelText:
-                    '${AppLocalizations.of(context).translate('usage_limit_per_coupon')}',
+                labelText: '${AppLocalizations.of(context).translate('usage_limit_per_coupon')}',
                 labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                hintText:
-                    '${AppLocalizations.of(context).translate('unlimited_usage')}',
+                hintText: '${AppLocalizations.of(context).translate('unlimited_usage')}',
                 hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                border: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.teal)),
+                border: new OutlineInputBorder(borderSide: new BorderSide(color: Colors.teal)),
               ),
             ),
             SizedBox(
@@ -589,14 +498,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
               maxLines: 1,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.people),
-                labelText:
-                    '${AppLocalizations.of(context).translate('usage_limit_per_user')}',
+                labelText: '${AppLocalizations.of(context).translate('usage_limit_per_user')}',
                 labelStyle: TextStyle(fontSize: 14, color: Colors.blueGrey),
-                hintText:
-                    '${AppLocalizations.of(context).translate('unlimited_usage')}',
+                hintText: '${AppLocalizations.of(context).translate('unlimited_usage')}',
                 hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                border: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.teal)),
+                border: new OutlineInputBorder(borderSide: new BorderSide(color: Colors.teal)),
               ),
             )
           ],
@@ -655,12 +561,8 @@ class _DiscountDetailState extends State<DiscountDetail> {
     Coupon coupon = Coupon(
         couponId: widget.couponId,
         couponCode: couponCode.text,
-        startDate: startDate != null
-            ? selectedDateFormat.format(startDate).toString()
-            : '',
-        endDate: endDate != null
-            ? selectedDateFormat.format(endDate).toString()
-            : '',
+        startDate: startDate != null ? selectedDateFormat.format(startDate).toString() : '',
+        endDate: endDate != null ? selectedDateFormat.format(endDate).toString() : '',
         status: 0,
         usageLimit: usageChecking(usageLimit.text),
         usageLimitPerUser: usageChecking(usageLimitUser.text),
@@ -686,14 +588,11 @@ class _DiscountDetailState extends State<DiscountDetail> {
       builder: (BuildContext context) {
         // return alert dialog object
         return AlertDialog(
-          title: Text(
-              "${AppLocalizations.of(context).translate('delete_request')}"),
-          content: Text(
-              "${AppLocalizations.of(context).translate('delete_message')}"),
+          title: Text("${AppLocalizations.of(context).translate('delete_request')}"),
+          content: Text("${AppLocalizations.of(context).translate('delete_message')}"),
           actions: <Widget>[
             FlatButton(
-              child:
-                  Text('${AppLocalizations.of(context).translate('cancel')}'),
+              child: Text('${AppLocalizations.of(context).translate('cancel')}'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -709,18 +608,12 @@ class _DiscountDetailState extends State<DiscountDetail> {
               * */
                 Map data = await Domain().deleteCoupon(widget.couponId);
                 if (data['status'] == '1') {
-                  CustomToast(
-                          '${AppLocalizations.of(context).translate('delete_success')}',
-                          context)
-                      .show();
+                  CustomToast('${AppLocalizations.of(context).translate('delete_success')}', context).show();
                   await Future.delayed(Duration(milliseconds: 300));
                   Navigator.of(context).pop();
                   Navigator.pop(context, true);
                 } else
-                  CustomToast(
-                          '${AppLocalizations.of(context).translate('something_went_wrong')}',
-                          context)
-                      .show();
+                  CustomToast('${AppLocalizations.of(context).translate('something_went_wrong')}', context).show();
               },
             ),
           ],
@@ -738,41 +631,26 @@ class _DiscountDetailState extends State<DiscountDetail> {
 
         var discountType = jsonDecode(coupon.discountType);
         this.discountType = int.parse(discountType['type']);
-        this.discountAmount.text =
-            Order().convertToInt(discountType['rate']).toStringAsFixed(2);
-        this.maxDiscountAmount.text =
-            discountType['max_rate'] != '-1' && discountType['max_rate'] != null
-                ? Order()
-                    .convertToInt(setUsage(discountType['max_rate']))
-                    .toStringAsFixed(2)
-                : '';
+        this.discountAmount.text = Order().convertToInt(discountType['rate']).toStringAsFixed(2);
+        this.maxDiscountAmount.text = discountType['max_rate'] != '-1' && discountType['max_rate'] != null
+            ? Order().convertToInt(setUsage(discountType['max_rate'])).toStringAsFixed(2)
+            : '';
 
         var discountCondition = jsonDecode(coupon.discountCondition);
         this.discountCondition = int.parse(discountCondition['type']);
-        this.conditionAmount.text = Order()
-            .convertToInt(discountCondition['condition'])
-            .toStringAsFixed(2);
+        this.conditionAmount.text = Order().convertToInt(discountCondition['condition']).toStringAsFixed(2);
 
         usageLimit.text = setUsage(coupon.usageLimit.toString());
         usageLimitUser.text = setUsage(coupon.usageLimitPerUser.toString());
 
-        startDate = coupon.startDate.isNotEmpty
-            ? DateTime.parse(coupon.startDate)
-            : null;
-        endDate =
-            coupon.endDate.isNotEmpty ? DateTime.parse(coupon.endDate) : null;
+        startDate = coupon.startDate.isNotEmpty ? DateTime.parse(coupon.startDate) : null;
+        endDate = coupon.endDate.isNotEmpty ? DateTime.parse(coupon.endDate) : null;
       } catch (e) {
         print(e);
-        CustomToast(
-                '${AppLocalizations.of(context).translate('something_went_wrong')}',
-                context)
-            .show();
+        CustomToast('${AppLocalizations.of(context).translate('something_went_wrong')}', context).show();
       }
     } else {
-      CustomToast(
-              '${AppLocalizations.of(context).translate('something_went_wrong')}',
-              context)
-          .show();
+      CustomToast('${AppLocalizations.of(context).translate('something_went_wrong')}', context).show();
     }
 
     setState(() {
@@ -791,8 +669,7 @@ class _DiscountDetailState extends State<DiscountDetail> {
   Map<String, dynamic> getDiscountCondition() {
     return {
       jsonEncode('type'): jsonEncode(discountCondition.toString()),
-      jsonEncode('condition'):
-          jsonEncode(conditionAmount.text.isEmpty ? '0' : conditionAmount.text),
+      jsonEncode('condition'): jsonEncode(conditionAmount.text.isEmpty ? '0' : conditionAmount.text),
     };
   }
 
@@ -821,7 +698,6 @@ class _DiscountDetailState extends State<DiscountDetail> {
   }
 
   showSnackBar(context, message) {
-    CustomSnackBar.show(
-        context, '${AppLocalizations.of(context).translate(message)}');
+    CustomSnackBar.show(context, '${AppLocalizations.of(context).translate(message)}');
   }
 }

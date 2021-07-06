@@ -95,7 +95,6 @@ class _OrderDetailState extends State<OrderDetail> {
             if (object.hasData) {
               if (object.connectionState == ConnectionState.done) {
                 Map data = object.data;
-
                 if (data['order_detail_status'] == '1') {
                   List orderDetail = data['order_detail'];
                   order = Order.fromJson(orderDetail[0]);
@@ -1210,7 +1209,7 @@ class _OrderDetailState extends State<OrderDetail> {
         currentTime: date,
         onChanged: (date) {}, onConfirm: (date) async {
       String selectedDate = DateFormat("yyyy-MM-dd").format(date);
-      String selectedTime = DateFormat("hh:mm").format(date);
+      String selectedTime = DateFormat("HH:mm").format(date);
 
       Map data = await Domain()
           .updateDeliveryDate(selectedDate, selectedTime, order.id.toString());
@@ -1382,8 +1381,15 @@ class _OrderDetailState extends State<OrderDetail> {
                   await Domain().updateStatus(value, order.id.toString());
 
               if (data['status'] == '1') {
-                showSnackBar(
-                    '${AppLocalizations.of(mainContext).translate('update_success')}');
+                showSnackBar('${AppLocalizations.of(mainContext).translate('update_success')}');
+                /*
+                * send whatsApp here
+                * */
+                var allowWhatsApp =
+                await SharePreferences().read('allow_send_whatsapp');
+                if (allowWhatsApp == '0') {
+                  Domain().sendWhatsApp2Customer(order.id.toString());
+                }
                 setState(() {
                   orderItems.clear();
                   order.status = value;
@@ -1831,7 +1837,7 @@ class _OrderDetailState extends State<OrderDetail> {
     String message = '';
     if (messageType == 0) {
       message =
-          'Hi,%20*${order.name.replaceAll(' ', '%20')}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orderId)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${order.publicUrl}';
+          'Hi,%20We%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orderId)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${order.publicUrl}';
     }
     //send receipt
     else if (messageType == 2) {

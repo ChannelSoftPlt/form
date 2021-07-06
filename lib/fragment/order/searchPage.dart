@@ -40,10 +40,12 @@ class _SearchPageState extends State<SearchPage> {
         brightness: Brightness.dark,
         title: TextField(
           controller: queryController,
+          autofocus: true,
           decoration: InputDecoration(
             hintText:
                 '${AppLocalizations.of(context).translate('search_by')} ${AppLocalizations.of(context).translate(widget.type)}',
             focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
             suffixIcon: IconButton(
                 icon: Icon(Icons.clear),
                 color: Colors.orangeAccent,

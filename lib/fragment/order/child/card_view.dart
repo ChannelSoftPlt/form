@@ -9,6 +9,7 @@ import 'package:my/shareWidget/snack_bar.dart';
 import 'package:my/shareWidget/status_dialog.dart';
 import 'package:my/translation/AppLocalizations.dart';
 import 'package:my/utils/domain.dart';
+import 'package:my/utils/sharePreference.dart';
 import 'package:my/utils/statusControl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:my/utils/paymentStatus.dart';
@@ -204,6 +205,11 @@ class _CardViewState extends State<CardView> {
               '${AppLocalizations.of(context).translate('change_payment_status')}'),
         ),
         PopupMenuItem(
+          value: 'group',
+          child:
+              Text('${AppLocalizations.of(context).translate('assign_group')}'),
+        ),
+        PopupMenuItem(
           value: 'driver',
           child: Text(
               '${AppLocalizations.of(context).translate('assign_driver')}'),
@@ -230,7 +236,7 @@ class _CardViewState extends State<CardView> {
             break;
           case 'whatsapp':
             String message =
-                'Hi,%20*${widget.orders.name.replaceAll(' ', '%20')}*%0aWe%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orders.orderID)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${widget.orders.publicUrl}';
+                'Hi,%20We%20have%20received%20your%20order.%0a*Order%20No.${Order().whatsAppOrderPrefix(widget.orders.orderID)}*%0a%0aPlease%20Check%20Your%20Order%20Here:%0a${Domain.whatsAppLink}?id=${widget.orders.publicUrl}';
             Order().openWhatsApp(
                 '+' + Order.getPhoneNumber(widget.orders.phone),
                 message,
@@ -244,6 +250,9 @@ class _CardViewState extends State<CardView> {
             break;
           case 'payment_status':
             showPaymentStatusDialog(context);
+            break;
+          case 'group':
+            showGroupingDialog(context);
             break;
           case 'driver':
             showDriverDialog(context);
@@ -418,16 +427,19 @@ class _CardViewState extends State<CardView> {
             onClick: (value) async {
               await Future.delayed(Duration(milliseconds: 500));
               Navigator.pop(mainContext);
-              Map data = await Domain()
-                  .updateStatus(value, widget.orders.id.toString());
-
+              Map data = await Domain().updateStatus(value, widget.orders.id.toString());
               if (data['status'] == '1') {
                 CustomSnackBar.show(mainContext,
                     '${AppLocalizations.of(mainContext).translate('update_success')}');
+                /*
+                * send whatsApp here
+                * */
+                var allowWhatsApp =
+                    await SharePreferences().read('allow_send_whatsapp');
+                if (allowWhatsApp == '0') {
+                  Domain().sendWhatsApp2Customer(widget.orders.id.toString());
+                }
                 widget.refresh();
-                // setState(() {
-                //   widget.orders.status = value;
-                // });
               } else
                 CustomSnackBar.show(mainContext,
                     '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');

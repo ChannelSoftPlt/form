@@ -9,8 +9,9 @@ import 'detail/group_detail.dart';
 
 class GroupGridView extends StatefulWidget {
   final OrderGroup orderGroup;
+  final Function() delete;
 
-  GroupGridView({this.orderGroup});
+  GroupGridView({this.orderGroup, this.delete});
 
   @override
   _GroupGridViewState createState() => _GroupGridViewState();
@@ -84,6 +85,10 @@ class _GroupGridViewState extends State<GroupGridView> {
           value: 'edit',
           child: Text("${AppLocalizations.of(context).translate('edit_name')}"),
         ),
+        PopupMenuItem(
+          value: 'delete',
+          child: Text("${AppLocalizations.of(context).translate('delete')}"),
+        ),
       ],
       onCanceled: () {},
       onSelected: (value) {
@@ -93,6 +98,9 @@ class _GroupGridViewState extends State<GroupGridView> {
             break;
           case 'edit':
             showEditGroupNameDialog(context);
+            break;
+          case 'delete':
+            deleteGroup(context);
             break;
         }
       },
@@ -131,15 +139,54 @@ class _GroupGridViewState extends State<GroupGridView> {
                 CustomSnackBar.show(mainContext,
                     '${AppLocalizations.of(mainContext).translate('update_success')}');
                 setState(() {});
-              }
-              else if(data['status'] == '3') {
+              } else if (data['status'] == '3') {
                 CustomSnackBar.show(mainContext,
                     '${AppLocalizations.of(mainContext).translate('group_existed')}');
-              }
-              else
+              } else
                 CustomSnackBar.show(mainContext,
                     '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
             });
+      },
+    );
+  }
+
+  deleteGroup(mainContext) {
+    // flutter defined function
+    showDialog(
+      context: mainContext,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: Text(AppLocalizations.of(mainContext).translate('delete')),
+          content: Text(
+              '${AppLocalizations.of(mainContext).translate('delete_message')}'),
+          actions: <Widget>[
+            TextButton(
+              child: Text(AppLocalizations.of(mainContext).translate('cancel')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                AppLocalizations.of(mainContext).translate('confirm'),
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                Map data = await Domain().deleteGroupName(widget.orderGroup);
+                if (data['status'] == '1') {
+                  Navigator.of(context).pop();
+                  widget.delete();
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(mainContext).translate('delete_success')}');
+                } else {
+                  CustomSnackBar.show(mainContext,
+                      '${AppLocalizations.of(mainContext).translate('something_went_wrong')}');
+                }
+              },
+            ),
+          ],
+        );
       },
     );
   }

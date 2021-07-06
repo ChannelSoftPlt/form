@@ -522,7 +522,7 @@ class _DistanceLayoutState extends State<DistanceLayout> {
                                   );
                               }
                               return Container(
-                                height: 285,
+                                height: 80,
                                 alignment: Alignment.center,
                                 child: Text(
                                   AppLocalizations.of(context)
