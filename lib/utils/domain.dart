@@ -14,35 +14,30 @@ import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
 
 class Domain {
-//  static var domain = 'https://www.mobile.emenu.com.my/';
-//  static var webDomain = 'https://www.cp.emenu.com.my/';
+  static var domain = 'https://www.mobile.emenu.com.my/';
+  static var webDomain = 'https://www.cp.emenu.com.my/';
 
   //testing server
-  static var domain = 'https://emenumobile.lkmng.com/';
-  static var webDomain = 'https://www.formtest.lkmng.com/';
+//  static var domain = 'https://emenumobile.lkmng.com/';
+//  static var webDomain = 'https://www.formtest.lkmng.com/';
 
   static Uri order = Uri.parse(domain + 'mobile_api/order/index.php');
   static Uri product = Uri.parse(domain + 'mobile_api/product/index.php');
-  static Uri orderItem =
-      Uri.parse(domain + 'mobile_api/order_detail/index.php');
+  static Uri orderItem = Uri.parse(domain + 'mobile_api/order_detail/index.php');
   static Uri postcode = Uri.parse(domain + 'mobile_api/postcode/index.php');
-  static Uri orderGroup =
-      Uri.parse(domain + 'mobile_api/order_group/index.php');
+  static Uri orderGroup = Uri.parse(domain + 'mobile_api/order_group/index.php');
   static Uri driver = Uri.parse(domain + 'mobile_api/driver/index.php');
   static Uri profile = Uri.parse(domain + 'mobile_api/profile/index.php');
   static Uri user = Uri.parse(domain + 'mobile_api/user/index.php');
   static Uri discount = Uri.parse(domain + 'mobile_api/coupon/index.php');
-  static Uri notification =
-      Uri.parse(domain + 'mobile_api/notification/index.php');
+  static Uri notification = Uri.parse(domain + 'mobile_api/notification/index.php');
   static Uri category = Uri.parse(domain + 'mobile_api/category/index.php');
   static Uri export = Uri.parse(domain + 'mobile_api/export/index.php');
   static Uri form = Uri.parse(domain + 'mobile_api/form/index.php');
   static Uri shipping = Uri.parse(domain + 'mobile_api/shipping/index.php');
-  static Uri promotionDialog =
-      Uri.parse(domain + 'mobile_api/promotion_dialog/index.php');
+  static Uri promotionDialog = Uri.parse(domain + 'mobile_api/promotion_dialog/index.php');
   static Uri printer = Uri.parse(domain + 'mobile_api/printer/index.php');
-  static Uri lanPrinter =
-      Uri.parse(domain + 'mobile_api/printer/lanprinter/index.php');
+  static Uri lanPrinter = Uri.parse(domain + 'mobile_api/printer/lanprinter/index.php');
 
   /*
   * Web Domain
@@ -52,20 +47,16 @@ class Domain {
   static Uri whatsAppLink = Uri.parse(webDomain + 'order/view-order.php');
   static Uri imagePath = Uri.parse(webDomain + 'product/image/');
   static Uri proofImgPath = Uri.parse(webDomain + 'order/proof_img/');
-  static Uri invoiceLink =
-      Uri.parse(webDomain + 'order/print.php?print=true&&id=');
+  static Uri invoiceLink = Uri.parse(webDomain + 'order/print.php?print=true&&id=');
   static Uri whatsAppApi = Uri.parse(webDomain + 'whatsapp/index.php');
 
-  fetchOrder(currentPage, itemPerPage, orderStatus, query, orderGroupId,
-      driverId, startDate, endDate) async {
+  fetchOrder(currentPage, itemPerPage, orderStatus, query, orderGroupId, driverId, startDate, endDate) async {
     //get version
     PackageInfo package = await PackageInfo.fromPlatform();
 
     var response = await http.post(Domain.order, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'start_date': startDate,
       'end_date': endDate,
       'driver_id': driverId,
@@ -79,13 +70,10 @@ class Domain {
     return jsonDecode(response.body);
   }
 
-  fetchGroupWithPagination(
-      currentPage, itemPerPage, query, startDate, endDate) async {
+  fetchGroupWithPagination(currentPage, itemPerPage, query, startDate, endDate) async {
     var response = await http.post(Domain.orderGroup, body: {
       'read_with_pagination': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'start_date': startDate,
       'end_date': endDate,
       'query': query,
@@ -96,8 +84,7 @@ class Domain {
   }
 
   fetchGroupDetail(orderGroupId) async {
-    var response = await http.post(Domain.orderGroup,
-        body: {'read_total': '1', 'order_group_id': orderGroupId.toString()});
+    var response = await http.post(Domain.orderGroup, body: {'read_total': '1', 'order_group_id': orderGroupId.toString()});
     return jsonDecode(response.body);
   }
 
@@ -110,9 +97,7 @@ class Domain {
 
     var response = await http.post(Domain.order, body: {
       'read_order_detail': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'public_url': publicUrl,
       'order_id': orderId,
       'version': package.version
@@ -126,9 +111,7 @@ class Domain {
   fetchProduct(query, currentPage, itemPerPage) async {
     var response = await http.post(Domain.product, body: {
       'read_order_product': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'query': query,
       'page': currentPage.toString(),
       'itemPerPage': itemPerPage.toString()
@@ -153,9 +136,7 @@ class Domain {
   fetchGroup() async {
     var response = await http.post(Domain.orderGroup, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -166,9 +147,7 @@ class Domain {
   fetchDriver() async {
     var response = await http.post(Domain.driver, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -179,9 +158,7 @@ class Domain {
   fetchProfile() async {
     var response = await http.post(Domain.profile, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -192,9 +169,7 @@ class Domain {
   fetchUser(currentPage, itemPerPage, query) async {
     var response = await http.post(Domain.user, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'query': query,
       'page': currentPage.toString(),
       'itemPerPage': itemPerPage.toString()
@@ -205,13 +180,10 @@ class Domain {
   /*
   * read user order
   * */
-  fetchUserOrder(
-      currentPage, itemPerPage, query, startDate, endDate, phone) async {
+  fetchUserOrder(currentPage, itemPerPage, query, startDate, endDate, phone) async {
     var response = await http.post(Domain.user, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'start_date': startDate,
       'end_date': endDate,
       'query': query,
@@ -228,9 +200,7 @@ class Domain {
   fetchUserTotalAmount(phone) async {
     var response = await http.post(Domain.user, body: {
       'read_total_purchase': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'phone': phone,
     });
     return jsonDecode(response.body);
@@ -242,11 +212,8 @@ class Domain {
   fetchDiscount(currentPage, itemPerPage, query) async {
     var response = await http.post(Domain.discount, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
-      'form_id':
-          Merchant.fromJson(await SharePreferences().read("merchant")).formId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
+      'form_id': Merchant.fromJson(await SharePreferences().read("merchant")).formId,
       'query': query,
       'page': currentPage.toString(),
       'itemPerPage': itemPerPage.toString()
@@ -273,19 +240,15 @@ class Domain {
       'read': '1',
       'coupon_code': code,
       'phone': phone,
-      'form_id':
-          Merchant.fromJson(await SharePreferences().read("merchant")).formId,
+      'form_id': Merchant.fromJson(await SharePreferences().read("merchant")).formId,
     });
     return jsonDecode(response.body);
   }
 
-  fetchProductWithPagination(
-      currentPage, itemPerPage, query, categoryName, orderType) async {
+  fetchProductWithPagination(currentPage, itemPerPage, query, categoryName, orderType) async {
     var response = await http.post(Domain.product, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'query': query,
       'category_name': categoryName,
       'page': currentPage.toString(),
@@ -298,9 +261,7 @@ class Domain {
   fetchProductVariationWithPagination(currentPage, itemPerPage, query) async {
     var response = await http.post(Domain.product, body: {
       'read_variation': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'query': query,
       'page': currentPage.toString(),
       'itemPerPage': itemPerPage.toString()
@@ -314,9 +275,7 @@ class Domain {
   fetchCategory() async {
     var response = await http.post(Domain.category, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -327,9 +286,7 @@ class Domain {
   fetchExportCustomer($startDate, $endDate) async {
     var response = await http.post(Domain.export, body: {
       'export_customer': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'start_date': $startDate,
       'end_date': $endDate
     });
@@ -342,9 +299,7 @@ class Domain {
   fetchExportProduct($startDate, $endDate) async {
     var response = await http.post(Domain.export, body: {
       'export_product': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'start_date': $startDate,
       'end_date': $endDate
     });
@@ -357,9 +312,7 @@ class Domain {
   fetchExportSales($startDate, $endDate, $groupId) async {
     var response = await http.post(Domain.export, body: {
       'export_sales': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'start_date': $startDate,
       'end_date': $endDate,
       'order_group_id': $groupId,
@@ -373,9 +326,7 @@ class Domain {
   fetchExportProductSold($startDate, $endDate) async {
     var response = await http.post(Domain.export, body: {
       'export_product_sold': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'start_date': $startDate,
       'end_date': $endDate
     });
@@ -386,13 +337,8 @@ class Domain {
   * print data
   * */
   fetchPrintData($orderId) async {
-    var response = await http.post(Domain.printer, body: {
-      'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
-      'order_id': $orderId
-    });
+    var response = await http.post(Domain.printer,
+        body: {'read': '1', 'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId, 'order_id': $orderId});
     return jsonDecode(response.body);
   }
 
@@ -413,9 +359,7 @@ class Domain {
   launchCheck() async {
     var response = await http.post(Domain.registration, body: {
       'launch_check': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -426,9 +370,7 @@ class Domain {
   expiredChecking() async {
     var response = await http.post(Domain.registration, body: {
       'subscription_check': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -439,9 +381,7 @@ class Domain {
   readGalleryLimit() async {
     var response = await http.post(Domain.product, body: {
       'read_gallery_limit': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -452,9 +392,7 @@ class Domain {
   readFormSetting() async {
     var response = await http.post(Domain.form, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -465,9 +403,7 @@ class Domain {
   readPromotionDialogSetting() async {
     var response = await http.post(Domain.promotionDialog, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -478,9 +414,7 @@ class Domain {
   readShippingSetting() async {
     var response = await http.post(Domain.shipping, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -491,9 +425,7 @@ class Domain {
   readEastWestSetting() async {
     var response = await http.post(Domain.shipping, body: {
       'read_east_west': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -504,9 +436,7 @@ class Domain {
   readDistanceSetting() async {
     var response = await http.post(Domain.shipping, body: {
       'read_distance': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -518,9 +448,7 @@ class Domain {
     var response = await http.post(Domain.profile, body: {
       'read_qr_code': '1',
       'type': type,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -531,9 +459,7 @@ class Domain {
   checkQRCode() async {
     var response = await http.post(Domain.profile, body: {
       'read_availability': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -544,9 +470,7 @@ class Domain {
   readPostcodeSetting() async {
     var response = await http.post(Domain.shipping, body: {
       'read_postcode': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -557,9 +481,7 @@ class Domain {
   readLanPrinter() async {
     var response = await http.post(Domain.lanPrinter, body: {
       'read': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -568,11 +490,7 @@ class Domain {
   * update status
   * */
   updateStatus(status, orderId) async {
-    var response = await http.post(Domain.order, body: {
-      'update_order_status': '1',
-      'order_id': orderId,
-      'status': status
-    });
+    var response = await http.post(Domain.order, body: {'update_order_status': '1', 'order_id': orderId, 'status': status});
     return jsonDecode(response.body);
   }
 
@@ -582,9 +500,7 @@ class Domain {
   updateShippingStatus(status) async {
     var response = await http.post(Domain.shipping, body: {
       'update_status': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'status': status.toString()
     });
     return jsonDecode(response.body);
@@ -596,9 +512,7 @@ class Domain {
   updateSelfCollect(status) async {
     var response = await http.post(Domain.shipping, body: {
       'update_self_collect': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'status': status.toString()
     });
     return jsonDecode(response.body);
@@ -608,8 +522,7 @@ class Domain {
   * update phone number
   * */
   updatePhone(phone, orderId) async {
-    var response = await http.post(Domain.order,
-        body: {'update_phone': '1', 'order_id': orderId, 'phone': phone});
+    var response = await http.post(Domain.order, body: {'update_phone': '1', 'order_id': orderId, 'phone': phone});
     return jsonDecode(response.body);
   }
 
@@ -617,8 +530,7 @@ class Domain {
   * update name
   * */
   updateName(name, orderId) async {
-    var response = await http.post(Domain.order,
-        body: {'update_name': '1', 'order_id': orderId, 'name': name});
+    var response = await http.post(Domain.order, body: {'update_name': '1', 'order_id': orderId, 'name': name});
     return jsonDecode(response.body);
   }
 
@@ -626,11 +538,7 @@ class Domain {
   * update payment status
   * */
   updatePaymentStatus(paymentStatus, orderId) async {
-    var response = await http.post(Domain.order, body: {
-      'update_payment_status': '1',
-      'order_id': orderId,
-      'payment_status': paymentStatus
-    });
+    var response = await http.post(Domain.order, body: {'update_payment_status': '1', 'order_id': orderId, 'payment_status': paymentStatus});
     return jsonDecode(response.body);
   }
 
@@ -638,8 +546,7 @@ class Domain {
   * update remark
   * */
   updateCustomerNote(note, orderId) async {
-    var response = await http.post(Domain.orderItem,
-        body: {'update': '1', 'order_id': orderId, 'note': note});
+    var response = await http.post(Domain.orderItem, body: {'update': '1', 'order_id': orderId, 'note': note});
     return jsonDecode(response.body);
   }
 
@@ -647,11 +554,7 @@ class Domain {
   * update status
   * */
   updateMultipleStatus(status, orderIds) async {
-    var response = await http.post(Domain.order, body: {
-      'update_order_status': '1',
-      'order_ids': orderIds,
-      'status': status
-    });
+    var response = await http.post(Domain.order, body: {'update_order_status': '1', 'order_ids': orderIds, 'status': status});
     return jsonDecode(response.body);
   }
 
@@ -734,9 +637,7 @@ class Domain {
       'update': '1',
       'current_password': currentPassword,
       'new_password': newPassword,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -744,8 +645,7 @@ class Domain {
   /*
   * update profile
   * */
-  updateProfile(companyName, companyAddress, contactNumber, personInCharge,
-      whatsAppNumber) async {
+  updateProfile(companyName, companyAddress, contactNumber, personInCharge, whatsAppNumber) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'address': companyAddress,
@@ -753,9 +653,7 @@ class Domain {
       'name': personInCharge,
       'company_name': companyName,
       'whatsapp_number': whatsAppNumber,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -763,8 +661,7 @@ class Domain {
   /*
   * update payment
   * */
-  updatePayment(bankDetail, bankTransfer, cod, fpayTransfer, allowTNG,
-      allowBoost, allowDuit, allowSarawak, taxPercent) async {
+  updatePayment(bankDetail, bankTransfer, cod, fpayTransfer, allowTNG, allowBoost, allowDuit, allowSarawak, taxPercent) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'bank_details': bankDetail,
@@ -776,9 +673,7 @@ class Domain {
       'duit_now_manual_payment': allowDuit,
       'sarawak_manual_payment': allowSarawak,
       'tax_percent': taxPercent,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -792,9 +687,7 @@ class Domain {
       'fpay_username': fpayUsername,
       'fpay_api_key': fpayApiKey,
       'fpay_secret_key': fpaySecretKey,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -802,18 +695,8 @@ class Domain {
   /*
   * update order setting
   * */
-  updateOrderSetting(
-      emailOption,
-      selfCollectOption,
-      deliveryDateOption,
-      deliveryTimeOption,
-      orderMinDay,
-      workingDay,
-      workingTime,
-      minPurchase,
-      allowEmail,
-      allowWhatsApp,
-      orderReminder) async {
+  updateOrderSetting(emailOption, selfCollectOption, deliveryDateOption, deliveryTimeOption, orderMinDay, workingDay, workingTime, minPurchase,
+      allowEmail, allowWhatsApp, orderReminder) async {
     var response = await http.post(Domain.profile, body: {
       'update': '1',
       'self_collect': selfCollectOption,
@@ -827,9 +710,7 @@ class Domain {
       'allow_send_email': allowEmail,
       'allow_send_whatsapp': allowWhatsApp,
       'order_reminder': orderReminder,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -842,9 +723,7 @@ class Domain {
       'update': '1',
       'name': name,
       'category_id': categoryId,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -852,8 +731,7 @@ class Domain {
   /*
   * create product
   * */
-  updateProduct(Product product, extension, imageCode, imageGalleryName,
-      imageGalleryFile) async {
+  updateProduct(Product product, extension, imageCode, imageGalleryName, imageGalleryFile) async {
     var response = await http.post(Domain.product, body: {
       'update': '1',
       'product_id': product.productId.toString(),
@@ -881,9 +759,7 @@ class Domain {
     var response = await http.post(Domain.registration, body: {
       'log_out': '1',
       'token': token,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -894,9 +770,7 @@ class Domain {
   updateGroupName(OrderGroup orderGroup) async {
     var response = await http.post(Domain.orderGroup, body: {
       'update': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'order_group_id': orderGroup.orderGroupId.toString(),
       'group_name': orderGroup.groupName,
     });
@@ -930,8 +804,7 @@ class Domain {
       'usage_limit': coupon.usageLimit,
       'product_restriction': coupon.productRestriction,
       'coupon_code': coupon.couponCode,
-      'form_id':
-          Merchant.fromJson(await SharePreferences().read("merchant")).formId
+      'form_id': Merchant.fromJson(await SharePreferences().read("merchant")).formId
     });
     return jsonDecode(response.body);
   }
@@ -956,9 +829,7 @@ class Domain {
       'update': '1',
       'image_code': imageCode,
       'status': object.status.toString(),
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'banner_status': object.bannerStatus.toString(),
       'banner_video_link': object.bannerVideoLink,
       'form_color': object.formColor,
@@ -994,9 +865,7 @@ class Domain {
   updatePostcodeShipping(postcode) async {
     var response = await http.post(Domain.shipping, body: {
       'update_postcode': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'shipping_by_postcode': postcode
     });
     return jsonDecode(response.body);
@@ -1005,13 +874,10 @@ class Domain {
   /*
   * update distance shipping
   * */
-  updateDistanceShipping(
-      distance, address, longitude, latitude, avoidToll) async {
+  updateDistanceShipping(distance, address, longitude, latitude, avoidToll) async {
     var response = await http.post(Domain.shipping, body: {
       'update_distance': '1',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'shipping_by_distance': distance,
       'address_long_lat': address,
       'longitude': longitude,
@@ -1028,9 +894,7 @@ class Domain {
     var response = await http.post(Domain.promotionDialog, body: {
       'update_promotion_dialog': '1',
       'promotion_dialog': promotionDialog,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId
     });
     return jsonDecode(response.body);
   }
@@ -1043,9 +907,7 @@ class Domain {
       'update_qr_code': '1',
       'qr_code': qrCode,
       'type': type,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId
     });
     return jsonDecode(response.body);
   }
@@ -1060,9 +922,7 @@ class Domain {
       'ip': object.ip,
       'name': object.name,
       'printer_id': object.printerId.toString(),
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId
     });
     return jsonDecode(response.body);
   }
@@ -1095,9 +955,7 @@ class Domain {
     var response = await http.post(Domain.orderGroup, body: {
       'action': orderGroupId == '' ? 'create' : 'update',
       'status': status,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'group_name': groupName,
       'order_id': orderId,
       'order_group_id': orderGroupId,
@@ -1111,9 +969,7 @@ class Domain {
   setDriver(driverName, orderId, driverId) async {
     var response = await http.post(Domain.driver, body: {
       'action': driverId == '' ? 'create' : 'update',
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
       'driver_name': driverName,
       'order_id': orderId,
       'driver_id': driverId,
@@ -1149,13 +1005,8 @@ class Domain {
   * register device token
   * */
   registerDeviceToken(token) async {
-    var response = await http.post(Domain.notification, body: {
-      'register_token': '1',
-      'token': token,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId
-    });
+    var response = await http.post(Domain.notification,
+        body: {'register_token': '1', 'token': token, 'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId});
     return jsonDecode(response.body);
   }
 
@@ -1166,9 +1017,7 @@ class Domain {
     var response = await http.post(Domain.category, body: {
       'create': '1',
       'name': name,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -1176,8 +1025,7 @@ class Domain {
   /*
   * create product
   * */
-  createProduct(Product product, extension, imageCode, imageGalleryName,
-      imageGalleryFile) async {
+  createProduct(Product product, extension, imageCode, imageGalleryName, imageGalleryFile) async {
     var response = await http.post(Domain.product, body: {
       'create': '1',
       'status': product.status.toString(),
@@ -1193,8 +1041,7 @@ class Domain {
       'variation': product.variation,
       'stock': product.stock,
       'sequence': product.sequence,
-      'form_id':
-          Merchant.fromJson(await SharePreferences().read("merchant")).formId,
+      'form_id': Merchant.fromJson(await SharePreferences().read("merchant")).formId,
     });
     return jsonDecode(response.body);
   }
@@ -1214,8 +1061,7 @@ class Domain {
       'usage_limit': coupon.usageLimit,
       'product_restriction': coupon.productRestriction,
       'coupon_code': coupon.couponCode,
-      'form_id':
-          Merchant.fromJson(await SharePreferences().read("merchant")).formId,
+      'form_id': Merchant.fromJson(await SharePreferences().read("merchant")).formId,
     });
     return jsonDecode(response.body);
   }
@@ -1243,9 +1089,7 @@ class Domain {
       'name': lanPrinter.name,
       'ip': lanPrinter.ip,
       'port': lanPrinter.port.toString(),
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -1254,8 +1098,7 @@ class Domain {
   /*
   * delete order item
   * */
-  deleteOrderItem(
-      orderProductId, orderId, totalAmount, stock, productId) async {
+  deleteOrderItem(orderProductId, orderId, totalAmount, stock, productId) async {
     var response = await http.post(Domain.orderItem, body: {
       'delete': '1',
       'order_product_id': orderProductId,
@@ -1344,9 +1187,7 @@ class Domain {
     var response = await http.post(Domain.form, body: {
       'delete_image': '1',
       'deleted_image_name': imageName,
-      'merchant_id':
-          Merchant.fromJson(await SharePreferences().read("merchant"))
-              .merchantId,
+      'merchant_id': Merchant.fromJson(await SharePreferences().read("merchant")).merchantId,
     });
     return jsonDecode(response.body);
   }
@@ -1355,8 +1196,7 @@ class Domain {
   * delete coupon
   * */
   deleteCoupon(couponId) async {
-    var response = await http.post(Domain.discount,
-        body: {'delete': '1', 'id': couponId.toString()});
+    var response = await http.post(Domain.discount, body: {'delete': '1', 'id': couponId.toString()});
     return jsonDecode(response.body);
   }
 
@@ -1364,10 +1204,7 @@ class Domain {
   * remove coupon
   * */
   removeCouponFromOrder(couponUsageId) async {
-    var response = await http.post(Domain.discount, body: {
-      'delete_coupon': '1',
-      'coupon_usage_id': couponUsageId.toString()
-    });
+    var response = await http.post(Domain.discount, body: {'delete_coupon': '1', 'coupon_usage_id': couponUsageId.toString()});
     return jsonDecode(response.body);
   }
 
@@ -1375,8 +1212,7 @@ class Domain {
   * delete printer
   * */
   deletePrinter(printerId) async {
-    var response = await http.post(Domain.lanPrinter,
-        body: {'delete': '1', 'printer_id': printerId.toString()});
+    var response = await http.post(Domain.lanPrinter, body: {'delete': '1', 'printer_id': printerId.toString()});
     return jsonDecode(response.body);
   }
 
@@ -1384,9 +1220,8 @@ class Domain {
   * send whatsApp api customer side
   * */
   sendWhatsApp2Customer(orderIds) async {
-    print(orderIds);
-    var response = await http.post(Domain.whatsAppApi,
-        body: {'message_customer': '1', 'id': orderIds});
+    var response = await http.post(Domain.whatsAppApi, body: {'message_customer': '1', 'id': orderIds});
+    print('message: ' + response.body);
     return jsonDecode(response.body);
   }
 }

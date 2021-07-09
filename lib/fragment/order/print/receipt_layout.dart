@@ -122,7 +122,7 @@ class ReceiptLayout {
       if (order.selfCollect == 0) {
         ticket.text('Self Collect', styles: PosStyles(align: PosAlign.center));
       } else {
-        ticket.text('${order.address}', styles: PosStyles(align: PosAlign.center));
+        ticket.text('${order.address}', containsChinese: true, styles: PosStyles(align: PosAlign.center));
       }
       //delivery time
       if (order.deliveryDate != '' || order.deliveryTime != '') {
@@ -310,7 +310,7 @@ class ReceiptLayout {
       if (order.selfCollect == 0) {
         ticket.text('Self Collect', styles: PosStyles(align: PosAlign.center));
       } else {
-        ticket.text('${order.address}', styles: PosStyles(align: PosAlign.center));
+        ticket.text('${order.address}', containsChinese: true, styles: PosStyles(align: PosAlign.center));
       }
       //delivery time
       if (order.deliveryDate != '' || order.deliveryTime != '') {
