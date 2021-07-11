@@ -630,5 +630,8 @@
   "label_condition_2": "maka bayaran penghantaran akan menjadi ",
   "print_pdf": "Mencetak Invois",
   "print_receipt": "Cetakan Resit",
-  "invalid_file": "Fail Tidak Sah"
+  "invalid_file": "Fail Tidak Sah",
+
+  "whatsapp_notification": "Pemberitahuan WhatsApp",
+  "whatsapp_notification_hint": "Kirim pemberitahuan WhatsApp kepada pelanggan ketika pesanan dilakukan atau status pesanan diubah."
 }

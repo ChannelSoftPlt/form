@@ -73,7 +73,7 @@
   "existing_driver": "现有司机",
   "search_driver": "搜寻司机",
 
-  "edit_address": "添加新的",
+  "edit_address": "编辑地址",
   "address": "地址",
   "delivery_address": "寄货地址",
   "postcode": "邮编号",
@@ -630,5 +630,8 @@
   "label_condition_2": "那么运费将是 ",
   "print_pdf": "打印发票",
   "print_receipt": "打印收据",
-  "invalid_file": "无效的文件"
+  "invalid_file": "无效的文件",
+
+  "whatsapp_notification": "WhatsApp 通知（测试版）",
+  "whatsapp_notification_hint": "当下订单或更改订单状态时，向客户发送 WhatsApp 通知。"
 }
